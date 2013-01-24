@@ -9,17 +9,51 @@
 #include <stdexcept>
 #include <vector>
 #include <cmath>
+#include <string>
+
+// for PATH_MAX
+#include <limits>
+// for dirname
+#include <libgen.h>
+// for readlink
+#include <unistd.h>
+
+#include "Program.h"
 
 using namespace std;
 
 // constants
 const glm::vec2 SCREEN_SIZE(800, 600);
 
-static void LoadShaders() {
-    std::vector
+static string ResourcePath(string fileName){
+    // Gets the full directory of the program on linux
+    char exe_file[PATH_MAX + 1];
+    int size;
+    size = readlink("/proc/self/exe", exe_file, PATH_MAX);
+    if (size < 0) {
+        return ".//../"+ fileName;
+    } else {
+        exe_file[size] = '\0';
+        // dirname reports the parent directory of a file
+        return string(dirname(exe_file)) + "/";
+    }
+}
+
+static void LoadShaders(mogl::Program* program) {
+    vector<mogl::Shader> shaders;
+    shaders.push_back(mogl::Shader::shaderFromFile(
+        ResourcePath("source/vertex-shader.txt"), 
+        GL_VERTEX_SHADER));
+    shaders.push_back(mogl::Shader::shaderFromFile(
+        ResourcePath("source/fragment-shader.txt"), 
+        GL_FRAGMENT_SHADER));
+    program = new mogl::Program(shaders);
 }
 
 int main(int argc, char* argv[]) {
+    // initialize the program object
+    mogl::Program* program = NULL;
+
     // Initialize GLFW
     if(!glfwInit()){
         throw runtime_error("glfwInit failed.");
@@ -44,7 +78,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Loading vertext and fragment shaders into opengl
-    LoadShaders();
+    LoadShaders(program);
 
     // clean up and exit
     glfwTerminate();
