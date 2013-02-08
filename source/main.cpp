@@ -58,10 +58,10 @@ static void LoadShaders() {
     // std::cout << ResourcePath("source/fragment-shader.txt") << std::endl;
 
     shaders.push_back(mogl::Shader::ShaderFromFile(
-        ResourcePath("source/vertex-shader.txt"), 
+        ResourcePath("resource/vertex-shader.vert"), 
         GL_VERTEX_SHADER));
     shaders.push_back(mogl::Shader::ShaderFromFile(
-        ResourcePath("source/fragment-shader.txt"), 
+        ResourcePath("resource/fragment-shader.frag"), 
         GL_FRAGMENT_SHADER));
     gProgram = new mogl::Program(shaders);
 }
