@@ -18,7 +18,7 @@ TARGETDIR = bin
 
 ifeq ($(config),debug)
 	OBJDIR 		= obj/debug
-	TARGET 		= $(TARGETDIR)/program_debug
+	TARGET 		= $(TARGETDIR)/program_debug.debug
 	DEFINES 	= -DDEBUG
 	CPPFLAGS	= -MMD -MP $(DEFINES) -g -Wall
 	CXXFLAGS 	= $(CPPFLAGS)
@@ -28,7 +28,7 @@ endif
 
 ifeq ($(config),release)
 	OBJDIR 		= obj/release
-	TARGET 		= $(TARGETDIR)/program_debug
+	TARGET 		= $(TARGETDIR)/program_debug.release
 	DEFINES 	= -DNDEBUG
 	CPPFLAGS 	= -MMD -MP $(DEFINES) -02 -Wall
 	CXXFLAGS 	= $(CPPFLAGS)
