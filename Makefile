@@ -17,12 +17,12 @@ verbose:
 
 release:
 	@echo "==== Building opengl ===="
-	@${MAKE} --no-print-directory -C . -f opengl.make release=1
+	@${MAKE} --no-print-directory -C . -f opengl.make clang=1 release=1
 	@echo "==== Finished opengl ===="
 
 run: 
 	@echo "==== Running opengl ===="
-	@${MAKE} --no-print-directory -C . -f opengl.make run
+	@${MAKE} --no-print-directory -C . -f opengl.make clang=1 run
 
 clean:
 	@${MAKE} --no-print-directory -C . -f opengl.make clean

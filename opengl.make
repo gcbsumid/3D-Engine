@@ -37,6 +37,8 @@ endif
 
 OBJECTS := \
 	$(OBJDIR)/main.o \
+	$(OBJDIR)/Program.o \
+	$(OBJDIR)/Shader.o \
 
 .PHONY: clean
 
@@ -62,6 +64,14 @@ run: ${TARGET}
 	./${TARGET}
 
 $(OBJDIR)/main.o: source/main.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/Program.o: source/Program.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/Shader.o: source/Shader.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 

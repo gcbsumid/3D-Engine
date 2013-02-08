@@ -1,0 +1,9 @@
+#version 150
+
+in vec4 vert;
+
+void main() {
+    // does not alter vertices at all
+    // Note: All vertex shaders must set a gl_Position
+    gl_Position = vert;
+}
