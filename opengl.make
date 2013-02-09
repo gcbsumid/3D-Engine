@@ -20,7 +20,8 @@ ifeq ($(config),debug)
 	OBJDIR 		= obj/debug
 	TARGET 		= $(TARGETDIR)/program_debug.debug
 	DEFINES 	= -DDEBUG
-	CPPFLAGS	= -MMD -MP $(DEFINES) -g -Wall
+	INCLUDES   += -Ithirdparty/stb_image -I/opt/local/include
+	CPPFLAGS   += -MMD -MP $(DEFINES) -g -Wall $(INCLUDES)
 	CXXFLAGS 	= $(CPPFLAGS)
 	LDFLAGS 	= 
 	LIBS      += -lGL -lglfw -lGLEW
@@ -30,7 +31,8 @@ ifeq ($(config),release)
 	OBJDIR 		= obj/release
 	TARGET 		= $(TARGETDIR)/program_debug.release
 	DEFINES 	= -DNDEBUG
-	CPPFLAGS 	= -MMD -MP $(DEFINES) -02 -Wall
+	INCLUDES   += -Ithirdparty/stb_image -I/opt/local/include
+	CPPFLAGS   += -MMD -MP $(DEFINES) -02 -Wall
 	CXXFLAGS 	= $(CPPFLAGS)
 	LDFLAGS 	= -s
 endif
@@ -39,6 +41,9 @@ OBJECTS := \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/Program.o \
 	$(OBJDIR)/Shader.o \
+	$(OBJDIR)/Texture.o \
+	$(OBJDIR)/Bitmap.o \
+	$(OBJDIR)/util.o \
 
 .PHONY: clean
 
@@ -72,6 +77,18 @@ $(OBJDIR)/Program.o: source/Program.cpp
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/Shader.o: source/Shader.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/util.o: source/util.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/Texture.o: source/Texture.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/Bitmap.o: source/Bitmap.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 

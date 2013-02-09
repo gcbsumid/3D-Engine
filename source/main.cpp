@@ -20,6 +20,8 @@
 #include <unistd.h>
 
 #include "Program.h"
+#include "Texture.h"
+#include "util.h"
 
 using namespace std;
 
@@ -28,29 +30,11 @@ const glm::vec2 SCREEN_SIZE(800, 600);
 
 // globals 
 mogl::Program* gProgram = NULL;
+mogl::Texture* gTexture = NULL;
 GLuint gVAO = 0;
 GLuint gVBO = 0;
 const int FPS = 30;
 
-static unsigned long now() {
-    timeval tv;
-    gettimeofday(&tv, NULL);
-    return tv.tv_sec * 1000000 + tv.tv_usec;
-}
-
-static string ResourcePath(string fileName){
-    // Gets the full directory of the program on linux
-    char exe_file[PATH_MAX + 1];
-    int size;
-    size = readlink("/proc/self/exe", exe_file, PATH_MAX);
-    if (size < 0) {
-        return ".//../"+ fileName;
-    } else {
-        exe_file[size] = '\0';
-        // dirname reports the parent directory of a file
-        return string(dirname(exe_file)) + "//../" + fileName;
-    }
-}
 
 static void LoadShaders() {
     vector<mogl::Shader> shaders;
@@ -58,10 +42,10 @@ static void LoadShaders() {
     // std::cout << ResourcePath("source/fragment-shader.txt") << std::endl;
 
     shaders.push_back(mogl::Shader::ShaderFromFile(
-        ResourcePath("resource/vertex-shader.vert"), 
+        utility::ResourcePath("vertex-shader.vert"), 
         GL_VERTEX_SHADER));
     shaders.push_back(mogl::Shader::ShaderFromFile(
-        ResourcePath("resource/fragment-shader.frag"), 
+        utility::ResourcePath("fragment-shader.frag"), 
         GL_FRAGMENT_SHADER));
     gProgram = new mogl::Program(shaders);
 }
@@ -78,31 +62,49 @@ static void LoadTriangle() {
 
     // Put the three triangle vertices into the VBO
     GLfloat vertexData[] = {
-        // X    Y   Z
-        0.0f, 0.8f, 0.0f,
-       -0.8f,-0.8f, 0.0f,
-        0.8f,-0.8f, 0.0f
+        // X    Y     Z       U   V
+        0.0f, 0.8f, 0.0f,   0.5f, 1.0f,
+       -0.8f,-0.8f, 0.0f,   0.0f, 0.0f,
+        0.8f,-0.8f, 0.0f,   1.0f, 0.0f
     };
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
     // connect the xyz to the "vert" attribute of the vertex shader 
-    GLuint attrib = gProgram->Attrib("vert");
-    glEnableVertexAttribArray(attrib);
-    glVertexAttribPointer(attrib, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    GLuint vertAttrib = gProgram->Attrib("vert");
+    glEnableVertexAttribArray(vertAttrib);
+    glVertexAttribPointer(vertAttrib, 3, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), NULL);
     
+    // connect the uv coordinates to the "vertTexCoord" attribute of the vertex shader
+    GLuint vertTexCoordAttrib = gProgram->Attrib("vertTexCoord");
+    glEnableVertexAttribArray(vertTexCoordAttrib);
+    glVertexAttribPointer(vertTexCoordAttrib, 2, GL_FLOAT, GL_TRUE, 5*sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));
+
     // unbind the VBO and VAO
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+}
+
+// loads the file "hazard.png" into gTexture
+static void LoadTexture() {
+    mogl::Bitmap bmp = mogl::Bitmap::BitmapFromFile(utility::ResourcePath("hazard.png"));
+    bmp.FlipVertically();
+    gTexture = new mogl::Texture(bmp);
 }
 
 // draws a single frame
 static void Render() {
     // clear everything
     glClearColor(0, 0, 0, 1); // black
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
 
     // bind the program (the shaders)
-    glUseProgram(gProgram->Object());
+    gProgram->Use();
+
+    // bind the texture and set the "tex" uniform in the fragment
+    // shader
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, gTexture->Object());
+    gProgram->SetUniform("tex", 0);
 
     // bind the VAO (the triangle)
     glBindVertexArray(gVAO);
@@ -110,11 +112,10 @@ static void Render() {
     // draw the VAO
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    // unbind the VAO
+    // unbind the VAO, the program and the texture
     glBindVertexArray(0);
-
-    // unbind the program
-    glUseProgram(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    gProgram->Stop();
 
     // swap the display buffers (displays what was just drawn)
     glfwSwapBuffers();
@@ -140,6 +141,11 @@ int main(int argc, char* argv[]) {
     if(glewInit() != GLEW_OK)
         throw std::runtime_error("glewInit failed");
 
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+    std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+
     // initialize GLEW
     if(!GLEW_VERSION_3_2){
         throw runtime_error("OpenGL 3.2 Api is not available.");
@@ -148,6 +154,9 @@ int main(int argc, char* argv[]) {
     // Loading vertext and fragment shaders into opengl
     LoadShaders();
 
+    // load the texture
+    LoadTexture();
+
     // create buffer and fill it with the points of the triangle
     LoadTriangle();
 
@@ -155,10 +164,10 @@ int main(int argc, char* argv[]) {
     unsigned long lastRepaint= 0;
     while(glfwGetWindowParam(GLFW_OPENED)) {
         // draw one frame
-        unsigned long end = now();
+        unsigned long end = utility::now();
         if(end - lastRepaint > 1000000/FPS) {
             Render();
-            lastRepaint = now();
+            lastRepaint = utility::now();
         } else {
             usleep(1000000/FPS - (end - lastRepaint));
         }

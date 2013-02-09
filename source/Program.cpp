@@ -61,6 +61,22 @@ GLuint Program::Object() const {
     return mObject;
 }
 
+void Program::Use() const {
+    glUseProgram(mObject);
+}
+
+bool Program::IsInUse() const {
+    GLint currentProgram = 0;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
+    // returns whether the current program is this object
+    return (currentProgram == (GLint)mObject);
+}
+
+void Program::Stop() const {
+    assert(IsInUse());
+    glUseProgram(0);
+}
+
 GLuint Program::Attrib(const GLchar* attribName) const {
     if (!attribName) {
         throw std::runtime_error("attribName was NULL.");
@@ -90,3 +106,77 @@ GLint Program::Uniform(const GLchar* uniformName) const {
 
     return uniform;
 }
+
+#define ATTRIB_N_UNIFORM_SETTERS(OGL_TYPE, TYPE_PREFIX, TYPE_SUFFIX) \
+\
+    void Program::SetAttrib(const GLchar* name, OGL_TYPE v0) \
+        { assert(IsInUse()); glVertexAttrib ## TYPE_PREFIX ## 1 ## TYPE_SUFFIX (Attrib(name), v0); } \
+    void Program::SetAttrib(const GLchar* name, OGL_TYPE v0, OGL_TYPE v1) \
+        { assert(IsInUse()); glVertexAttrib ## TYPE_PREFIX ## 2 ## TYPE_SUFFIX (Attrib(name), v0, v1); } \
+    void Program::SetAttrib(const GLchar* name, OGL_TYPE v0, OGL_TYPE v1, OGL_TYPE v2) \
+        { assert(IsInUse()); glVertexAttrib ## TYPE_PREFIX ## 3 ## TYPE_SUFFIX (Attrib(name), v0, v1, v2); } \
+    void Program::SetAttrib(const GLchar* name, OGL_TYPE v0, OGL_TYPE v1, OGL_TYPE v2, OGL_TYPE v3) \
+        { assert(IsInUse()); glVertexAttrib ## TYPE_PREFIX ## 4 ## TYPE_SUFFIX (Attrib(name), v0, v1, v2, v3); } \
+\
+    void Program::SetAttrib1v(const GLchar* name, const OGL_TYPE* v) \
+        { assert(IsInUse()); glVertexAttrib ## TYPE_PREFIX ## 1 ## TYPE_SUFFIX ## v (Attrib(name), v); } \
+    void Program::SetAttrib2v(const GLchar* name, const OGL_TYPE* v) \
+        { assert(IsInUse()); glVertexAttrib ## TYPE_PREFIX ## 2 ## TYPE_SUFFIX ## v (Attrib(name), v); } \
+    void Program::SetAttrib3v(const GLchar* name, const OGL_TYPE* v) \
+        { assert(IsInUse()); glVertexAttrib ## TYPE_PREFIX ## 3 ## TYPE_SUFFIX ## v (Attrib(name), v); } \
+    void Program::SetAttrib4v(const GLchar* name, const OGL_TYPE* v) \
+        { assert(IsInUse()); glVertexAttrib ## TYPE_PREFIX ## 4 ## TYPE_SUFFIX ## v (Attrib(name), v); } \
+\
+    void Program::SetUniform(const GLchar* name, OGL_TYPE v0) \
+        { assert(IsInUse()); glUniform1 ## TYPE_SUFFIX (Uniform(name), v0); } \
+    void Program::SetUniform(const GLchar* name, OGL_TYPE v0, OGL_TYPE v1) \
+        { assert(IsInUse()); glUniform2 ## TYPE_SUFFIX (Uniform(name), v0, v1); } \
+    void Program::SetUniform(const GLchar* name, OGL_TYPE v0, OGL_TYPE v1, OGL_TYPE v2) \
+        { assert(IsInUse()); glUniform3 ## TYPE_SUFFIX (Uniform(name), v0, v1, v2); } \
+    void Program::SetUniform(const GLchar* name, OGL_TYPE v0, OGL_TYPE v1, OGL_TYPE v2, OGL_TYPE v3) \
+        { assert(IsInUse()); glUniform4 ## TYPE_SUFFIX (Uniform(name), v0, v1, v2, v3); } \
+\
+    void Program::SetUniform1v(const GLchar* name, const OGL_TYPE* v, GLsizei count) \
+        { assert(IsInUse()); glUniform1 ## TYPE_SUFFIX ## v (Uniform(name), count, v); } \
+    void Program::SetUniform2v(const GLchar* name, const OGL_TYPE* v, GLsizei count) \
+        { assert(IsInUse()); glUniform2 ## TYPE_SUFFIX ## v (Uniform(name), count, v); } \
+    void Program::SetUniform3v(const GLchar* name, const OGL_TYPE* v, GLsizei count) \
+        { assert(IsInUse()); glUniform3 ## TYPE_SUFFIX ## v (Uniform(name), count, v); } \
+    void Program::SetUniform4v(const GLchar* name, const OGL_TYPE* v, GLsizei count) \
+        { assert(IsInUse()); glUniform4 ## TYPE_SUFFIX ## v (Uniform(name), count, v); }
+
+ATTRIB_N_UNIFORM_SETTERS(GLfloat, , f);
+ATTRIB_N_UNIFORM_SETTERS(GLdouble, , d);
+ATTRIB_N_UNIFORM_SETTERS(GLint, I, i);
+ATTRIB_N_UNIFORM_SETTERS(GLuint, I, ui);
+
+void Program::SetUniformMatrix2(const GLchar* name, const GLfloat* v, GLsizei count, GLboolean transpose) {
+    assert(IsInUse());
+    glUniformMatrix2fv(Uniform(name), count, transpose, v);
+}
+
+void Program::SetUniformMatrix3(const GLchar* name, const GLfloat* v, GLsizei count, GLboolean transpose) {
+    assert(IsInUse());
+    glUniformMatrix3fv(Uniform(name), count, transpose, v);
+}
+
+void Program::SetUniformMatrix4(const GLchar*name, const GLfloat* v, GLsizei count, GLboolean transpose) {
+    assert(IsInUse());
+    glUniformMatrix4fv(Uniform(name), count, transpose, v);
+}
+
+void Program::SetUniform(const GLchar* name, const glm::mat2& m, GLboolean transpose) {
+    assert(IsInUse());
+    glUniformMatrix2fv(Uniform(name), 1, transpose, glm::value_ptr(m));
+}
+
+void Program::SetUniform(const GLchar* name, const glm::mat3& m, GLboolean transpose) {
+    assert(IsInUse());
+    glUniformMatrix3fv(Uniform(name), 1, transpose, glm::value_ptr(m));
+}
+
+void Program::SetUniform(const GLchar* name, const glm::mat4& m, GLboolean transpose) {
+    assert(IsInUse());
+    glUniformMatrix4fv(Uniform(name), 1, transpose, glm::value_ptr(m));
+}
+

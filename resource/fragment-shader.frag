@@ -1,11 +1,15 @@
 #version 150
 
-out vec4 finalColor; 
+uniform sampler2D tex; // This is the texture
+
+in vec2 fragTexCoord; // This is the texture coordinates
+
+out vec4 finalColor;   // This is the output color for pixels
 
 // The purpose of this fragment shader is to calculate the 
 // color of each pixel that is drawn
 
 void main() {
     // set every drawn pixel to white
-    finalColor = vec4(1.0, 1.0, 1.0, 1.0);
+    finalColor = texture(tex, fragTexCoord);
 }
