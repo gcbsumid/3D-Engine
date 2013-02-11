@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <GL/glfw.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 // Standard C++ libraries
 #include <cassert>
@@ -10,7 +11,6 @@
 #include <vector>
 #include <cmath>
 #include <string>
-#include <sys/time.h>
 
 // for PATH_MAX
 #include <limits>
@@ -31,9 +31,11 @@ const glm::vec2 SCREEN_SIZE(800, 600);
 // globals 
 mogl::Program* gProgram = NULL;
 mogl::Texture* gTexture = NULL;
+GLfloat gDegreesRotated = 0.0f;
+glm::vec3 gTranslateDest = glm::vec3(0,0,0); 
 GLuint gVAO = 0;
 GLuint gVBO = 0;
-const int FPS = 30;
+const int FPS = 60;
 
 
 static void LoadShaders() {
@@ -48,6 +50,18 @@ static void LoadShaders() {
         utility::ResourcePath("fragment-shader.frag"), 
         GL_FRAGMENT_SHADER));
     gProgram = new mogl::Program(shaders);
+
+    gProgram->Use();
+
+    // set the camera matrix
+    glm::mat4 camera = glm::lookAt(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
+    gProgram->SetUniform("camera", camera);
+
+    // set the projection matrix 
+    glm::mat4 projection = glm::perspective<float>(50.0, SCREEN_SIZE.x/SCREEN_SIZE.y, 0.1, 10.0);
+    gProgram->SetUniform("projection", projection);
+
+    gProgram->Stop();
 }
 
 // loads a triangle into the VAO and globals: gVAO and gVBO
@@ -62,11 +76,56 @@ static void LoadTriangle() {
 
     // Put the three triangle vertices into the VBO
     GLfloat vertexData[] = {
-        // X    Y     Z       U   V
-        0.0f, 0.8f, 0.0f,   0.5f, 1.0f,
-       -0.8f,-0.8f, 0.0f,   0.0f, 0.0f,
-        0.8f,-0.8f, 0.0f,   1.0f, 0.0f
+    //      X     Y     Z       U     V
+    // bottom
+        -1.0f,-1.0f,-1.0f,   0.0f, 0.0f,
+        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,
+        -1.0f,-1.0f, 1.0f,   0.0f, 1.0f,
+        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,
+        1.0f,-1.0f, 1.0f,   1.0f, 1.0f,
+        -1.0f,-1.0f, 1.0f,   0.0f, 1.0f,
+
+    // top
+        -1.0f, 1.0f,-1.0f,   0.0f, 0.0f,
+        -1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
+        1.0f, 1.0f,-1.0f,   1.0f, 0.0f,
+        1.0f, 1.0f,-1.0f,   1.0f, 0.0f,
+        -1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
+
+    // front
+        -1.0f,-1.0f, 1.0f,   1.0f, 0.0f,
+        1.0f,-1.0f, 1.0f,   0.0f, 0.0f,
+        -1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
+        1.0f,-1.0f, 1.0f,   0.0f, 0.0f,
+        1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
+
+    // back
+        -1.0f,-1.0f,-1.0f,   0.0f, 0.0f,
+        -1.0f, 1.0f,-1.0f,   0.0f, 1.0f,
+        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,
+        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,
+        -1.0f, 1.0f,-1.0f,   0.0f, 1.0f,
+        1.0f, 1.0f,-1.0f,   1.0f, 1.0f,
+
+    // left
+        -1.0f,-1.0f, 1.0f,   0.0f, 1.0f,
+        -1.0f, 1.0f,-1.0f,   1.0f, 0.0f,
+        -1.0f,-1.0f,-1.0f,   0.0f, 0.0f,
+        -1.0f,-1.0f, 1.0f,   0.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
+        -1.0f, 1.0f,-1.0f,   1.0f, 0.0f,
+
+    // right
+        1.0f,-1.0f, 1.0f,   1.0f, 1.0f,
+        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,
+        1.0f, 1.0f,-1.0f,   0.0f, 0.0f,
+        1.0f,-1.0f, 1.0f,   1.0f, 1.0f,
+        1.0f, 1.0f,-1.0f,   0.0f, 0.0f,
+        1.0f, 1.0f, 1.0f,   0.0f, 1.0f
     };
+
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
     // connect the xyz to the "vert" attribute of the vertex shader 
@@ -86,7 +145,7 @@ static void LoadTriangle() {
 
 // loads the file "hazard.png" into gTexture
 static void LoadTexture() {
-    mogl::Bitmap bmp = mogl::Bitmap::BitmapFromFile(utility::ResourcePath("hazard.png"));
+    mogl::Bitmap bmp = mogl::Bitmap::BitmapFromFile(utility::ResourcePath("wooden-crate.jpg"));
     bmp.FlipVertically();
     gTexture = new mogl::Texture(bmp);
 }
@@ -95,10 +154,16 @@ static void LoadTexture() {
 static void Render() {
     // clear everything
     glClearColor(0, 0, 0, 1); // black
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // bind the program (the shaders)
     gProgram->Use();
+
+    // set the model matrix
+    glm::mat4 rot = glm::rotate(glm::mat4(), gDegreesRotated, glm::vec3(0,1,0));
+    glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(2,0,0));
+    // glm::mat4 trans = glm::translate(glm::mat4(1.0f), gTranslateDest);
+    gProgram->SetUniform("model", rot * trans);
 
     // bind the texture and set the "tex" uniform in the fragment
     // shader
@@ -110,7 +175,7 @@ static void Render() {
     glBindVertexArray(gVAO);
 
     // draw the VAO
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 3*6*2);
 
     // unbind the VAO, the program and the texture
     glBindVertexArray(0);
@@ -119,6 +184,24 @@ static void Render() {
 
     // swap the display buffers (displays what was just drawn)
     glfwSwapBuffers();
+}
+
+static void Update(double elapsedTime) {
+    // Rotate by 1 degree and mod it by 360
+    const float degreesPerSecond = 180.0f;
+    // static float distancePerSecond = 5.0f;
+    gDegreesRotated += elapsedTime * degreesPerSecond;
+    // if(gTranslateDest.x > 1) {
+    //     distancePerSecond = -5.0f;
+    // } else if(gTranslateDest.x < -1.0f) {
+    //     distancePerSecond = 5.0f;
+    // }
+
+    // gTranslateDest += glm::vec3(distancePerSecond*elapsedTime,0,0);
+
+    if(gDegreesRotated >= 360) {
+        gDegreesRotated -= 360.0f;
+    }
 }
 
 int main(int argc, char* argv[]) {
@@ -132,7 +215,7 @@ int main(int argc, char* argv[]) {
     glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
     glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);
     glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
-    if(!glfwOpenWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, 8, 8, 8, 8, 0, 0, GLFW_WINDOW)){
+    if(!glfwOpenWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, 8, 8, 8, 8, 16, 0, GLFW_WINDOW)){
         throw runtime_error("glfwOpenWindow failed. Can your hardware handle OpenGL 3.2?");
     }
 
@@ -151,6 +234,9 @@ int main(int argc, char* argv[]) {
         throw runtime_error("OpenGL 3.2 Api is not available.");
     }
 
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
     // Loading vertext and fragment shaders into opengl
     LoadShaders();
 
@@ -161,16 +247,35 @@ int main(int argc, char* argv[]) {
     LoadTriangle();
 
     // run while the window is open
-    unsigned long lastRepaint= 0;
+    double lastFrame= glfwGetTime();
+    int framePerSecond = 0;
+    double timer = 0.0f;
+    double frameTimer = 0.0f;
     while(glfwGetWindowParam(GLFW_OPENED)) {
         // draw one frame
-        unsigned long end = utility::now();
-        if(end - lastRepaint > 1000000/FPS) {
+        double currentTime = glfwGetTime();
+
+        timer += currentTime - lastFrame;
+        frameTimer += currentTime - lastFrame;
+
+        // // Frame Rate Counter
+        // if(frameTimer > 1.0f) {
+        //     std::cout << "Frames Per Second: " << framePerSecond << std::endl;
+        //     frameTimer -= 1.0f;
+        //     framePerSecond = 0;
+        // }
+
+        // Update animations
+        Update(currentTime - lastFrame);
+
+        // Controlling frame rate to 60 fps
+        if(timer > 1.0/60.0) {
+            framePerSecond++;
+            timer -= 1.0/60.0;
             Render();
-            lastRepaint = utility::now();
-        } else {
-            usleep(1000000/FPS - (end - lastRepaint));
         }
+
+        lastFrame = glfwGetTime();
     }
 
     // clean up and exit
