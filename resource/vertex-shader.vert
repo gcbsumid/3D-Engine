@@ -1,7 +1,6 @@
 #version 150
 
 uniform mat4 camera;
-uniform mat4 projection;
 uniform mat4 model;
 
 in vec4 vert;
@@ -19,5 +18,5 @@ void main() {
     fragTexCoord = vertTexCoord;
 
     // Transform every vertex my the camera matrix and projection matrix
-    gl_Position = projection * camera * model * vert;
+    gl_Position = camera * model * vert;
 }

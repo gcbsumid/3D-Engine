@@ -43,6 +43,7 @@ OBJECTS := \
 	$(OBJDIR)/Shader.o \
 	$(OBJDIR)/Texture.o \
 	$(OBJDIR)/Bitmap.o \
+	$(OBJDIR)/Camera.o \
 	$(OBJDIR)/util.o \
 
 .PHONY: clean
@@ -89,6 +90,10 @@ $(OBJDIR)/Texture.o: source/Texture.cpp
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/Bitmap.o: source/Bitmap.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/Camera.o: source/Camera.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 

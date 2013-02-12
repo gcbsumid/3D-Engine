@@ -21,6 +21,7 @@
 
 #include "Program.h"
 #include "Texture.h"
+#include "Camera.h"
 #include "util.h"
 
 using namespace std;
@@ -31,6 +32,7 @@ const glm::vec2 SCREEN_SIZE(800, 600);
 // globals 
 mogl::Program* gProgram = NULL;
 mogl::Texture* gTexture = NULL;
+mogl::Camera* gCamera = new mogl::Camera();
 GLfloat gDegreesRotated = 0.0f;
 glm::vec3 gTranslateDest = glm::vec3(0,0,0); 
 GLuint gVAO = 0;
@@ -54,12 +56,12 @@ static void LoadShaders() {
     gProgram->Use();
 
     // set the camera matrix
-    glm::mat4 camera = glm::lookAt(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
-    gProgram->SetUniform("camera", camera);
+    // glm::mat4 camera = glm::lookAt(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
+    gProgram->SetUniform("camera", gCamera->Matrix());
 
-    // set the projection matrix 
-    glm::mat4 projection = glm::perspective<float>(50.0, SCREEN_SIZE.x/SCREEN_SIZE.y, 0.1, 10.0);
-    gProgram->SetUniform("projection", projection);
+    // // set the projection matrix 
+    // glm::mat4 projection = glm::perspective<float>(50.0, SCREEN_SIZE.x/SCREEN_SIZE.y, 0.1, 10.0);
+    // gProgram->SetUniform("projection", projection);
 
     gProgram->Stop();
 }
@@ -236,6 +238,10 @@ int main(int argc, char* argv[]) {
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+
+    // Set the camera variables;
+    gCamera->SetPosition(glm::vec3(0,0,4));
+    gCamera->SetViewportAspectRatio(SCREEN_SIZE.x/SCREEN_SIZE.y);
 
     // Loading vertext and fragment shaders into opengl
     LoadShaders();
