@@ -5,6 +5,7 @@ using namespace mogl;
 
 // must be less than 90 to avoid gimbal clock
 static const float MAX_VERTICAL_ANGLE = 85.0f;
+static const float MOVE_SPEED = 10.0f;
 
 Camera::Camera() :
     mPosition(0.0f, 0.0f, 1.0f), // looking forward
@@ -12,7 +13,7 @@ Camera::Camera() :
     mVerticalAngle(0.0f),
     mFieldOfView(50.0f),
     mNearPlane(0.01f),
-    mFarPlane(10.0f),
+    mFarPlane(100.0f),
     mViewportAspectRatio(4.0f/3.0f) 
 {
 
@@ -111,4 +112,11 @@ glm::mat4 Camera::Matrix() const {
     camera *= Orientation();
     camera = glm::translate(camera, -mPosition);
     return camera;
+}
+
+void Camera::MoveCamera(float elapsedTime, glm::vec3 direction) {
+    float distance = MOVE_SPEED * elapsedTime;
+
+    glm::vec3 displacement = distance * direction;
+    OffsetPosition(displacement);
 }

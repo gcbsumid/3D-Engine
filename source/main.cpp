@@ -52,18 +52,6 @@ static void LoadShaders() {
         utility::ResourcePath("fragment-shader.frag"), 
         GL_FRAGMENT_SHADER));
     gProgram = new mogl::Program(shaders);
-
-    gProgram->Use();
-
-    // set the camera matrix
-    // glm::mat4 camera = glm::lookAt(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
-    gProgram->SetUniform("camera", gCamera->Matrix());
-
-    // // set the projection matrix 
-    // glm::mat4 projection = glm::perspective<float>(50.0, SCREEN_SIZE.x/SCREEN_SIZE.y, 0.1, 10.0);
-    // gProgram->SetUniform("projection", projection);
-
-    gProgram->Stop();
 }
 
 // loads a triangle into the VAO and globals: gVAO and gVBO
@@ -161,6 +149,10 @@ static void Render() {
     // bind the program (the shaders)
     gProgram->Use();
 
+    // set the camera matrix
+    // glm::mat4 camera = glm::lookAt(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
+    gProgram->SetUniform("camera", gCamera->Matrix());
+
     // set the model matrix
     glm::mat4 rot = glm::rotate(glm::mat4(), gDegreesRotated, glm::vec3(0,1,0));
     glm::mat4 trans = glm::translate(glm::mat4(1.0f), glm::vec3(2,0,0));
@@ -191,8 +183,13 @@ static void Render() {
 static void Update(double elapsedTime) {
     // Rotate by 1 degree and mod it by 360
     const float degreesPerSecond = 180.0f;
+    // rotates 1 degree every 10 pixels or 0.1 degree every pixel.
+    const float mouseSensitivity = 0.1f;
+    // increases or decreases the field of view
+    const float zoomSensitivity = 5.0f;
+
     // static float distancePerSecond = 5.0f;
-    gDegreesRotated += elapsedTime * degreesPerSecond;
+    // gDegreesRotated += elapsedTime * degreesPerSecond;
     // if(gTranslateDest.x > 1) {
     //     distancePerSecond = -5.0f;
     // } else if(gTranslateDest.x < -1.0f) {
@@ -204,6 +201,41 @@ static void Update(double elapsedTime) {
     if(gDegreesRotated >= 360) {
         gDegreesRotated -= 360.0f;
     }
+
+    // move position based on wasd keys
+    if(glfwGetKey('S')) {
+        gCamera->MoveCamera(elapsedTime, -gCamera->Forward());
+    } else if(glfwGetKey('W')) {
+        gCamera->MoveCamera(elapsedTime, gCamera->Forward());
+    }
+
+    if(glfwGetKey('A')){
+        gCamera->MoveCamera(elapsedTime, -gCamera->Right());
+    } else if(glfwGetKey('D')){
+        gCamera->MoveCamera(elapsedTime, gCamera->Right());
+    }
+
+    if(glfwGetKey('X')){
+        gCamera->MoveCamera(elapsedTime, -gCamera->Up());
+    } else if(glfwGetKey('Z')){
+        gCamera->MoveCamera(elapsedTime, gCamera->Up());
+    }
+
+    // View rotation based on mouse movements
+    int mouseX = 0, mouseY = 0;
+    glfwGetMousePos(&mouseX, &mouseY);
+    gCamera->OffsetOrientation(mouseSensitivity * mouseY, mouseSensitivity * mouseX);
+    glfwSetMousePos(0,0);
+
+    float fieldOfView = gCamera->FieldOfView() + zoomSensitivity * (float)glfwGetMouseWheel();
+    if(fieldOfView < 5.0f) {
+        fieldOfView = 5.0f;
+    }
+    if(fieldOfView > 130.0f) {
+        fieldOfView = 130.0f;
+    }
+    gCamera->SetFieldOfView(fieldOfView);
+    glfwSetMouseWheel(0);
 }
 
 int main(int argc, char* argv[]) {
@@ -231,6 +263,11 @@ int main(int argc, char* argv[]) {
     std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
     std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 
+    // GLFW settings
+    glfwDisable(GLFW_MOUSE_CURSOR);
+    glfwSetMousePos(0,0);
+    glfwSetMouseWheel(0);
+
     // initialize GLEW
     if(!GLEW_VERSION_3_2){
         throw runtime_error("OpenGL 3.2 Api is not available.");
@@ -256,13 +293,13 @@ int main(int argc, char* argv[]) {
     double lastFrame= glfwGetTime();
     int framePerSecond = 0;
     double timer = 0.0f;
-    double frameTimer = 0.0f;
+    // double frameTimer = 0.0f;
     while(glfwGetWindowParam(GLFW_OPENED)) {
         // draw one frame
         double currentTime = glfwGetTime();
 
         timer += currentTime - lastFrame;
-        frameTimer += currentTime - lastFrame;
+        // frameTimer += currentTime - lastFrame;
 
         // // Frame Rate Counter
         // if(frameTimer > 1.0f) {
@@ -272,16 +309,21 @@ int main(int argc, char* argv[]) {
         // }
 
         // Update animations
-        Update(currentTime - lastFrame);
+        // Update(currentTime - lastFrame);
 
         // Controlling frame rate to 60 fps
         if(timer > 1.0/60.0) {
+            Update(1.0/60.0);
             framePerSecond++;
             timer -= 1.0/60.0;
             Render();
         }
 
-        lastFrame = glfwGetTime();
+        lastFrame = currentTime;
+
+        // HIT escape to escape
+        if(glfwGetKey(GLFW_KEY_ESC)) 
+            glfwCloseWindow();
     }
 
     // clean up and exit

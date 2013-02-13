@@ -29,7 +29,10 @@ namespace mogl {
 
         // The width divided by the height of the screen/window/viewport
         float ViewportAspectRatio() const;
-        void SetViewportAspectRatio(const float viewportAspectRatio);
+        void SetViewportAspectRatio(const float viewportAspectRatio); 
+
+        // move Camera function
+        void MoveCamera(float elapsedTime, glm::vec3 direction);
 
         // returns the unit vector representing the direction the camera
         // is facing, to the right of the camera, and top of the camera
