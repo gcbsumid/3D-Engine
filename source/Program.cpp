@@ -3,7 +3,7 @@
 #include <sstream>
 #include <iostream>
 
-using namespace mogl;
+using namespace backlash;
 
 Program::Program(const std::vector<Shader> &shaders) 
     : mObject(0) 

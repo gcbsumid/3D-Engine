@@ -21,11 +21,11 @@ std::string utility::ResourcePath(std::string fileName){
     int size;
     size = readlink("/proc/self/exe", exe_file, PATH_MAX);
     if (size < 0) {
-        return ".//../"+ fileName;
+        return "./../"+ fileName;
     } else {
         exe_file[size] = '\0';
         // dirname reports the parent directory of a file
-        return std::string(dirname(exe_file)) + "//../resource/" + fileName;
+        return std::string(dirname(exe_file)) + "/../resource/" + fileName;
     }
 }
 

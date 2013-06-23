@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-using namespace mogl;
+using namespace backlash;
 
 Shader::Shader(const std::string& shaderCode, GLenum shaderType, const std::string& filePath):
     mObject(0),

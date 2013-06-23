@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <string>
 
-namespace mogl {
+namespace backlash {
 
     // Represents a compiled OpenGL shader
 

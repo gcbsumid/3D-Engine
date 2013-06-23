@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace mogl;
+using namespace backlash;
 
 // must be less than 90 to avoid gimbal clock
 static const float MAX_VERTICAL_ANGLE = 85.0f;

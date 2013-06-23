@@ -1,17 +1,17 @@
 #pragma once
 #include <string>
 
-namespace mogl {
+namespace backlash {
     // A bitmap image (a grid of pixels)
 
     class Bitmap {
     public:
         // Represent the number of channels per pixel and order the channels.
         enum E_FORMAT {
-            E_FORMAT_GREYSCALE = 1,
-            E_FORMAT_GREYSCALEALPHA = 2,
-            E_FORMAT_RGB = 3,
-            E_FORMAT_RGBA = 4
+            E_FORMAT_GREYSCALE = 1,         // one byte
+            E_FORMAT_GREYSCALEALPHA = 2,    // two bytes
+            E_FORMAT_RGB = 3,               // three bytes
+            E_FORMAT_RGBA = 4               // four bytes
         };
 
         // Creates a new image with the specified width, height, and format.
@@ -23,7 +23,7 @@ namespace mogl {
             const unsigned char* pixels = NULL);
         ~Bitmap();
 
-        // load the given file onto a mogl bitmap/
+        // load the given file onto a backlash bitmap/
         static Bitmap BitmapFromFile(std::string FilePath);
 
         // width in pixels

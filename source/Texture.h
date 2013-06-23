@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include "Bitmap.h"
 
-namespace mogl {
+namespace backlash {
 
     // Represents an OpenGL texture
 
@@ -11,7 +11,7 @@ namespace mogl {
     public:
         // Creates a texture from a bitmap
 
-        // The texture is loaded upside down because mogl::Bitmap pixel
+        // The texture is loaded upside down because backlash::Bitmap pixel
         // data is ordered from the top row down, but OpenGl expects 
         // the data to be from the bottom row up.
         Texture(const Bitmap& bitmap, GLint minMagFiler = GL_LINEAR,

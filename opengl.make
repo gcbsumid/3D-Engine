@@ -21,7 +21,7 @@ ifeq ($(config),debug)
 	TARGET 		= $(TARGETDIR)/program_debug.debug
 	DEFINES 	= -DDEBUG
 	INCLUDES   += -Ithirdparty/stb_image -I/opt/local/include
-	CPPFLAGS   += -MMD -MP $(DEFINES) -g -Wall $(INCLUDES)
+	CPPFLAGS   += -MMD -MP $(DEFINES) -g -Wall $(INCLUDES) -std=c++11
 	CXXFLAGS 	= $(CPPFLAGS)
 	LDFLAGS 	= 
 	LIBS      += -lGL -lglfw -lGLEW
@@ -32,7 +32,7 @@ ifeq ($(config),release)
 	TARGET 		= $(TARGETDIR)/program_debug.release
 	DEFINES 	= -DNDEBUG
 	INCLUDES   += -Ithirdparty/stb_image -I/opt/local/include
-	CPPFLAGS   += -MMD -MP $(DEFINES) -02 -Wall
+	CPPFLAGS   += -MMD -MP $(DEFINES) -02 -Wall -std=c++11
 	CXXFLAGS 	= $(CPPFLAGS)
 	LDFLAGS 	= -s
 endif

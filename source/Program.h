@@ -6,7 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 // stands for modern opengl
-namespace mogl {
+namespace backlash {
 
     // represents an OpenGL program made by linking shaders
     class Program {
@@ -37,7 +37,7 @@ namespace mogl {
         // Setters for attribute and uniform variables.
         // These are convenience methoods for the glVertexAttrib* and 
         // glUniformAttrib* functions
-#define _MOGL_PROGRAM_ATTRIB_N_UNIFORM_SETTERS(OGL_TYPE)\
+#define _BACKLASH_PROGRAM_ATTRIB_N_UNIFORM_SETTERS(OGL_TYPE)\
         void SetAttrib(const GLchar* attribName, OGL_TYPE v0); \
         void SetAttrib(const GLchar* attribName, OGL_TYPE v0, OGL_TYPE v1); \
         void SetAttrib(const GLchar* attribName, OGL_TYPE v0, OGL_TYPE v1, OGL_TYPE v2); \
@@ -58,10 +58,10 @@ namespace mogl {
         void SetUniform3v(const GLchar* uniformName, const OGL_TYPE* v, GLsizei count=1); \
         void SetUniform4v(const GLchar* uniformName, const OGL_TYPE* v, GLsizei count=1); \
 
-        _MOGL_PROGRAM_ATTRIB_N_UNIFORM_SETTERS(GLfloat)
-        _MOGL_PROGRAM_ATTRIB_N_UNIFORM_SETTERS(GLdouble)
-        _MOGL_PROGRAM_ATTRIB_N_UNIFORM_SETTERS(GLint)
-        _MOGL_PROGRAM_ATTRIB_N_UNIFORM_SETTERS(GLuint)
+        _BACKLASH_PROGRAM_ATTRIB_N_UNIFORM_SETTERS(GLfloat)
+        _BACKLASH_PROGRAM_ATTRIB_N_UNIFORM_SETTERS(GLdouble)
+        _BACKLASH_PROGRAM_ATTRIB_N_UNIFORM_SETTERS(GLint)
+        _BACKLASH_PROGRAM_ATTRIB_N_UNIFORM_SETTERS(GLuint)
 
         void SetUniformMatrix2(const GLchar* uniformName, const GLfloat* v, GLsizei count=1, GLboolean transpose=GL_FALSE);
         void SetUniformMatrix3(const GLchar* uniformName, const GLfloat* v, GLsizei count=1, GLboolean transpose=GL_FALSE);

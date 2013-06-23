@@ -12,3 +12,5 @@ Feb 10, 2013: I've finished the second and third tutorial. Its pretty cool. I wa
 Feb 12, 2013: I've finished implemented the camera class. I'm doing so much cool shit now. Learning! Will be implementing the player input that plays with the camera movement soon. 
 
 June 6, 2013: After a long hiatus, I'm starting on this again. School had gotten in the way (main reason), but I had also gotten lazy. 
+
+June 23, 2013: I've finally gotten off my lazy ass and did something today. I made it say "HI". Implemented Assets and instances. "One small step for me, is an extremely tiny step for alot of people." - Christian

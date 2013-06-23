@@ -5,7 +5,7 @@
 #define STBI_FAILURE_USERMSG
 #include <stb_image.c>
 
-using namespace mogl;
+using namespace backlash;
 
 inline unsigned char AverageRGB(unsigned char rgb[3]) {
     return (unsigned char)(((double)rgb[0] + (double)rgb[1] + (double)rgb[2]) / 3.0);
