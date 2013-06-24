@@ -21,7 +21,8 @@ ifeq ($(config),debug)
 	TARGET 		= $(TARGETDIR)/program_debug.debug
 	DEFINES 	= -DDEBUG
 	INCLUDES   += -Ithirdparty/stb_image -I/opt/local/include
-	CPPFLAGS   += -MMD -MP $(DEFINES) -g -Wall $(INCLUDES) -std=c++11
+	COMPILER	= -std=c++11
+	CPPFLAGS   += -MMD -MP $(DEFINES) -g -Wall $(INCLUDES) $(COMPILER)
 	CXXFLAGS 	= $(CPPFLAGS)
 	LDFLAGS 	= 
 	LIBS      += -lGL -lglfw -lGLEW
@@ -32,7 +33,8 @@ ifeq ($(config),release)
 	TARGET 		= $(TARGETDIR)/program_debug.release
 	DEFINES 	= -DNDEBUG
 	INCLUDES   += -Ithirdparty/stb_image -I/opt/local/include
-	CPPFLAGS   += -MMD -MP $(DEFINES) -02 -Wall -std=c++11
+	COMPILER	= -std=c++11
+	CPPFLAGS   += -MMD -MP $(DEFINES) -02 -Wall $(COMPILER)
 	CXXFLAGS 	= $(CPPFLAGS)
 	LDFLAGS 	= -s
 endif
@@ -44,6 +46,10 @@ OBJECTS := \
 	$(OBJDIR)/Texture.o \
 	$(OBJDIR)/Bitmap.o \
 	$(OBJDIR)/Camera.o \
+	$(OBJDIR)/Entity.o \
+	$(OBJDIR)/EntityComponent.o \
+	$(OBJDIR)/DrawComponent.o \
+	$(OBJDIR)/Asset.o \
 	$(OBJDIR)/util.o \
 
 .PHONY: clean
@@ -94,6 +100,22 @@ $(OBJDIR)/Bitmap.o: source/Bitmap.cpp
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/Camera.o: source/Camera.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/Entity.o: source/Entity.cpp  
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/EntityComponent.o: source/EntityComponent.cpp 
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/DrawComponent.o: source/DrawComponent.cpp 
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/Asset.o: source/ModelAsset.cpp  
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 

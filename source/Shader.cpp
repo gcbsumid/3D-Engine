@@ -7,9 +7,7 @@
 
 #include <iostream>
 
-using namespace backlash;
-
-Shader::Shader(const std::string& shaderCode, GLenum shaderType, const std::string& filePath):
+backlash::Shader::Shader(const std::string& shaderCode, GLenum shaderType, const std::string& filePath):
     mObject(0),
     mRefCount(NULL)
 {
@@ -53,24 +51,24 @@ Shader::Shader(const std::string& shaderCode, GLenum shaderType, const std::stri
     *mRefCount = 1;
 }
 
-Shader::Shader(const Shader& shader) :
+backlash::Shader::Shader(const Shader& shader) :
     mObject(shader.mObject),
     mRefCount(shader.mRefCount)
 {
     Retain();
 }
 
-Shader::~Shader() {
+backlash::Shader::~Shader() {
     if(mRefCount) {
         Release();
     }
 }
 
-GLuint Shader::object() const {
+GLuint backlash::Shader::object() const {
     return mObject;
 }
 
-Shader& Shader::operator=(const Shader& shader) {
+backlash::Shader& backlash::Shader::operator=(const Shader& shader) {
     Release();
     mObject = shader.mObject;
     mRefCount = shader.mRefCount;
@@ -78,7 +76,7 @@ Shader& Shader::operator=(const Shader& shader) {
     return *this;
 }
 
-Shader Shader::ShaderFromFile(const std::string& filePath, GLenum shaderType) {
+backlash::Shader backlash::Shader::ShaderFromFile(const std::string& filePath, GLenum shaderType) {
     // open file
     std::ifstream f;
     f.open(filePath.c_str(), std::ios::in | std::ios::binary);
@@ -91,16 +89,16 @@ Shader Shader::ShaderFromFile(const std::string& filePath, GLenum shaderType) {
     code << f.rdbuf();
 
     // Return new shader
-    Shader shader(code.str(), shaderType, filePath);
+    backlash::Shader shader(code.str(), shaderType, filePath);
     return shader;
 }
 
-void Shader::Retain() {
+void backlash::Shader::Retain() {
     assert(mRefCount);
     *mRefCount += 1;
 }
 
-void Shader::Release() {
+void backlash::Shader::Release() {
     assert(mRefCount && *mRefCount > 0);
     *mRefCount -= 1;
     if(*mRefCount == 0) {

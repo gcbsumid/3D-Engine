@@ -36,10 +36,10 @@ const glm::vec2 SCREEN_SIZE(800, 600);
 
 /* Note: because the shaders and textures can be shared, you should probably 
  *       store them, later on, inside a std::map and use their ID as what is 
- *       contained inside the ModelAsset.
+ *       contained inside the ModelAssetTemp.
  */
 
-struct ModelAsset {
+struct ModelAssetTemp {
     // Material data
     backlash::Program* mShaders;    // the program
     backlash::Texture* mTextures;   // textures
@@ -52,7 +52,7 @@ struct ModelAsset {
     GLint mDrawStart;
     GLint mDrawCount;
 
-    ModelAsset() : mShaders(NULL),
+    ModelAssetTemp() : mShaders(NULL),
                    mTextures(NULL),
                    mVBO(0),
                    mVAO(0),
@@ -60,20 +60,20 @@ struct ModelAsset {
                    mDrawStart(0),
                    mDrawCount(0) {} 
 
-    ~ModelAsset() {
+    ~ModelAssetTemp() {
         delete mShaders;
         delete mTextures;
     }
 } ;
 
 struct ModelInstance {
-    ModelAsset* mAsset;
+    ModelAssetTemp* mAsset;
     glm::mat4 mTransform;   // contains size, position, and rotation. 
                             // a.k.a. the model matrix
 } ;
 
 // globals 
-ModelAsset* gWoodenCrate = NULL;
+ModelAssetTemp* gWoodenCrate = NULL;
 std::list<ModelInstance> gInstances;
 
 backlash::Camera* gCamera = new backlash::Camera();
@@ -186,7 +186,7 @@ static backlash::Texture* LoadTexture(const string texture) {
 
 // draws an model instance
 static void RenderInstance(const ModelInstance& inst) {
-    ModelAsset* asset = inst.mAsset;
+    ModelAssetTemp* asset = inst.mAsset;
     backlash::Program* shaders = asset->mShaders;
 
     // set shader uniforms
@@ -299,7 +299,7 @@ static void Update(double elapsedTime) {
 
 // Loading the wooden crate asset
 static void LoadWoodenCrateAsset() {
-    gWoodenCrate = new ModelAsset();
+    gWoodenCrate = new ModelAssetTemp();
     gWoodenCrate->mShaders = LoadShaders("vertex-shader.vert", "fragment-shader.frag");
     gWoodenCrate->mDrawType = GL_TRIANGLES;
     gWoodenCrate->mDrawStart = 0;

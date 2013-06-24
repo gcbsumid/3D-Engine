@@ -1,4 +1,6 @@
-#pragma once
+#ifndef BITMAP_H
+#define BITMAP_H
+
 #include <string>
 
 namespace backlash {
@@ -88,3 +90,5 @@ namespace backlash {
 
     };
 }
+
+#endif

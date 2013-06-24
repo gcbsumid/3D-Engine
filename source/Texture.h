@@ -1,4 +1,5 @@
-#pragma once 
+#ifndef TEXTURE_H
+#define TEXTURE_H
 
 #include <GL/glew.h>
 #include "Bitmap.h"
@@ -42,3 +43,5 @@ namespace backlash {
         const Texture& operator=(const Texture&);
     };
 }
+
+#endif

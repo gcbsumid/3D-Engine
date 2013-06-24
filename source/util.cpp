@@ -1,6 +1,3 @@
-#include <GL/glew.h>
-#include <GL/glfw.h>
-#include <glm/glm.hpp>
 #include <sys/time.h>
 #include <string>
 
@@ -13,7 +10,9 @@
 
 #include "util.h"
 
-using namespace utility;
+static GLuint CURRENT_COMPONENT_ID = 0;
+static GLuint CURRENT_ASSET_ID = 0;
+
 
 std::string utility::ResourcePath(std::string fileName){
     // Gets the full directory of the program on linux
@@ -33,4 +32,12 @@ unsigned long utility::now() {
     timeval tv;
     gettimeofday(&tv, NULL);
     return tv.tv_sec * 1000000 + tv.tv_usec;
+}
+
+GLuint utility::GenerateComponentID() {
+    return CURRENT_COMPONENT_ID++;
+}
+
+GLuint utility::GenerateAssetID() {
+    return CURRENT_ASSET_ID++;
 }

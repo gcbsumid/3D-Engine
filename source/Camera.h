@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CAMERA_H
+#define CAMERA_H
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -53,3 +54,5 @@ namespace backlash {
         float mViewportAspectRatio;
     };
 }
+
+#endif

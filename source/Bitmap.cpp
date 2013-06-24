@@ -5,8 +5,6 @@
 #define STBI_FAILURE_USERMSG
 #include <stb_image.c>
 
-using namespace backlash;
-
 inline unsigned char AverageRGB(unsigned char rgb[3]) {
     return (unsigned char)(((double)rgb[0] + (double)rgb[1] + (double)rgb[2]) / 3.0);
 }
@@ -79,47 +77,47 @@ static void RGBAToRGB(unsigned char* src, unsigned char* dest){
 
 typedef void(*FormatConverterFunc)(unsigned char*, unsigned char*);
 
-static FormatConverterFunc ConverterFuncForFormat(Bitmap::E_FORMAT srcFormat, Bitmap::E_FORMAT destFormat) {
+static FormatConverterFunc ConverterFuncForFormat(backlash::Bitmap::E_FORMAT srcFormat, backlash::Bitmap::E_FORMAT destFormat) {
     if(srcFormat == destFormat) {
         throw std::runtime_error("Just use memcpy if pixel formats are the same.");
     }
 
     switch(srcFormat) {
-        case Bitmap::E_FORMAT_GREYSCALE: {
+        case backlash::Bitmap::E_FORMAT_GREYSCALE: {
             switch(destFormat) {
-                case Bitmap::E_FORMAT_GREYSCALEALPHA:   return GreyscaleToGreyscaleAlpha;
-                case Bitmap::E_FORMAT_RGB:              return GreyscaleToRGB;
-                case Bitmap::E_FORMAT_RGBA:             return GreyscaleToRGBA;
+                case backlash::Bitmap::E_FORMAT_GREYSCALEALPHA:   return GreyscaleToGreyscaleAlpha;
+                case backlash::Bitmap::E_FORMAT_RGB:              return GreyscaleToRGB;
+                case backlash::Bitmap::E_FORMAT_RGBA:             return GreyscaleToRGBA;
                 default:
                     throw std::runtime_error("Unhandled bitmap format");
             }
             break;
         }
-        case Bitmap::E_FORMAT_GREYSCALEALPHA: {
+        case backlash::Bitmap::E_FORMAT_GREYSCALEALPHA: {
             switch(destFormat) {
-                case Bitmap::E_FORMAT_GREYSCALE:    return GreyscaleAlphaToGreyscale;
-                case Bitmap::E_FORMAT_RGB:          return GreyscaleAlphaToRGB;
-                case Bitmap::E_FORMAT_RGBA:         return GreyscaleAlphaToRGBA;
+                case backlash::Bitmap::E_FORMAT_GREYSCALE:    return GreyscaleAlphaToGreyscale;
+                case backlash::Bitmap::E_FORMAT_RGB:          return GreyscaleAlphaToRGB;
+                case backlash::Bitmap::E_FORMAT_RGBA:         return GreyscaleAlphaToRGBA;
                 default:
                     throw std::runtime_error("Unhandled bitmap format");
             }
             break;
         }
-        case Bitmap::E_FORMAT_RGB: {
+        case backlash::Bitmap::E_FORMAT_RGB: {
             switch(destFormat) {
-                case Bitmap::E_FORMAT_GREYSCALE:    return RGBToGreyscale;
-                case Bitmap::E_FORMAT_GREYSCALEALPHA: return RGBToGreyscaleAlpha;
-                case Bitmap::E_FORMAT_RGBA:         return RGBToRGBA;
+                case backlash::Bitmap::E_FORMAT_GREYSCALE:    return RGBToGreyscale;
+                case backlash::Bitmap::E_FORMAT_GREYSCALEALPHA: return RGBToGreyscaleAlpha;
+                case backlash::Bitmap::E_FORMAT_RGBA:         return RGBToRGBA;
                 default:
                     throw std::runtime_error("Unhandled bitmap format");
             }
             break;
         }
-        case Bitmap::E_FORMAT_RGBA: {
+        case backlash::Bitmap::E_FORMAT_RGBA: {
             switch(destFormat) {
-                case Bitmap::E_FORMAT_GREYSCALE:    return RGBAToGreyscale;
-                case Bitmap::E_FORMAT_GREYSCALEALPHA: return RGBAToGreyscaleAlpha;
-                case Bitmap::E_FORMAT_RGB:          return RGBAToRGB;
+                case backlash::Bitmap::E_FORMAT_GREYSCALE:    return RGBAToGreyscale;
+                case backlash::Bitmap::E_FORMAT_GREYSCALEALPHA: return RGBAToGreyscaleAlpha;
+                case backlash::Bitmap::E_FORMAT_RGB:          return RGBAToRGB;
                 default:
                     throw std::runtime_error("Unhandled bitmap format.");
             }
@@ -131,7 +129,7 @@ static FormatConverterFunc ConverterFuncForFormat(Bitmap::E_FORMAT srcFormat, Bi
 }
 
 // Misc Functions
-inline unsigned GetPixelOffset(unsigned col, unsigned row, unsigned width, unsigned height, Bitmap::E_FORMAT format) {
+inline unsigned GetPixelOffset(unsigned col, unsigned row, unsigned width, unsigned height, backlash::Bitmap::E_FORMAT format) {
     return (row*width + col)*format;
 }
 
@@ -148,59 +146,59 @@ inline bool RectsOverlap(unsigned srcCol, unsigned srcRow, unsigned destCol, uns
     return false;
 }
 
-// Bitmap Class
-Bitmap::Bitmap(unsigned width, unsigned height, E_FORMAT format, const unsigned char* pixels) :
+// backlash::Bitmap Class
+backlash::Bitmap::Bitmap(unsigned width, unsigned height, E_FORMAT format, const unsigned char* pixels) :
     mPixels(NULL)
 {
     Set(width, height, format, pixels);
 }
 
-Bitmap::~Bitmap() {
+backlash::Bitmap::~Bitmap() {
     if(mPixels) {
         free(mPixels);
     }
 }
 
-Bitmap Bitmap::BitmapFromFile(std::string filePath) {
+backlash::Bitmap backlash::Bitmap::BitmapFromFile(std::string filePath) {
     int width, height, channels;
     unsigned char* pixels = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
     if(!pixels) {
         throw std::runtime_error(stbi_failure_reason());
     }
 
-    Bitmap bmp(width, height, (E_FORMAT)channels, pixels);
+    backlash::Bitmap bmp(width, height, (E_FORMAT)channels, pixels);
     stbi_image_free(pixels);
     return bmp;
 }
 
-Bitmap::Bitmap(const Bitmap& other) :
+backlash::Bitmap::Bitmap(const backlash::Bitmap& other) :
     mPixels(NULL)
 {
     Set(other.mWidth, other.mHeight, other.mFormat, other.mPixels);
 }
 
-Bitmap& Bitmap::operator=(const Bitmap& other) {
+backlash::Bitmap& backlash::Bitmap::operator=(const backlash::Bitmap& other) {
     Set(other.mWidth, other.mHeight, other.mFormat, other.mPixels);
     return *this;
 }
 
-unsigned int Bitmap::Width() const {
+unsigned int backlash::Bitmap::Width() const {
     return mWidth;
 }
 
-unsigned int Bitmap::Height() const {
+unsigned int backlash::Bitmap::Height() const {
     return mHeight;
 }
 
-Bitmap::E_FORMAT Bitmap::Format() const {
+backlash::Bitmap::E_FORMAT backlash::Bitmap::Format() const {
     return mFormat;
 }
 
-unsigned char* Bitmap::PixelBuffer() const {
+unsigned char* backlash::Bitmap::PixelBuffer() const {
     return mPixels;
 }
 
-unsigned char* Bitmap::GetPixel(unsigned int column, unsigned int row) const {
+unsigned char* backlash::Bitmap::GetPixel(unsigned int column, unsigned int row) const {
     if(column >= mWidth || row >= mHeight) {
         throw std::runtime_error("Pixel coordinate out of bounds");
     }
@@ -208,12 +206,12 @@ unsigned char* Bitmap::GetPixel(unsigned int column, unsigned int row) const {
     return mPixels + GetPixelOffset(column, row, mWidth, mHeight, mFormat);
 }
 
-void Bitmap::SetPixel(unsigned int column, unsigned int row, const unsigned char* pixel) {
+void backlash::Bitmap::SetPixel(unsigned int column, unsigned int row, const unsigned char* pixel) {
     unsigned char* myPixel = GetPixel(column, row);
     memcpy(myPixel, pixel, mFormat);
 }
 
-void Bitmap::FlipVertically() {
+void backlash::Bitmap::FlipVertically() {
     unsigned long rowSize = mFormat * mWidth;
     unsigned char* rowBuffer = new unsigned char[rowSize];
     unsigned halfRows = mHeight/2;
@@ -230,7 +228,7 @@ void Bitmap::FlipVertically() {
     delete rowBuffer;
 }
 
-void Bitmap::Rotate90CounterClockwise() {
+void backlash::Bitmap::Rotate90CounterClockwise() {
     unsigned char* newPixels = (unsigned char*) malloc(mFormat*mWidth*mHeight);
 
     for(unsigned row = 0; row < mHeight; ++row) {
@@ -249,7 +247,7 @@ void Bitmap::Rotate90CounterClockwise() {
     mWidth = swapTmp;
 }
 
-void Bitmap::CopyRectFromBitmap(const Bitmap& src, 
+void backlash::Bitmap::CopyRectFromBitmap(const backlash::Bitmap& src, 
                                 unsigned srcCol,
                                 unsigned srcRow,
                                 unsigned destCol,
@@ -266,7 +264,7 @@ void Bitmap::CopyRectFromBitmap(const Bitmap& src,
         throw std::runtime_error("Can't copy zero height/width rectangle");
     
     if(srcCol + width >= src.Width() || srcRow + height >= src.Height())
-        throw std::runtime_error("Rectangle doesn't fit within source bitmap");
+        throw std::runtime_error("Rectangle doesn't fit within source backlash::bitmap");
 
     if(destCol + width >= mWidth || destRow + height >= mHeight)
         throw std::runtime_error("Rectangle doesn't fit within destination bitmap");
@@ -293,7 +291,7 @@ void Bitmap::CopyRectFromBitmap(const Bitmap& src,
     }
 }
 
-void Bitmap::Set(unsigned width, unsigned height, E_FORMAT format, const unsigned char* pixels) {
+void backlash::Bitmap::Set(unsigned width, unsigned height, E_FORMAT format, const unsigned char* pixels) {
     if(width == 0) {
         throw std::runtime_error("Zero width bitmap.");
     }
