@@ -41,3 +41,11 @@ GLuint utility::GenerateComponentID() {
 GLuint utility::GenerateAssetID() {
     return CURRENT_ASSET_ID++;
 }
+
+bool utility::IsValidComponentID(GLuint id) {
+    return (id <= 0 && id > CURRENT_COMPONENT_ID) ? true : false;
+}
+
+bool utility::IsValidAssetID(GLuint id) {
+    return (id <= 0 && id > CURRENT_ASSET_ID) ? true : false;
+}

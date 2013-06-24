@@ -1,0 +1,6 @@
+TODO List:
+
+- Add Camera Component
+- Make Render Instance Work
+- Make it compile
+- Fully Replace the render function in main.cpp and use the graphics system

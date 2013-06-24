@@ -3,7 +3,10 @@
 
 #include "EntityComponent.h"
 #include "ModelAsset.h"
+
 #include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace backlash {
     class DrawComponent : public EntityComponent {
@@ -12,10 +15,15 @@ namespace backlash {
         ~DrawComponent();
 
         void Update();
-        GLuint GetAssetID();
+
+        void SetTransform(glm::mat4);
+        glm::mat4 GetTransform() const;
+        
+        GLuint GetAssetID() const;
 
     private:
         GLuint mAssetID;
+        glm::mat4 mTransform;
     } ;
 }
 
