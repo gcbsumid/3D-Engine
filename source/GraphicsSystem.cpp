@@ -16,7 +16,7 @@ void backlash::GraphicsSystem::AddCameraComponent(GLuint id) {
     mCameraID = id;
 }
 
-void backlash::GraphicsSystem::Render(const std::map<GLuint,backlash::DrawComponent>& components
+void backlash::GraphicsSystem::Render(const std::map<GLuint,backlash::EntityComponent>& components
                                       const std::map<GLuint,backlash::ModelAsset>& assets) const {
     /* TODO: Lets have it like this for now. Maybe you can figure out later where the 
      *       Assets should actually be located ~ either as a global variable or as a 
@@ -24,7 +24,7 @@ void backlash::GraphicsSystem::Render(const std::map<GLuint,backlash::DrawCompon
      */
 
     // clear everything
-    glClearColor(0, 0, 0, 1); // black
+    glClearnColor(0, 0, 0, 1); // black
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // render all instances
@@ -47,14 +47,15 @@ void backlash::GraphicsSystem::Render(const std::map<GLuint,backlash::DrawCompon
     glfwSwapBuffers();
 }
 
-void backlash::GraphicsSystem::RenderInstance(const backlash::DrawComponent& comp, 
+void backlash::GraphicsSystem::RenderInstance(const backlash::DrawComponent& renderComp, 
                                               const backlash::ModelAsset& asset,
-                                              const backlash::CameraComponent& camera) const {
-    backlash::Program* shaders = asset.mShaders;
+                                              const backlash::CameraComponent& cameraComp) const {
+    auto shaders = asset.mShaders;
+    auto camera = cameraComp.GetCamera();
 
     // set shader uniforms
     shaders->SetUniform("camera", camera->Matrix());
-    shaders->SetUniform("model", comp.mTransform);
+    shaders->SetUniform("model", renderComp.GetTransform());
     shaders->SetUniform("tex", 0); // texture is bounded to GL_TEXTURE0
 
     // bind the texture

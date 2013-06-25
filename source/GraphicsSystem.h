@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 
+#include "EntityComponent.h"
 #include "DrawComponent.h"
 
 #include <map>
@@ -11,8 +12,7 @@
 namespace backlash {
     class GraphicsSystem {
     public:
-        static GraphicsSystem& getInstance()
-        {
+        static GraphicsSystem& getInstance() {
             static GraphicsSystem instance;
             return instance;
         }
@@ -21,7 +21,7 @@ namespace backlash {
 
         void AddCameraComponent(GLuint);
         void AddDrawComponent(GLuint);
-        void Render(const std::map<GLuint,DrawComponent>&) const;
+        void Render(const std::map<GLuint,EntityComponent>&) const;
 
     private:
         void RenderInstance(const DrawComponent&, const ModelAsset&, const CameraComponent&) const;
@@ -32,8 +32,8 @@ namespace backlash {
         GLuint mCameraID;
 
         // Don't Implement copy constructor
-        GraphicsSystem(GraphicsSystem const&);
-        void operator=(GraphicsSystem const&);
+        GraphicsSystem(const GraphicsSystem&);
+        void operator=(const GraphicsSystem&);
     };
 }
 
