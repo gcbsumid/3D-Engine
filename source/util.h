@@ -19,8 +19,8 @@ namespace utility {
     std::string ResourcePath(std::string filename);
     GLuint GenerateComponentID();
     GLuint GenerateAssetID();
-    bool IsValidComponentID();
-    bool IsValidAssetID();
+    bool IsValidComponentID(GLuint id);
+    bool IsValidAssetID(GLuint id);
     unsigned long now();
 
 }

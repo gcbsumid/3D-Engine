@@ -2,6 +2,7 @@
 #define MODELASSET_H
 
 #include <GL/glew.h>
+#include <GL/glfw.h>
 #include <memory>
 
 #include "Program.h"
@@ -13,8 +14,8 @@ namespace backlash {
         ~ModelAsset();
 
         // Material data
-        std::unique_ptr<backlash::Program> mShaders;    // the program
-        std::unique_ptr<backlash::Texture> mTextures;   // textures
+        std::shared_ptr<backlash::Program> mShaders;    // the program
+        std::shared_ptr<backlash::Texture> mTextures;   // textures
 
         // Mesh data
         GLuint mVBO;                    // vertex buffer object id; 

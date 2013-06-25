@@ -49,6 +49,9 @@ OBJECTS := \
 	$(OBJDIR)/Entity.o \
 	$(OBJDIR)/EntityComponent.o \
 	$(OBJDIR)/DrawComponent.o \
+	$(OBJDIR)/CameraComponent.o \
+	$(OBJDIR)/GraphicsSystem.o \
+	$(OBJDIR)/InputSystem.o \
 	$(OBJDIR)/Asset.o \
 	$(OBJDIR)/util.o \
 
@@ -112,6 +115,18 @@ $(OBJDIR)/EntityComponent.o: source/EntityComponent.cpp
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/DrawComponent.o: source/DrawComponent.cpp 
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/CameraComponent.o: source/CameraComponent.cpp 
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/InputSystem.o: source/InputSystem.cpp 
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/GraphicsSystem.o: source/GraphicsSystem.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 

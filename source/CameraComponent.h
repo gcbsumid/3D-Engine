@@ -15,10 +15,10 @@ namespace backlash {
         ~CameraComponent();
 
         void Update();
-        unique_ptr<Camera> GetCamera();
+        std::shared_ptr<Camera> GetCamera() const; 
 
     private:
-        unique_ptr<Camera> mCamera;
+        std::shared_ptr<Camera> mCamera;
     };
 }
 

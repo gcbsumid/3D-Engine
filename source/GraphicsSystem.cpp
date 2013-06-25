@@ -16,22 +16,22 @@ void backlash::GraphicsSystem::AddCameraComponent(GLuint id) {
     mCameraID = id;
 }
 
-void backlash::GraphicsSystem::Render(const std::map<GLuint,backlash::EntityComponent>& components
-                                      const std::map<GLuint,backlash::ModelAsset>& assets) const {
+void backlash::GraphicsSystem::Render(COMPONENT_LIST& components, 
+                                      ASSET_LIST& assets) const {
     /* TODO: Lets have it like this for now. Maybe you can figure out later where the 
      *       Assets should actually be located ~ either as a global variable or as a 
      *       member of the Graphics System.
      */
 
     // clear everything
-    glClearnColor(0, 0, 0, 1); // black
+    glClearColor(0, 0, 0, 1); // black
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // render all instances
-    backlash::Program* current = NULL;
+    assert(utility::IsValidComponentID(mCameraID));
+    std::shared_ptr<backlash::Program> current = NULL;
     for (auto compID : mDrawComponentIDs) {
         auto asset = assets.at(compID);
-
         if (!asset->mShaders->IsInUse()) {
             if (current && current->IsInUse()) {
                 current->Stop();
@@ -39,7 +39,9 @@ void backlash::GraphicsSystem::Render(const std::map<GLuint,backlash::EntityComp
             current = asset->mShaders;
             current->Use();
         }
-        RenderInstance(components.at(compID), asset, components.at(mCameraID));
+        RenderInstance(std::static_pointer_cast<backlash::DrawComponent>(components.at(compID)), 
+                       asset, 
+                       std::static_pointer_cast<backlash::CameraComponent>(components.at(mCameraID)));
     }
     current->Stop();
 
@@ -47,27 +49,27 @@ void backlash::GraphicsSystem::Render(const std::map<GLuint,backlash::EntityComp
     glfwSwapBuffers();
 }
 
-void backlash::GraphicsSystem::RenderInstance(const backlash::DrawComponent& renderComp, 
-                                              const backlash::ModelAsset& asset,
-                                              const backlash::CameraComponent& cameraComp) const {
-    auto shaders = asset.mShaders;
-    auto camera = cameraComp.GetCamera();
+void backlash::GraphicsSystem::RenderInstance(std::shared_ptr<backlash::DrawComponent> renderComp, 
+                                              std::shared_ptr<backlash::ModelAsset> asset,
+                                              std::shared_ptr<backlash::CameraComponent> cameraComp) const {
+    auto shaders = asset->mShaders;
+    auto camera = cameraComp->GetCamera();
 
     // set shader uniforms
     shaders->SetUniform("camera", camera->Matrix());
-    shaders->SetUniform("model", renderComp.GetTransform());
+    shaders->SetUniform("model", renderComp->GetTransform());
     shaders->SetUniform("tex", 0); // texture is bounded to GL_TEXTURE0
 
     // bind the texture
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, asset.mTextures->Object());
+    glBindTexture(GL_TEXTURE_2D, asset->mTextures->Object());
 
     /* Note: Consider using glDrawArraysInstanced instead
      *       of glDrawArrays. You can get better performance.
      */
     // bind VAO and draw 
-    glBindVertexArray(asset.mVAO);
-    glDrawArrays(asset.mDrawType, asset.mDrawStart, asset.mDrawCount);
+    glBindVertexArray(asset->mVAO);
+    glDrawArrays(asset->mDrawType, asset->mDrawStart, asset->mDrawCount);
 
     // unbind everything
     glBindTexture(GL_TEXTURE_2D, 0);

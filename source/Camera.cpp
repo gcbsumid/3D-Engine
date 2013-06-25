@@ -12,10 +12,9 @@ backlash::Camera::Camera() :
     mFieldOfView(50.0f),
     mNearPlane(0.01f),
     mFarPlane(100.0f),
-    mViewportAspectRatio(4.0f/3.0f) 
-{
+    mViewportAspectRatio(4.0f/3.0f) {}
 
-}
+backlash::Camera::~Camera() {};
 
 const glm::vec3& backlash::Camera::Position() const {
     return mPosition;

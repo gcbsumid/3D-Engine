@@ -8,6 +8,7 @@ namespace backlash {
     class Camera {
     public:
         Camera();
+        ~Camera();
 
         // Position of Camera
         const glm::vec3& Position() const;

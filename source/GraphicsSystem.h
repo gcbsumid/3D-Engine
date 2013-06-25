@@ -5,9 +5,13 @@
 
 #include "EntityComponent.h"
 #include "DrawComponent.h"
+#include "CameraComponent.h"
 
 #include <map>
 #include <list>
+
+typedef std::map<GLuint,std::shared_ptr<backlash::EntityComponent> > COMPONENT_LIST;
+typedef std::map<GLuint,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST;
 
 namespace backlash {
     class GraphicsSystem {
@@ -21,10 +25,13 @@ namespace backlash {
 
         void AddCameraComponent(GLuint);
         void AddDrawComponent(GLuint);
-        void Render(const std::map<GLuint,EntityComponent>&) const;
+        void Render(COMPONENT_LIST& components, 
+                    ASSET_LIST& assets) const ;
 
     private:
-        void RenderInstance(const DrawComponent&, const ModelAsset&, const CameraComponent&) const;
+        void RenderInstance(std::shared_ptr<DrawComponent>, 
+                            std::shared_ptr<ModelAsset>, 
+                            std::shared_ptr<CameraComponent>) const;
 
         GraphicsSystem();      
 

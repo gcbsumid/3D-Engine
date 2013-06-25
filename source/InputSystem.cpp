@@ -16,11 +16,11 @@ void backlash::InputSystem::AddCameraComponent(GLuint id) {
     mCameraComponentID = id;
 }
 
-void backlash::InputSystem::HandleInput(std::map<GLuint,EntityComponent>& components, double elapsedTime) {
+void backlash::InputSystem::HandleInput(COMPONENT_LIST& components, double elapsedTime) {
     assert(utility::IsValidComponentID(mCameraComponentID));
 
-    auto cameraComponent = components.at(mCameraComponentID);
-    auto camera = cameraComponent.GetCamera();
+    auto cameraComponent = std::static_pointer_cast<backlash::CameraComponent>(components.at(mCameraComponentID));
+    auto camera = cameraComponent->GetCamera();
 
     // move position based on wasd keys
     if (glfwGetKey('S')) {
@@ -54,7 +54,7 @@ void backlash::InputSystem::HandleInput(std::map<GLuint,EntityComponent>& compon
     if (fieldOfView > 130.0f) {
         fieldOfView = 130.0f;
     }
-    camera.SetFieldOfView(fieldOfView);
+    camera->SetFieldOfView(fieldOfView);
     glfwSetMouseWheel(0);
 
 }

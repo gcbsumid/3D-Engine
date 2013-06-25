@@ -7,6 +7,8 @@
 #include "CameraComponent.h"
 #include "EntityComponent.h"
 
+typedef std::map<GLuint,std::shared_ptr<backlash::EntityComponent> > COMPONENT_LIST;
+
 namespace backlash {
     class InputSystem {
     public:
@@ -18,7 +20,7 @@ namespace backlash {
         ~InputSystem() {}
 
         void AddCameraComponent(GLuint);
-        void HandleInput(std::map<GLuint,EntityComponent>&);
+        void HandleInput(COMPONENT_LIST&, double);
 
     private:
         GLuint mCameraComponentID;

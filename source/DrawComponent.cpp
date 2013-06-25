@@ -15,7 +15,7 @@ void backlash::DrawComponent::SetTransform(glm::mat4 transform) {
     mTransform = transform;
 }
 
-glm::mat4 backlash::DrawComponent::GetTransform() {
+glm::mat4 backlash::DrawComponent::GetTransform() const {
     return mTransform;
 }
 
