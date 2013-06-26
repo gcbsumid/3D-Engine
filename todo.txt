@@ -1,9 +1,17 @@
 TODO List:
 
-- Make Render Instance Work
-- Create a game objects that generates all the objects
-- Make it compile
+- Make Entities either static or dynamic (Update optimization)
+- Fill in the Engine.cpp file with proper stuff from main.cpp
 - Fully Replace the render function in main.cpp and use the graphics system
 - make a room
 - Add Add lighting
 - Create new shaders
+
+TODO eventually List:
+- Resource Manager - So you can get models from files. Research .pak files (I think).
+- Physics System - Something simple. Probably Just gravity first. 
+- Collision Detection system - Probably need to add that to the Physics system. Maybe add a collision component that has bounding boxes. Keep it simple.
+- Logging and Error printing system - Sounds simple enough. Print stuff to a file that says what is going on. Probably create a flag to turn this on and off.
+- Animation System? - LOL, this will probably not happen any time soon. Not very important atm. 
+- Artificial Intelligence - Also not very important right now. When you have alot of free time and you're bored. 
+- Organize the files. Put the systems into their own folders and stuff. 

@@ -24,6 +24,8 @@ namespace backlash {
 
     private:
         std::map<E_COMPONENT,GLuint> mComponents;
+        // TODO: Make Entities have a static boolean. Optimization for 
+        //       Entity updates.
     };
 }
 
