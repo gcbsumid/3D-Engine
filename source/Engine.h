@@ -33,15 +33,16 @@ namespace backlash {
 
         ~Engine();
 
-        void LoadAssets();      // Loads Assets
-        void CreateSystems();   // Create All Systems
-        void CreateObjects();   // Creates all instances
         void Run();             // The game loop
         void Init();            // Initialize Engine properties
-        void Update();          // TODO: create an object system which updates all entities
 
     private:
         Engine();
+
+        void LoadAssets();      // Loads Assets
+        void CreateSystems();   // Create All Systems
+        void CreateObjects();   // Creates all instances
+        void Update(double);    // TODO: create an object system which updates all entities
 
         COMPONENT_LIST mComponents;
         ASSET_LIST mAssets;

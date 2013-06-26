@@ -12,7 +12,7 @@
 
 static GLuint CURRENT_COMPONENT_ID = 0;
 static GLuint CURRENT_ASSET_ID = 0;
-
+static GLuint CURRENT_ENTITY_ID = 0;
 
 std::string utility::ResourcePath(std::string fileName){
     // Gets the full directory of the program on linux
@@ -42,10 +42,18 @@ GLuint utility::GenerateAssetID() {
     return CURRENT_ASSET_ID++;
 }
 
+GLuint utility::GenerateEntityID() {
+    return CURRENT_ENTITY_ID++;
+}
+
 bool utility::IsValidComponentID(GLuint id) {
     return (id <= 0 && id > CURRENT_COMPONENT_ID) ? true : false;
 }
 
 bool utility::IsValidAssetID(GLuint id) {
     return (id <= 0 && id > CURRENT_ASSET_ID) ? true : false;
+}
+
+bool utility::IsValideEntityID(GLuint id) {
+    return (id <= 0 && id > CURRENT_ENTITY_ID) ? true : false;
 }

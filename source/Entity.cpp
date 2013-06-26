@@ -1,8 +1,8 @@
 #include "Entity.h"
 
 // Standard C++ Libraries
-#include <utility>
-#include <stdexcept>
+#include <utility> // Do I need this?
+#include <stdexcept> // Do I need this?
 #include <sstream>
 #include <cassert>
 
@@ -11,7 +11,7 @@ static bool IsValid(backlash::E_COMPONENT comp) {
             comp < backlash::E_COMPONENT::E_COMPONENT_MAX) ? true : false;
 }
 
-backlash::Entity::Entity() {}
+backlash::Entity::Entity() : mID(utility::GenerateEntityID) {}
 
 backlash::Entity::~Entity() {}
 
@@ -25,7 +25,7 @@ void backlash::Entity::AddComponent(backlash::E_COMPONENT comp, GLuint id) {
     }
 }
 
-GLuint backlash::Entity::GetComponentID(E_COMPONENT comp) {
+GLuint backlash::Entity::GetComponentID(E_COMPONENT comp) const {
     if (mComponents.count(comp) == 0) {
         std::stringstream msg;
         msg << "The component " << comp << " doesn't exist in this entity." << std::endl;
@@ -33,4 +33,8 @@ GLuint backlash::Entity::GetComponentID(E_COMPONENT comp) {
     }
 
     return mComponents.at(comp);
+}
+
+GLuint backlash::Entity::GetID() const {
+    return mID;
 }

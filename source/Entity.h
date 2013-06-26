@@ -20,10 +20,12 @@ namespace backlash {
         ~Entity();
 
         void AddComponent(E_COMPONENT, GLuint);
-        GLuint GetComponentID(E_COMPONENT);
-
+        GLuint GetComponentID(E_COMPONENT) const;
+        GLuint GetID() const;
+ 
     private:
         std::map<E_COMPONENT,GLuint> mComponents;
+        GLuint mID;
         // TODO: Make Entities have a static boolean. Optimization for 
         //       Entity updates.
     };
