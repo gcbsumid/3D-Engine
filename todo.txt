@@ -1,8 +1,6 @@
 TODO List:
 
 - Make Entities either static or dynamic (Update optimization)
-- Fill in the Engine.cpp file with proper stuff from main.cpp
-- Fully Replace the render function in main.cpp and use the graphics system
 - make a room
 - Add Add lighting
 - Create new shaders
