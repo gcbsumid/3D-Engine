@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "util.h"
 
 // Standard C++ Libraries
 #include <utility> // Do I need this?
@@ -11,7 +12,7 @@ static bool IsValid(backlash::E_COMPONENT comp) {
             comp < backlash::E_COMPONENT::E_COMPONENT_MAX) ? true : false;
 }
 
-backlash::Entity::Entity() : mID(utility::GenerateEntityID) {}
+backlash::Entity::Entity() : mID(utility::GenerateEntityID()) {}
 
 backlash::Entity::~Entity() {}
 

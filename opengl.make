@@ -53,6 +53,7 @@ OBJECTS := \
 	$(OBJDIR)/GraphicsSystem.o \
 	$(OBJDIR)/InputSystem.o \
 	$(OBJDIR)/Asset.o \
+	$(OBJDIR)/Engine.o \
 	$(OBJDIR)/util.o \
 
 .PHONY: clean
@@ -127,6 +128,10 @@ $(OBJDIR)/InputSystem.o: source/InputSystem.cpp
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/GraphicsSystem.o: source/GraphicsSystem.cpp 
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/Engine.o: source/Engine.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 

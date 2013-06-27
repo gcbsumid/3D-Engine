@@ -9,6 +9,7 @@
 
 #include <map>
 #include <list>
+#include <memory>
 
 typedef std::map<GLuint,std::shared_ptr<backlash::EntityComponent> > COMPONENT_LIST;
 typedef std::map<GLuint,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST;
@@ -16,9 +17,11 @@ typedef std::map<GLuint,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST;
 namespace backlash {
     class GraphicsSystem {
     public:
-        static GraphicsSystem& getInstance() {
-            static GraphicsSystem instance;
-            return instance;
+        static std::shared_ptr<GraphicsSystem> getInstance() {
+            if (mInstance.use_count() < 1) {
+                mInstance = std::shared_ptr<GraphicsSystem>(new GraphicsSystem);
+            }
+            return mInstance;
         }
 
         ~GraphicsSystem() {}
@@ -34,6 +37,8 @@ namespace backlash {
                             std::shared_ptr<CameraComponent>) const;
 
         GraphicsSystem();      
+
+        static std::shared_ptr<GraphicsSystem> mInstance;
 
         std::list<GLuint> mDrawComponentIDs;
         GLuint mCameraID;

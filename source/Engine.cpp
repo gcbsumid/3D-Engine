@@ -1,8 +1,10 @@
 #include "Engine.h"
 #include "Program.h"
 #include "Texture.h"
+#include "util.h"
 #include <GL/glfw.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <string>
 
 // for PATH_MAX
 #include <limits>
@@ -14,8 +16,21 @@
 
 // constants
 const glm::vec2 SCREEN_SIZE(800, 600);
+static const float degreesPerSecond = 180.0f;
 
-static void LoadTriangle(std::shared_ptr<ModelAsset> asset) {
+// THIS IS ONLY TEMPORARY
+GLuint gDotID = -1;
+GLfloat tempGDegreesRotated = 0.0f;
+
+static inline glm::mat4 translate(GLfloat x, GLfloat y, GLfloat z) {
+    return glm::translate(glm::mat4(), glm::vec3(x,y,z));
+}
+
+static inline glm::mat4 scale(GLfloat x, GLfloat y, GLfloat z) {
+    return glm::scale(glm::mat4(), glm::vec3(x,y,z));
+}
+
+static void LoadTriangle(std::shared_ptr<backlash::ModelAsset> asset) {
     // make and bind the VAO 
     glGenVertexArrays(1, &asset->mVAO);
     glBindVertexArray(asset->mVAO);
@@ -93,8 +108,8 @@ static void LoadTriangle(std::shared_ptr<ModelAsset> asset) {
     glBindVertexArray(0);
 }
 
-static backlash::Program* LoadShaders(const string vertex, const string fragment) {
-    vector<backlash::Shader> shaders;
+static std::shared_ptr<backlash::Program> LoadShaders(const std::string vertex, const std::string fragment) {
+    std::vector<backlash::Shader> shaders;
 
     shaders.push_back(backlash::Shader::ShaderFromFile(
         utility::ResourcePath(vertex), 
@@ -102,29 +117,24 @@ static backlash::Program* LoadShaders(const string vertex, const string fragment
     shaders.push_back(backlash::Shader::ShaderFromFile(
         utility::ResourcePath(fragment), 
         GL_FRAGMENT_SHADER));
-    return (new backlash::Program(shaders));
+    return std::shared_ptr<backlash::Program>(new backlash::Program(shaders));
 }
 
-static backlash::Texture* LoadTexture(const string texture) {
+static std::shared_ptr<backlash::Texture> LoadTexture(const std::string texture) {
     backlash::Bitmap bmp = backlash::Bitmap::BitmapFromFile(utility::ResourcePath(texture));
     bmp.FlipVertically();
-    return (new backlash::Texture(bmp));
+    return std::shared_ptr<backlash::Texture>(new backlash::Texture(bmp));
 }
 
 namespace backlash {
-    Engine::Engine() {
-        // TODO: this part.
+    Engine::Engine() : mGraphics(NULL), mInput(NULL) {
     }
 
     void Engine::LoadAssets() {
-        // TODO: load the shaders, textures, and mesh data for each asset.
-        //       Currently, it should only load WoodenCrate asset
-        // Status: DONE, I think
-
         std::shared_ptr<ModelAsset> woodenCrate(new ModelAsset());
         mAssets.insert(std::make_pair(woodenCrate->mID, woodenCrate));
 
-        LoadAssets(woodenCrate);
+        LoadTriangle(woodenCrate);
 
         woodenCrate->mShaders = LoadShaders("vertex-shader.vert", "fragment-shader.frag");
         woodenCrate->mDrawType = GL_TRIANGLES;
@@ -136,69 +146,60 @@ namespace backlash {
     }
 
     void Engine::CreateSystems() {
-        // TODO: Create the Graphics System and the Input System
-        // Status: DONE, I think
-        shared_ptr<CameraComponent> cameraComponent(new CameraComponent(SCREEN_SIZE));
-        shared_ptr<Entity> player(new Entity());
+        std::shared_ptr<CameraComponent> cameraComponent(new CameraComponent(SCREEN_SIZE));
+        std::shared_ptr<Entity> player(new Entity());
 
         // Add the camera component to the player entity and systems
-        player->AddComponent(E_COMPONENT::E_COMPONENT_CAMERA, cameraComponent->GetID());
-        mGraphics.AddCameraComponent(cameraComponent->GetID());
-        mInput.AddCameraComponent(cameraComponent->GetID());
+        player->AddComponent(E_COMPONENT_CAMERA, cameraComponent->GetID());
+        mGraphics->AddCameraComponent(cameraComponent->GetID());
+        mInput->AddCameraComponent(cameraComponent->GetID());
 
         // Add camera component to components list
-        mComponents.insert(std::make_pair(cameraComponent->mID, cameraComponent));
+        mComponents.insert(std::make_pair(cameraComponent->GetID(), cameraComponent));
 
         // Add player entity to Entity List 
-        mEntities.push_back(player);
+        mEntities.insert(std::make_pair(player->GetID(), player));
     }
 
     void Engine::CreateObjects() {
-        // TODO: Create the Object Instances or Entities. When creating each 
-        //       entity, add their respective draw components to the Graphics System
-        // Status: Done, I think.
         GLuint woodCrateAssetID = 0;
 
-        shared_ptr<Entity> dot(new Entity());
-        shared_ptr<DrawComponent> dotDrawComponent(new DrawComponent(woodCrateAssetID));
+        std::shared_ptr<Entity> dot(new Entity());
+        std::shared_ptr<DrawComponent> dotDrawComponent(new DrawComponent(woodCrateAssetID));
         dotDrawComponent->SetTransform(glm::mat4());
-        dot->AddComponent(E_COMPONENT::E_COMPONENT_DRAW, dotDrawComponent);
-        mEntities.push_back(dot);
+        dot->AddComponent(E_COMPONENT_DRAW, dotDrawComponent->GetID());
+        mEntities.insert(std::make_pair(dot->GetID(),dot));
+        gDotID = dot->GetID();
 
-        shared_ptr<Entity> i(new Entity());
-        shared_ptr<DrawComponent> iDrawComponent(new DrawComponent(woodCrateAssetID));
+        std::shared_ptr<Entity> i(new Entity());
+        std::shared_ptr<DrawComponent> iDrawComponent(new DrawComponent(woodCrateAssetID));
         iDrawComponent->SetTransform(translate(0,-4,0) * scale(1,2,1));
-        i->AddComponent(E_COMPONENT::E_COMPONENT_DRAW, iDrawComponent);
-        mEntities.push_back(i);
+        i->AddComponent(E_COMPONENT_DRAW, iDrawComponent->GetID());
+        mEntities.insert(std::make_pair(i->GetID(),i));
 
-        shared_ptr<Entity> hLeft(new Entity());
-        shared_ptr<DrawComponent> hLeftDrawComponent(new DrawComponent(woodCrateAssetID));
+        std::shared_ptr<Entity> hLeft(new Entity());
+        std::shared_ptr<DrawComponent> hLeftDrawComponent(new DrawComponent(woodCrateAssetID));
         hLeftDrawComponent->SetTransform(translate(-8,0,0) * scale(1,6,1));
-        hLeft->AddComponent(E_COMPONENT::E_COMPONENT_DRAW, hLeftDrawComponent);
-        mEntities.push_back(hLeft);
+        hLeft->AddComponent(E_COMPONENT_DRAW, hLeftDrawComponent->GetID());
+        mEntities.insert(std::make_pair(hLeft->GetID(),hLeft));
 
-        shared_ptr<Entity> hRight(new Entity());
-        shared_ptr<DrawComponent> hRightDrawComponent(new DrawComponent(woodCrateAssetID));
+        std::shared_ptr<Entity> hRight(new Entity());
+        std::shared_ptr<DrawComponent> hRightDrawComponent(new DrawComponent(woodCrateAssetID));
         hRightDrawComponent->SetTransform(translate(-4,0,0) * scale(1,6,1));
-        hRight->AddComponent(E_COMPONENT::E_COMPONENT_DRAW, hRightDrawComponent);
-        mEntities.push_back(hRight);
+        hRight->AddComponent(E_COMPONENT_DRAW, hRightDrawComponent->GetID());
+        mEntities.insert(std::make_pair(hRight->GetID(),hRight));
 
-        shared_ptr<Entity> hMid(new Entity());
-        shared_ptr<DrawComponent> hMidDrawComponent(new DrawComponent(woodCrateAssetID));
+        std::shared_ptr<Entity> hMid(new Entity());
+        std::shared_ptr<DrawComponent> hMidDrawComponent(new DrawComponent(woodCrateAssetID));
         hMidDrawComponent->SetTransform(translate(-6,0,0) * scale(2,1,0.8));
-        hMid->AddComponent(E_COMPONENT::E_COMPONENT_DRAW, hMidDrawComponent);
-        mEntities.push_back(hMid);
+        hMid->AddComponent(E_COMPONENT_DRAW, hMidDrawComponent->GetID());
+        mEntities.insert(std::make_pair(hMid->GetID(),hMid));
     }
 
-    void Engine::Init() {
-        // TODO: Call LoadAssets(), Createsystems(), and CreateObjects()
-        //       When creating the CameraComponent, attach it to both the Graphics
-        //       system and the Input System
-        // Status: Done?
-    
+    void Engine::Init() {    
         // Initialize GLFW
         if (!glfwInit()) {
-            throw runtime_error("glfwInit failed.");
+            throw std::runtime_error("glfwInit failed.");
         }
 
         // open a window in GLFW
@@ -207,7 +208,7 @@ namespace backlash {
         glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
         glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
         if (!glfwOpenWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, 8, 8, 8, 8, 16, 0, GLFW_WINDOW)){
-            throw runtime_error("glfwOpenWindow failed. Can your hardware handle OpenGL 3.3?");
+            throw std::runtime_error("glfwOpenWindow failed. Can your hardware handle OpenGL 3.3?");
         }
 
         // initialise GLEW
@@ -227,7 +228,7 @@ namespace backlash {
 
         // initialize GLEW
         if (!GLEW_VERSION_3_3){
-            throw runtime_error("OpenGL 3.3 Api is not available.");
+            throw std::runtime_error("OpenGL 3.3 Api is not available.");
         }
 
         glEnable(GL_DEPTH_TEST);
@@ -239,16 +240,19 @@ namespace backlash {
     }
     
     void Engine::Update(double elapsedTime) {
-        // TODO: This basically updates all the entities that need to move. Maybe only go 
-        //       through the entities that aren't marked static. Also do the rendering here.
-        //       
+        mInput->HandleInput(mComponents, elapsedTime);
 
+        // rotating the dot
+        tempGDegreesRotated += elapsedTime * degreesPerSecond;
+        while (tempGDegreesRotated > 360.0f) {
+            tempGDegreesRotated -=360.0f;
+        }
+        GLuint drawComponentID = mEntities.at(gDotID)->GetComponentID(E_COMPONENT_DRAW);
+        std::shared_ptr<DrawComponent> dotDrawComp = std::static_pointer_cast<DrawComponent>(mComponents.at(drawComponentID));
+        dotDrawComp->SetTransform(glm::rotate(glm::mat4(), tempGDegreesRotated, glm::vec3(0,1,0)));
     }
     
     void Engine::Run() {
-        // TODO: This basically contains the gameloop.
-        // run while the window is open
-        // Status: Done, I think.
         double lastFrame= glfwGetTime();
         int framePerSecond = 0;
         double timer = 0.0f;
@@ -276,7 +280,7 @@ namespace backlash {
                 // Update(1.0/60.0);
                 framePerSecond++;
                 timer -= 1.0/60.0;
-                Render();
+                mGraphics->Render(mComponents, mAssets);
             }
 
             lastFrame = currentTime;

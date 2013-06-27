@@ -247,13 +247,6 @@ static void Update(double elapsedTime) {
     // increases or decreases the field of view
     const float zoomSensitivity = 5.0f;
 
-    // rotating the dot
-    gDegreesRotated += elapsedTime * degreesPerSecond;
-    while (gDegreesRotated > 360.0f) {
-        gDegreesRotated -=360.0f;
-    }
-    gInstances.front().mTransform = glm::rotate(glm::mat4(), gDegreesRotated, glm::vec3(0,1,0));
-
     // static float distancePerSecond = 5.0f;
     // if(gTranslateDest.x > 1) {
     //     distancePerSecond = -5.0f;

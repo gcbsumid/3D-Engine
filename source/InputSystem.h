@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include <map>
+#include <memory>
 
 #include "CameraComponent.h"
 #include "EntityComponent.h"
@@ -12,9 +13,11 @@ typedef std::map<GLuint,std::shared_ptr<backlash::EntityComponent> > COMPONENT_L
 namespace backlash {
     class InputSystem {
     public:
-        static InputSystem& getInstance() {
-            static InputSystem instance;
-            return instance;
+        static std::shared_ptr<InputSystem> getInstance() {
+            if (mInstance.use_count() < 1) {
+                mInstance = std::shared_ptr<InputSystem>(new InputSystem);
+            }
+            return mInstance;
         }
 
         ~InputSystem() {}
@@ -23,6 +26,8 @@ namespace backlash {
         void HandleInput(COMPONENT_LIST&, double);
 
     private:
+        static std::shared_ptr<InputSystem> mInstance;
+
         GLuint mCameraComponentID;
         InputSystem();
 

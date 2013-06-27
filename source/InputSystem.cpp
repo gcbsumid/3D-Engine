@@ -4,7 +4,6 @@
 
 #include <GL/glfw.h>
 
-static const float degreesPerSecond = 180.0f;
 static const float mouseSensitivity = 0.1f;
 static const float zoomSensitivity = 5.0f;
 

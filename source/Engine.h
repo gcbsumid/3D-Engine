@@ -9,7 +9,6 @@
 #include <iostream> // maybe
 #include <memory>
 #include <map>
-#include <list>
 
 #include "InputSystem.h"
 #include "GraphicsSystem.h"
@@ -21,14 +20,17 @@
 
 typedef std::map<GLuint,std::shared_ptr<backlash::EntityComponent> > COMPONENT_LIST;
 typedef std::map<GLuint,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST; 
-typedef std::list<std::shared_ptr<Entity> > ENTITY_LIST;
+typedef std::map<GLuint,std::shared_ptr<backlash::Entity> > ENTITY_LIST;
 
 namespace backlash {
     class Engine {
     public:
-        static Engine& getInstance() {
-            static Engine instance;
-            return instance;
+        static std::shared_ptr<Engine> GetInstance() {
+            if (mInstance.use_count() < 1) {
+                mInstance = std::shared_ptr<Engine>(new Engine);
+            }
+
+            return mInstance;
         }
 
         ~Engine();
@@ -44,12 +46,14 @@ namespace backlash {
         void CreateObjects();   // Creates all instances
         void Update(double);    // TODO: create an object system which updates all entities
 
+        static std::shared_ptr<Engine> mInstance;
+
         COMPONENT_LIST mComponents;
         ASSET_LIST mAssets;
         ENTITY_LIST mEntities;
 
-        GraphicsSystem mGraphics;
-        InputSystem mInput;
+        std::shared_ptr<GraphicsSystem> mGraphics;
+        std::shared_ptr<InputSystem> mInput;
 
         // Don't implement copy constructors
         Engine(const Engine&);
@@ -58,4 +62,4 @@ namespace backlash {
     } ;
 }
 
-#endif;
+#endif

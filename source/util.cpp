@@ -54,6 +54,6 @@ bool utility::IsValidAssetID(GLuint id) {
     return (id <= 0 && id > CURRENT_ASSET_ID) ? true : false;
 }
 
-bool utility::IsValideEntityID(GLuint id) {
+bool utility::IsValidEntityID(GLuint id) {
     return (id <= 0 && id > CURRENT_ENTITY_ID) ? true : false;
 }

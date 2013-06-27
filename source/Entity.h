@@ -10,6 +10,7 @@ namespace backlash {
     enum E_COMPONENT {
         E_COMPONENT_FIRST = 0,
         E_COMPONENT_DRAW = E_COMPONENT_FIRST,
+        E_COMPONENT_CAMERA,
 
         E_COMPONENT_MAX
     } ;
