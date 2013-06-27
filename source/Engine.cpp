@@ -133,7 +133,7 @@ namespace backlash {
     Engine::Engine() : mGraphics(NULL), mInput(NULL) {
     }
 
-    
+
     std::shared_ptr<Engine> Engine::GetInstance() {
         if (mInstance.use_count() < 1) {
             mInstance = std::shared_ptr<Engine>(new Engine);
@@ -146,8 +146,6 @@ namespace backlash {
         std::shared_ptr<ModelAsset> woodenCrate(new ModelAsset());
         mAssets.insert(std::make_pair(woodenCrate->mID, woodenCrate));
 
-        LoadTriangle(woodenCrate);
-
         woodenCrate->mShaders = LoadShaders("vertex-shader.vert", "fragment-shader.frag");
         woodenCrate->mDrawType = GL_TRIANGLES;
         woodenCrate->mDrawStart = 0;
@@ -155,6 +153,9 @@ namespace backlash {
         woodenCrate->mTextures = LoadTexture("wooden-crate.jpg");
         glGenBuffers(1, &woodenCrate->mVBO);
         glGenVertexArrays(1, &woodenCrate->mVAO);
+
+        LoadTriangle(woodenCrate);
+
     }
 
     void Engine::CreateSystems() {
@@ -181,6 +182,8 @@ namespace backlash {
 
         std::shared_ptr<Entity> dot(new Entity());
         std::shared_ptr<DrawComponent> dotDrawComponent(new DrawComponent(woodCrateAssetID));
+        mComponents.insert(std::make_pair(dotDrawComponent->GetID(), dotDrawComponent));
+        mGraphics->AddDrawComponent(dotDrawComponent->GetID());
         dotDrawComponent->SetTransform(glm::mat4());
         dot->AddComponent(E_COMPONENT_DRAW, dotDrawComponent->GetID());
         mEntities.insert(std::make_pair(dot->GetID(),dot));
@@ -188,24 +191,32 @@ namespace backlash {
 
         std::shared_ptr<Entity> i(new Entity());
         std::shared_ptr<DrawComponent> iDrawComponent(new DrawComponent(woodCrateAssetID));
+        mComponents.insert(std::make_pair(iDrawComponent->GetID(), iDrawComponent));
+        mGraphics->AddDrawComponent(iDrawComponent->GetID());
         iDrawComponent->SetTransform(translate(0,-4,0) * scale(1,2,1));
         i->AddComponent(E_COMPONENT_DRAW, iDrawComponent->GetID());
         mEntities.insert(std::make_pair(i->GetID(),i));
 
         std::shared_ptr<Entity> hLeft(new Entity());
         std::shared_ptr<DrawComponent> hLeftDrawComponent(new DrawComponent(woodCrateAssetID));
+        mComponents.insert(std::make_pair(hLeftDrawComponent->GetID(), hLeftDrawComponent));
+        mGraphics->AddDrawComponent(hLeftDrawComponent->GetID());
         hLeftDrawComponent->SetTransform(translate(-8,0,0) * scale(1,6,1));
         hLeft->AddComponent(E_COMPONENT_DRAW, hLeftDrawComponent->GetID());
         mEntities.insert(std::make_pair(hLeft->GetID(),hLeft));
 
         std::shared_ptr<Entity> hRight(new Entity());
         std::shared_ptr<DrawComponent> hRightDrawComponent(new DrawComponent(woodCrateAssetID));
+        mComponents.insert(std::make_pair(hRightDrawComponent->GetID(), hRightDrawComponent));
+        mGraphics->AddDrawComponent(hRightDrawComponent->GetID());
         hRightDrawComponent->SetTransform(translate(-4,0,0) * scale(1,6,1));
         hRight->AddComponent(E_COMPONENT_DRAW, hRightDrawComponent->GetID());
         mEntities.insert(std::make_pair(hRight->GetID(),hRight));
 
         std::shared_ptr<Entity> hMid(new Entity());
         std::shared_ptr<DrawComponent> hMidDrawComponent(new DrawComponent(woodCrateAssetID));
+        mComponents.insert(std::make_pair(hMidDrawComponent->GetID(), hMidDrawComponent));
+        mGraphics->AddDrawComponent(hMidDrawComponent->GetID());
         hMidDrawComponent->SetTransform(translate(-6,0,0) * scale(2,1,0.8));
         hMid->AddComponent(E_COMPONENT_DRAW, hMidDrawComponent->GetID());
         mEntities.insert(std::make_pair(hMid->GetID(),hMid));
@@ -249,8 +260,8 @@ namespace backlash {
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
 
-        CreateSystems();
         LoadAssets();
+        CreateSystems();
         CreateObjects();
     }
     

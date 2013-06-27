@@ -47,13 +47,13 @@ GLuint utility::GenerateEntityID() {
 }
 
 bool utility::IsValidComponentID(GLuint id) {
-    return (id <= 0 && id > CURRENT_COMPONENT_ID) ? true : false;
+    return (id < CURRENT_COMPONENT_ID) ? true : false;
 }
 
 bool utility::IsValidAssetID(GLuint id) {
-    return (id <= 0 && id > CURRENT_ASSET_ID) ? true : false;
+    return (id < CURRENT_ASSET_ID) ? true : false;
 }
 
 bool utility::IsValidEntityID(GLuint id) {
-    return (id <= 0 && id > CURRENT_ENTITY_ID) ? true : false;
+    return (id < CURRENT_ENTITY_ID) ? true : false;
 }

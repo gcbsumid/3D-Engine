@@ -10,7 +10,7 @@ static const float zoomSensitivity = 5.0f;
 // Global static pointer used to ensure my singleton
 std::shared_ptr<backlash::InputSystem> backlash::InputSystem::mInstance;
 
-backlash::InputSystem::InputSystem() : mCameraComponentID(-1) {}
+backlash::InputSystem::InputSystem() : mCameraComponentID(UINT_MAX) {}
 
 std::shared_ptr<backlash::InputSystem> backlash::InputSystem::GetInstance() {
     if (mInstance.use_count() < 1) {

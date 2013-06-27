@@ -21,5 +21,8 @@ using namespace std;
 int main(int argc, char* argv[]) {
     shared_ptr<backlash::Engine> gEngine = backlash::Engine::GetInstance();
 
+    gEngine->Init();
+    gEngine->Run();
+    
     return EXIT_SUCCESS;
 }

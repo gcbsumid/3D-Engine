@@ -3,6 +3,7 @@
 #include "util.h"
 #include "ModelAsset.h"
 #include <cassert>
+#include <iostream>
 
 // Global static pointer used to ensure my singleton
 std::shared_ptr<backlash::GraphicsSystem> backlash::GraphicsSystem::mInstance;
@@ -14,7 +15,7 @@ std::shared_ptr<backlash::GraphicsSystem> backlash::GraphicsSystem::GetInstance(
     return mInstance;
 }
 
-backlash::GraphicsSystem::GraphicsSystem() : mCameraComponentID(-1) {}
+backlash::GraphicsSystem::GraphicsSystem() : mCameraComponentID(UINT_MAX) {}
 
 void backlash::GraphicsSystem::AddDrawComponent(GLuint id) {
     assert(utility::IsValidComponentID(id));
@@ -34,6 +35,8 @@ void backlash::GraphicsSystem::Render(COMPONENT_LIST& components,
      *       Assets should actually be located ~ either as a global variable or as a 
      *       member of the Graphics System.
      */
+    typedef std::shared_ptr<backlash::DrawComponent> DRAWCOMP_PTR;
+    typedef std::shared_ptr<backlash::CameraComponent> CAMERACOMP_PTR;
 
     // clear everything
     glClearColor(0, 0, 0, 1); // black
@@ -43,7 +46,8 @@ void backlash::GraphicsSystem::Render(COMPONENT_LIST& components,
     assert(utility::IsValidComponentID(mCameraComponentID));
     std::shared_ptr<backlash::Program> current = NULL;
     for (auto compID : mDrawComponentIDs) {
-        auto asset = assets.at(compID);
+        DRAWCOMP_PTR drawComponent = std::static_pointer_cast<backlash::DrawComponent>(components.at(compID));
+        auto asset = assets.at(drawComponent->GetAssetID());
         if (!asset->mShaders->IsInUse()) {
             if (current && current->IsInUse()) {
                 current->Stop();
@@ -51,7 +55,7 @@ void backlash::GraphicsSystem::Render(COMPONENT_LIST& components,
             current = asset->mShaders;
             current->Use();
         }
-        RenderInstance(std::static_pointer_cast<backlash::DrawComponent>(components.at(compID)), 
+        RenderInstance(drawComponent, 
                        asset, 
                        std::static_pointer_cast<backlash::CameraComponent>(components.at(mCameraComponentID)));
     }
