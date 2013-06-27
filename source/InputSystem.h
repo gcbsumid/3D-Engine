@@ -13,13 +13,8 @@ typedef std::map<GLuint,std::shared_ptr<backlash::EntityComponent> > COMPONENT_L
 namespace backlash {
     class InputSystem {
     public:
-        static std::shared_ptr<InputSystem> getInstance() {
-            if (mInstance.use_count() < 1) {
-                mInstance = std::shared_ptr<InputSystem>(new InputSystem);
-            }
-            return mInstance;
-        }
-
+        static std::shared_ptr<InputSystem> GetInstance();
+        
         ~InputSystem() {}
 
         void AddCameraComponent(GLuint);

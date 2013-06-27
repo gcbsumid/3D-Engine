@@ -17,12 +17,7 @@ typedef std::map<GLuint,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST;
 namespace backlash {
     class GraphicsSystem {
     public:
-        static std::shared_ptr<GraphicsSystem> getInstance() {
-            if (mInstance.use_count() < 1) {
-                mInstance = std::shared_ptr<GraphicsSystem>(new GraphicsSystem);
-            }
-            return mInstance;
-        }
+        static std::shared_ptr<GraphicsSystem> GetInstance();
 
         ~GraphicsSystem() {}
 
@@ -41,7 +36,7 @@ namespace backlash {
         static std::shared_ptr<GraphicsSystem> mInstance;
 
         std::list<GLuint> mDrawComponentIDs;
-        GLuint mCameraID;
+        GLuint mCameraComponentID;
 
         // Don't Implement copy constructor
         GraphicsSystem(const GraphicsSystem&);

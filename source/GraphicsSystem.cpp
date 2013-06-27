@@ -4,6 +4,18 @@
 #include "ModelAsset.h"
 #include <cassert>
 
+// Global static pointer used to ensure my singleton
+std::shared_ptr<backlash::GraphicsSystem> backlash::GraphicsSystem::mInstance;
+
+std::shared_ptr<backlash::GraphicsSystem> backlash::GraphicsSystem::GetInstance() {
+    if (mInstance.get() == 0) {
+        mInstance = std::shared_ptr<backlash::GraphicsSystem>(new backlash::GraphicsSystem);
+    }
+    return mInstance;
+}
+
+backlash::GraphicsSystem::GraphicsSystem() : mCameraComponentID(-1) {}
+
 void backlash::GraphicsSystem::AddDrawComponent(GLuint id) {
     assert(utility::IsValidComponentID(id));
 
@@ -13,7 +25,7 @@ void backlash::GraphicsSystem::AddDrawComponent(GLuint id) {
 void backlash::GraphicsSystem::AddCameraComponent(GLuint id) {
     assert(utility::IsValidComponentID(id));
 
-    mCameraID = id;
+    mCameraComponentID = id;
 }
 
 void backlash::GraphicsSystem::Render(COMPONENT_LIST& components, 
@@ -28,7 +40,7 @@ void backlash::GraphicsSystem::Render(COMPONENT_LIST& components,
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // render all instances
-    assert(utility::IsValidComponentID(mCameraID));
+    assert(utility::IsValidComponentID(mCameraComponentID));
     std::shared_ptr<backlash::Program> current = NULL;
     for (auto compID : mDrawComponentIDs) {
         auto asset = assets.at(compID);
@@ -41,7 +53,7 @@ void backlash::GraphicsSystem::Render(COMPONENT_LIST& components,
         }
         RenderInstance(std::static_pointer_cast<backlash::DrawComponent>(components.at(compID)), 
                        asset, 
-                       std::static_pointer_cast<backlash::CameraComponent>(components.at(mCameraID)));
+                       std::static_pointer_cast<backlash::CameraComponent>(components.at(mCameraComponentID)));
     }
     current->Stop();
 

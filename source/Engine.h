@@ -25,15 +25,9 @@ typedef std::map<GLuint,std::shared_ptr<backlash::Entity> > ENTITY_LIST;
 namespace backlash {
     class Engine {
     public:
-        static std::shared_ptr<Engine> GetInstance() {
-            if (mInstance.use_count() < 1) {
-                mInstance = std::shared_ptr<Engine>(new Engine);
-            }
+        static std::shared_ptr<Engine> GetInstance();
 
-            return mInstance;
-        }
-
-        ~Engine();
+        ~Engine() {}
 
         void Run();             // The game loop
         void Init();            // Initialize Engine properties

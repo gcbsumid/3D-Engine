@@ -18,6 +18,9 @@
 const glm::vec2 SCREEN_SIZE(800, 600);
 static const float degreesPerSecond = 180.0f;
 
+// Global static pointer used to ensure my singleton
+std::shared_ptr<backlash::Engine> backlash::Engine::mInstance;
+
 // THIS IS ONLY TEMPORARY
 GLuint gDotID = -1;
 GLfloat tempGDegreesRotated = 0.0f;
@@ -130,6 +133,15 @@ namespace backlash {
     Engine::Engine() : mGraphics(NULL), mInput(NULL) {
     }
 
+    
+    std::shared_ptr<Engine> Engine::GetInstance() {
+        if (mInstance.use_count() < 1) {
+            mInstance = std::shared_ptr<Engine>(new Engine);
+        }
+
+        return mInstance;
+    }
+
     void Engine::LoadAssets() {
         std::shared_ptr<ModelAsset> woodenCrate(new ModelAsset());
         mAssets.insert(std::make_pair(woodenCrate->mID, woodenCrate));
@@ -146,6 +158,9 @@ namespace backlash {
     }
 
     void Engine::CreateSystems() {
+        mGraphics = GraphicsSystem::GetInstance();
+        mInput = InputSystem::GetInstance();
+
         std::shared_ptr<CameraComponent> cameraComponent(new CameraComponent(SCREEN_SIZE));
         std::shared_ptr<Entity> player(new Entity());
 
