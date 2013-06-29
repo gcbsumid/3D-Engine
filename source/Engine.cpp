@@ -238,6 +238,7 @@ namespace backlash {
         std::shared_ptr<LightComponent> lightComponent(new LightComponent());
         mComponents.insert(std::make_pair(lightComponent->GetID(), lightComponent));
         mGraphics->AddLightComponent(lightComponent->GetID());
+        mInput->AddLightComponent(lightComponent->GetID());
         light->AddComponent(E_COMPONENT_LIGHT, lightComponent->GetID());
         mEntities.insert(std::make_pair(light->GetID(), light));
         lightComponent->SetPosition(glm::vec3(0,3,3));

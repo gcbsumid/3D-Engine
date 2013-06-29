@@ -1,4 +1,6 @@
 #include "InputSystem.h"
+#include "CameraComponent.h"
+#include "LightComponent.h"
 #include "Camera.h"
 #include "util.h"
 
@@ -10,7 +12,7 @@ static const float zoomSensitivity = 5.0f;
 // Global static pointer used to ensure my singleton
 std::shared_ptr<backlash::InputSystem> backlash::InputSystem::mInstance;
 
-backlash::InputSystem::InputSystem() : mCameraComponentID(UINT_MAX) {}
+backlash::InputSystem::InputSystem() : mCameraComponentID(UINT_MAX), mLightComponentID(UINT_MAX) {}
 
 std::shared_ptr<backlash::InputSystem> backlash::InputSystem::GetInstance() {
     if (mInstance.use_count() < 1) {
@@ -26,6 +28,12 @@ void backlash::InputSystem::AddCameraComponent(GLuint id) {
     mCameraComponentID = id;
 }
 
+void backlash::InputSystem::AddLightComponent(GLuint id) {
+    assert(utility::IsValidComponentID(id));
+
+    mLightComponentID = id;
+}
+
 void backlash::InputSystem::HandleInput(COMPONENT_LIST& components, double elapsedTime) {
     // TODO: Change Event handling from polling to using callbacks. 
     //       Link: http://content.gpwiki.org/index.php/GLFW:Tutorials:Basics#Input
@@ -34,6 +42,7 @@ void backlash::InputSystem::HandleInput(COMPONENT_LIST& components, double elaps
 
     auto cameraComponent = std::static_pointer_cast<backlash::CameraComponent>(components.at(mCameraComponentID));
     auto camera = cameraComponent->GetCamera();
+    auto light = std::static_pointer_cast<backlash::LightComponent>(components.at(mLightComponentID));
 
     // move position based on wasd keys
     if (glfwGetKey('S')) {
@@ -55,15 +64,18 @@ void backlash::InputSystem::HandleInput(COMPONENT_LIST& components, double elaps
     }
 
     if (glfwGetKey('1')) {
-        // TODO: Change light positin = camera.position
+        light->SetPosition(camera->Position());
     }
 
     if (glfwGetKey('2')) {
-        // TODO: Light intensity = glm::vec3(1,0,0); <- red
+        // Set Colour to red
+        light->SetIntensity(glm::vec3(1,0,0)); 
     } else if (glfwGetKey('3')) {
-        // TODO: Light intensity = glm::vec3(0,1,1); <- green
+        // Set Colour to green
+        light->SetIntensity(glm::vec3(0,1,1));         
     } else if (glfwGetKey('4')) {
-        // TODO: Light intensity = glm::vec3(1,1,1); <- white
+        // Set Colour to white
+        light->SetIntensity(glm::vec3(1,1,1));         
     }
 
 

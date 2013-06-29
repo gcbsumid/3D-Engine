@@ -18,12 +18,14 @@ namespace backlash {
         ~InputSystem() {}
 
         void AddCameraComponent(GLuint);
+        void AddLightComponent(GLuint);
         void HandleInput(COMPONENT_LIST&, double);
 
     private:
         static std::shared_ptr<InputSystem> mInstance;
 
         GLuint mCameraComponentID;
+        GLuint mLightComponentID; // temp
         InputSystem();
 
         // Don't Implement copy constructors

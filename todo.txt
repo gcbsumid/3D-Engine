@@ -2,7 +2,6 @@ TODO List:
 
 - Make Entities either static or dynamic (Update optimization)
 - make a room
-- Add Add lighting
 - Create new shaders
 
 TODO eventually List:
