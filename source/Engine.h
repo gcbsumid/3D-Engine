@@ -1,10 +1,6 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 #include <cassert>
 #include <iostream> // maybe
 #include <memory>
@@ -15,8 +11,6 @@
 #include "Entity.h"
 #include "ModelAsset.h"
 #include "EntityComponent.h"
-#include "DrawComponent.h"
-#include "CameraComponent.h"
 
 typedef std::map<GLuint,std::shared_ptr<backlash::EntityComponent> > COMPONENT_LIST;
 typedef std::map<GLuint,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST; 

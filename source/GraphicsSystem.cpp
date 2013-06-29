@@ -29,6 +29,12 @@ void backlash::GraphicsSystem::AddCameraComponent(GLuint id) {
     mCameraComponentID = id;
 }
 
+void backlash::GraphicsSystem::AddLightComponent(GLuint id) {
+    assert(utility::IsValidComponentID(id));
+
+    mLightComponentIDs.push_back(id);
+}
+
 void backlash::GraphicsSystem::Render(COMPONENT_LIST& components, 
                                       ASSET_LIST& assets) const {
     /* TODO: Lets have it like this for now. Maybe you can figure out later where the 
@@ -37,13 +43,17 @@ void backlash::GraphicsSystem::Render(COMPONENT_LIST& components,
      */
     typedef std::shared_ptr<backlash::DrawComponent> DRAWCOMP_PTR;
     typedef std::shared_ptr<backlash::CameraComponent> CAMERACOMP_PTR;
+    typedef std::shared_ptr<backlash::LightComponent> LIGHTCOMP_PTR;
 
     // clear everything
     glClearColor(0, 0, 0, 1); // black
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // render all instances
+    auto lightID = mLightComponentIDs.at(0);
     assert(utility::IsValidComponentID(mCameraComponentID));
+    assert(utility::IsValidComponentID(lightID));
+    LIGHTCOMP_PTR lightComp = std::static_pointer_cast<backlash::LightComponent>(components.at(lightID));
     std::shared_ptr<backlash::Program> current = NULL;
     for (auto compID : mDrawComponentIDs) {
         DRAWCOMP_PTR drawComponent = std::static_pointer_cast<backlash::DrawComponent>(components.at(compID));
@@ -57,6 +67,7 @@ void backlash::GraphicsSystem::Render(COMPONENT_LIST& components,
         }
         RenderInstance(drawComponent, 
                        asset, 
+                       lightComp,
                        std::static_pointer_cast<backlash::CameraComponent>(components.at(mCameraComponentID)));
     }
     current->Stop();
@@ -67,6 +78,7 @@ void backlash::GraphicsSystem::Render(COMPONENT_LIST& components,
 
 void backlash::GraphicsSystem::RenderInstance(std::shared_ptr<backlash::DrawComponent> renderComp, 
                                               std::shared_ptr<backlash::ModelAsset> asset,
+                                              std::shared_ptr<backlash::LightComponent> lightComp,
                                               std::shared_ptr<backlash::CameraComponent> cameraComp) const {
     auto shaders = asset->mShaders;
     auto camera = cameraComp->GetCamera();
@@ -75,6 +87,8 @@ void backlash::GraphicsSystem::RenderInstance(std::shared_ptr<backlash::DrawComp
     shaders->SetUniform("camera", camera->Matrix());
     shaders->SetUniform("model", renderComp->GetTransform());
     shaders->SetUniform("tex", 0); // texture is bounded to GL_TEXTURE0
+    shaders->SetUniform("light.position", lightComp->GetPosition());
+    shaders->SetUniform("light.intensities", lightComp->GetIntensity());
 
     // bind the texture
     glActiveTexture(GL_TEXTURE0);

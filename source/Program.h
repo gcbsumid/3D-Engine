@@ -69,7 +69,8 @@ namespace backlash {
         void SetUniform(const GLchar* uniformName, const glm::mat2& m, GLboolean transpose=GL_FALSE);
         void SetUniform(const GLchar* uniformName, const glm::mat3& m, GLboolean transpose=GL_FALSE);
         void SetUniform(const GLchar* uniformName, const glm::mat4& m, GLboolean transpose=GL_FALSE);
-
+        void SetUniform(const GLchar* uniformName, const glm::vec3& v);
+        void SetUniform(const GLchar* uniformName, const glm::vec4& v);
 
 
     private:

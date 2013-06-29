@@ -50,6 +50,7 @@ OBJECTS := \
 	$(OBJDIR)/EntityComponent.o \
 	$(OBJDIR)/DrawComponent.o \
 	$(OBJDIR)/CameraComponent.o \
+	$(OBJDIR)/LightComponent.o \
 	$(OBJDIR)/GraphicsSystem.o \
 	$(OBJDIR)/InputSystem.o \
 	$(OBJDIR)/Asset.o \
@@ -120,6 +121,10 @@ $(OBJDIR)/DrawComponent.o: source/DrawComponent.cpp
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 $(OBJDIR)/CameraComponent.o: source/CameraComponent.cpp 
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/LightComponent.o: source/LightComponent.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 

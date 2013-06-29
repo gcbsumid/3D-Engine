@@ -1,9 +1,7 @@
-#include "Engine.h"
-#include "Program.h"
-#include "Texture.h"
-#include "util.h"
-#include <GL/glfw.h>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <GL/glfw.h>
 #include <string>
 
 // for PATH_MAX
@@ -13,6 +11,13 @@
 // for readlink
 #include <unistd.h>
 
+#include "Engine.h"
+#include "Program.h"
+#include "Texture.h"
+#include "util.h"
+#include "DrawComponent.h"
+#include "CameraComponent.h"
+#include "LightComponent.h"
 
 // constants
 const glm::vec2 SCREEN_SIZE(800, 600);
@@ -44,54 +49,54 @@ static void LoadTriangle(std::shared_ptr<backlash::ModelAsset> asset) {
 
     // Put the three triangle vertices into the VBO
     GLfloat vertexData[] = {
-    //      X     Y     Z       U     V
+    //      X     Y     Z       U     V         Normals
     // bottom
-        -1.0f,-1.0f,-1.0f,   0.0f, 0.0f,
-        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,
-        -1.0f,-1.0f, 1.0f,   0.0f, 1.0f,
-        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,
-        1.0f,-1.0f, 1.0f,   1.0f, 1.0f,
-        -1.0f,-1.0f, 1.0f,   0.0f, 1.0f,
+        -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+        -1.0f,-1.0f, 1.0f,  0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+        1.0f,-1.0f, 1.0f,   1.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+        -1.0f,-1.0f, 1.0f,  0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
 
     // top
-        -1.0f, 1.0f,-1.0f,   0.0f, 0.0f,
-        -1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-        1.0f, 1.0f,-1.0f,   1.0f, 0.0f,
-        1.0f, 1.0f,-1.0f,   1.0f, 0.0f,
-        -1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
+        -1.0f, 1.0f,-1.0f,  0.0f, 0.0f,     0.0f, 1.0f, 0.0f,
+        -1.0f, 1.0f, 1.0f,  0.0f, 1.0f,     0.0f, 1.0f, 0.0f,
+        1.0f, 1.0f,-1.0f,   1.0f, 0.0f,     0.0f, 1.0f, 0.0f,
+        1.0f, 1.0f,-1.0f,   1.0f, 0.0f,     0.0f, 1.0f, 0.0f,
+        -1.0f, 1.0f, 1.0f,  0.0f, 1.0f,     0.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 1.0f,   1.0f, 1.0f,     0.0f, 1.0f, 0.0f,
 
     // front
-        -1.0f,-1.0f, 1.0f,   1.0f, 0.0f,
-        1.0f,-1.0f, 1.0f,   0.0f, 0.0f,
-        -1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,   0.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
+        -1.0f,-1.0f, 1.0f,  1.0f, 0.0f,     0.0f, 0.0f, 1.0f,
+        1.0f,-1.0f, 1.0f,   0.0f, 0.0f,     0.0f, 0.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,  1.0f, 1.0f,     0.0f, 0.0f, 1.0f,
+        1.0f,-1.0f, 1.0f,   0.0f, 0.0f,     0.0f, 0.0f, 1.0f,
+        1.0f, 1.0f, 1.0f,   0.0f, 1.0f,     0.0f, 0.0f, 1.0f,
+        -1.0f, 1.0f, 1.0f,  1.0f, 1.0f,     0.0f, 0.0f, 1.0f,
 
     // back
-        -1.0f,-1.0f,-1.0f,   0.0f, 0.0f,
-        -1.0f, 1.0f,-1.0f,   0.0f, 1.0f,
-        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,
-        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,
-        -1.0f, 1.0f,-1.0f,   0.0f, 1.0f,
-        1.0f, 1.0f,-1.0f,   1.0f, 1.0f,
+        -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,     0.0f, 0.0f, -1.0f,
+        -1.0f, 1.0f,-1.0f,  0.0f, 1.0f,     0.0f, 0.0f, -1.0f,
+        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     0.0f, 0.0f, -1.0f,
+        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     0.0f, 0.0f, -1.0f,
+        -1.0f, 1.0f,-1.0f,  0.0f, 1.0f,     0.0f, 0.0f, -1.0f,
+        1.0f, 1.0f,-1.0f,   1.0f, 1.0f,     0.0f, 0.0f, -1.0f,
 
     // left
-        -1.0f,-1.0f, 1.0f,   0.0f, 1.0f,
-        -1.0f, 1.0f,-1.0f,   1.0f, 0.0f,
-        -1.0f,-1.0f,-1.0f,   0.0f, 0.0f,
-        -1.0f,-1.0f, 1.0f,   0.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-        -1.0f, 1.0f,-1.0f,   1.0f, 0.0f,
+        -1.0f,-1.0f, 1.0f,  0.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
+        -1.0f, 1.0f,-1.0f,  1.0f, 0.0f,     -1.0f, 0.0f, 0.0f,
+        -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,     -1.0f, 0.0f, 0.0f,
+        -1.0f,-1.0f, 1.0f,  0.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
+        -1.0f, 1.0f, 1.0f,  1.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
+        -1.0f, 1.0f,-1.0f,  1.0f, 0.0f,     -1.0f, 0.0f, 0.0f,
 
     // right
-        1.0f,-1.0f, 1.0f,   1.0f, 1.0f,
-        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,
-        1.0f, 1.0f,-1.0f,   0.0f, 0.0f,
-        1.0f,-1.0f, 1.0f,   1.0f, 1.0f,
-        1.0f, 1.0f,-1.0f,   0.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,   0.0f, 1.0f
+        1.0f,-1.0f, 1.0f,   1.0f, 1.0f,     1.0f, 0.0f, 0.0f,
+        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     1.0f, 0.0f, 0.0f,
+        1.0f, 1.0f,-1.0f,   0.0f, 0.0f,     1.0f, 0.0f, 0.0f,
+        1.0f,-1.0f, 1.0f,   1.0f, 1.0f,     1.0f, 0.0f, 0.0f,
+        1.0f, 1.0f,-1.0f,   0.0f, 0.0f,     1.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, 1.0f,   0.0f, 1.0f,     1.0f, 0.0f, 0.0f
     };
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
@@ -99,12 +104,16 @@ static void LoadTriangle(std::shared_ptr<backlash::ModelAsset> asset) {
     // connect the xyz to the "vert" attribute of the vertex shader 
     GLuint vertAttrib = asset->mShaders->Attrib("vert");
     glEnableVertexAttribArray(vertAttrib);
-    glVertexAttribPointer(vertAttrib, 3, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), NULL);
+    glVertexAttribPointer(vertAttrib, 3, GL_FLOAT, GL_FALSE, 8*sizeof(GLfloat), NULL);
     
     // connect the uv coordinates to the "vertTexCoord" attribute of the vertex shader
     GLuint vertTexCoordAttrib = asset->mShaders->Attrib("vertTexCoord");
     glEnableVertexAttribArray(vertTexCoordAttrib);
-    glVertexAttribPointer(vertTexCoordAttrib, 2, GL_FLOAT, GL_TRUE, 5*sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));
+    glVertexAttribPointer(vertTexCoordAttrib, 2, GL_FLOAT, GL_TRUE, 8*sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));
+
+    GLuint vertNormalAttrib = asset->mShaders->Attrib("vertNormal");
+    glEnableVertexAttribArray(vertNormalAttrib);
+    glVertexAttribPointer(vertNormalAttrib, 3, GL_FLOAT, GL_TRUE, 8*sizeof(GLfloat), (const GLvoid*)(5 * sizeof(GLfloat)));
 
     // unbind the VBO and VAO
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -155,7 +164,6 @@ namespace backlash {
         glGenVertexArrays(1, &woodenCrate->mVAO);
 
         LoadTriangle(woodenCrate);
-
     }
 
     void Engine::CreateSystems() {
@@ -178,8 +186,12 @@ namespace backlash {
     }
 
     void Engine::CreateObjects() {
+        // TODO: maybe create a file that contains these information and have the engine read it and 
+        //       create the objects based on the information. Maybe create a LoadScene() function that 
+        //       takes in a file name
         GLuint woodCrateAssetID = 0;
 
+        // Created the instances
         std::shared_ptr<Entity> dot(new Entity());
         std::shared_ptr<DrawComponent> dotDrawComponent(new DrawComponent(woodCrateAssetID));
         mComponents.insert(std::make_pair(dotDrawComponent->GetID(), dotDrawComponent));
@@ -220,6 +232,16 @@ namespace backlash {
         hMidDrawComponent->SetTransform(translate(-6,0,0) * scale(2,1,0.8));
         hMid->AddComponent(E_COMPONENT_DRAW, hMidDrawComponent->GetID());
         mEntities.insert(std::make_pair(hMid->GetID(),hMid));
+
+        // Created the lights
+        std::shared_ptr<Entity> light(new Entity());
+        std::shared_ptr<LightComponent> lightComponent(new LightComponent());
+        mComponents.insert(std::make_pair(lightComponent->GetID(), lightComponent));
+        mGraphics->AddLightComponent(lightComponent->GetID());
+        light->AddComponent(E_COMPONENT_LIGHT, lightComponent->GetID());
+        mEntities.insert(std::make_pair(light->GetID(), light));
+        lightComponent->SetPosition(glm::vec3(0,3,3));
+        lightComponent->SetIntensity(glm::vec3(1,1,1));
     }
 
     void Engine::Init() {    

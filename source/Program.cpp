@@ -178,3 +178,10 @@ void backlash::Program::SetUniform(const GLchar* name, const glm::mat4& m, GLboo
     glUniformMatrix4fv(Uniform(name), 1, transpose, glm::value_ptr(m));
 }
 
+void backlash::Program::SetUniform(const GLchar* name, const glm::vec3& v) {
+    SetUniform3v(name, glm::value_ptr(v));
+}
+
+void backlash::Program::SetUniform(const GLchar* name, const glm::vec4& v) {
+    SetUniform4v(name, glm::value_ptr(v));
+}

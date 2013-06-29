@@ -27,6 +27,9 @@ void backlash::InputSystem::AddCameraComponent(GLuint id) {
 }
 
 void backlash::InputSystem::HandleInput(COMPONENT_LIST& components, double elapsedTime) {
+    // TODO: Change Event handling from polling to using callbacks. 
+    //       Link: http://content.gpwiki.org/index.php/GLFW:Tutorials:Basics#Input
+
     assert(utility::IsValidComponentID(mCameraComponentID));
 
     auto cameraComponent = std::static_pointer_cast<backlash::CameraComponent>(components.at(mCameraComponentID));
@@ -50,6 +53,19 @@ void backlash::InputSystem::HandleInput(COMPONENT_LIST& components, double elaps
     } else if (glfwGetKey('Z')){
         camera->MoveCamera(elapsedTime, camera->Up());
     }
+
+    if (glfwGetKey('1')) {
+        // TODO: Change light positin = camera.position
+    }
+
+    if (glfwGetKey('2')) {
+        // TODO: Light intensity = glm::vec3(1,0,0); <- red
+    } else if (glfwGetKey('3')) {
+        // TODO: Light intensity = glm::vec3(0,1,1); <- green
+    } else if (glfwGetKey('4')) {
+        // TODO: Light intensity = glm::vec3(1,1,1); <- white
+    }
+
 
     // View rotation based on mouse movements
     int mouseX = 0, mouseY = 0;

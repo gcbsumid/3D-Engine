@@ -16,3 +16,7 @@
 # Compiled executables
 *.debug
 *.release
+
+# Sublime Projects
+*.sublime-project
+*.sublime-workspace

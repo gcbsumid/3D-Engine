@@ -6,9 +6,11 @@
 #include "EntityComponent.h"
 #include "DrawComponent.h"
 #include "CameraComponent.h"
+#include "LightComponent.h"
 
 #include <map>
 #include <list>
+#include <vector>
 #include <memory>
 
 typedef std::map<GLuint,std::shared_ptr<backlash::EntityComponent> > COMPONENT_LIST;
@@ -23,12 +25,14 @@ namespace backlash {
 
         void AddCameraComponent(GLuint);
         void AddDrawComponent(GLuint);
+        void AddLightComponent(GLuint);
         void Render(COMPONENT_LIST& components, 
                     ASSET_LIST& assets) const ;
 
     private:
         void RenderInstance(std::shared_ptr<DrawComponent>, 
                             std::shared_ptr<ModelAsset>, 
+                            std::shared_ptr<LightComponent>,
                             std::shared_ptr<CameraComponent>) const;
 
         GraphicsSystem();      
@@ -36,6 +40,7 @@ namespace backlash {
         static std::shared_ptr<GraphicsSystem> mInstance;
 
         std::list<GLuint> mDrawComponentIDs;
+        std::vector<GLuint> mLightComponentIDs;
         GLuint mCameraComponentID;
 
         // Don't Implement copy constructor
