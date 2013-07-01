@@ -37,9 +37,11 @@ namespace backlash {
         GLuint mCameraComponentID;
         GLuint mLightComponentID; // temp
 
-        static void HandleKeyEvents(int key, int action);
-        static void HandleMousePosEvents(int xpos, int ypos);
-        static void HandleMouseWheelEvents(int pos);
+
+        // TODO: I can't do this yet. I don't know how to use threads. yet.
+        // static void HandleKeyEvents(int key, int action);
+        // static void HandleMousePosEvents(int xpos, int ypos);
+        // static void HandleMouseWheelEvents(int pos);
 
         InputSystem(Engine_ptr);
 

@@ -13,7 +13,6 @@ namespace backlash {
     }
 
     void DrawComponent::SetTransform(glm::mat4 transform) {
-        // TODO: probably do some checks here to make sure transform is valid
         mTransform = transform;
     }
 

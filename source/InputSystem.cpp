@@ -38,11 +38,11 @@ namespace backlash {
     }
 
     void InputSystem::Init() {
-        // TODO: you still have to write these functions.
+        // TODO: you need to learn how to multi-thread
 
-        glfwSetMouseWheelCallback(InputSystem::HandleMouseWheelEvents);
-        glfwSetMousePosCallback(InputSystem::HandleMousePosEvents);
-        glfwSetKeyCallback(InputSystem::HandleKeyEvents);
+        // glfwSetMouseWheelCallback(InputSystem::HandleMouseWheelEvents);
+        // glfwSetMousePosCallback(InputSystem::HandleMousePosEvents);
+        // glfwSetKeyCallback(InputSystem::HandleKeyEvents);
     }
 
     void InputSystem::HandleInput(double elapsedTime) {
@@ -105,15 +105,15 @@ namespace backlash {
 
     }
 
-    void GLFWCALL InputSystem::HandleKeyEvents(int key, int action) {
-        // TODO: Everything in here.
-    }
+    // void GLFWCALL InputSystem::HandleKeyEvents(int key, int action) {
+    //     // TODO: Everything in here.
+    // }
 
-    void GLFWCALL InputSystem::HandleMousePosEvents(int xpos, int ypos) {
-        // TODO: Everything in here.
-    }
+    // void GLFWCALL InputSystem::HandleMousePosEvents(int xpos, int ypos) {
+    //     // TODO: Everything in here.
+    // }
 
-    void GLFWCALL InputSystem::HandleMouseWheelEvents(int pos) {
-        // TODO: Everything in here.
-    }
+    // void GLFWCALL InputSystem::HandleMouseWheelEvents(int pos) {
+    //     // TODO: Everything in here.
+    // }
 }
