@@ -346,11 +346,10 @@ namespace backlash {
         glfwTerminate();
     }
 
-    template<class Derived>
-    std::shared_ptr<Derived> Engine::GetComponent(GLuint id) const {
+    std::shared_ptr<EntityComponent> Engine::GetComponent(GLuint id) const {
         assert(utility::IsValidComponentID(id));
 
-        return std::static_pointer_cast<Derived>(mComponents.at(id));
+        return mComponents.at(id);
     }
 
     std::shared_ptr<ModelAsset> Engine::GetAsset(GLuint id) const {

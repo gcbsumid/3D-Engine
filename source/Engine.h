@@ -27,8 +27,8 @@ namespace backlash {
         void Run();             // The game loop
         void Init();            // Initialize Engine properties
 
-        template<class Derived> 
-        std::shared_ptr<Derived> GetComponent(GLuint) const; 
+        // Figure out a way how to do this better
+        std::shared_ptr<EntityComponent> GetComponent(GLuint) const; 
         std::shared_ptr<ModelAsset> GetAsset(GLuint) const;
         std::shared_ptr<Entity> GetEntity(GLuint) const;
 

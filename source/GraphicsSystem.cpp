@@ -61,10 +61,10 @@ namespace backlash {
         assert(utility::IsValidComponentID(mCameraComponentID));
         assert(utility::IsValidComponentID(lightID));
 
-        LIGHTCOMP_PTR lightComp = mParent->GetComponent<LightComponent>(lightID);
+        auto lightComp = std::static_pointer_cast<LightComponent>(mParent->GetComponent(lightID));
         std::shared_ptr<Program> current = NULL;
         for (auto compID : mDrawComponentIDs) {
-            DRAWCOMP_PTR drawComponent = mParent->GetComponent<DrawComponent>(compID);
+            auto drawComponent = std::static_pointer_cast<DrawComponent>(mParent->GetComponent(compID));
             auto asset = mParent->GetAsset(drawComponent->GetAssetID());
             if (!asset->mShaders->IsInUse()) {
                 if (current && current->IsInUse()) {
@@ -73,10 +73,11 @@ namespace backlash {
                 current = asset->mShaders;
                 current->Use();
             }
+            auto cameraComp = std::static_pointer_cast<CameraComponent>(mParent->GetComponent(mCameraComponentID));
             RenderInstance(drawComponent, 
                            asset, 
                            lightComp,
-                           mParent->GetComponent<CameraComponent>(mCameraComponentID));
+                           cameraComp);
         }
         current->Stop();
 

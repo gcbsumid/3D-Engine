@@ -48,9 +48,9 @@ namespace backlash {
     void InputSystem::HandleInput(double elapsedTime) {
         assert(utility::IsValidComponentID(mCameraComponentID));
 
-        auto cameraComponent = mParent->GetComponent<CameraComponent>(mCameraComponentID);
-        auto camera = cameraComponent->GetCamera();
-        auto lightComponent =  mParent->GetComponent<LightComponent>(mLightComponentID);
+        auto cameraComp = std::static_pointer_cast<CameraComponent>(mParent->GetComponent(mCameraComponentID));
+        auto camera = cameraComp->GetCamera();
+        auto lightComp = std::static_pointer_cast<LightComponent>(mParent->GetComponent(mLightComponentID));
 
         // move position based on wasd keys
         if (glfwGetKey('S')) {
@@ -72,18 +72,18 @@ namespace backlash {
         }
 
         if (glfwGetKey('1')) {
-            lightComponent->SetPosition(camera->Position());
+            lightComp->SetPosition(camera->Position());
         }
 
         if (glfwGetKey('2')) {
             // Set Colour to red
-            lightComponent->SetIntensity(glm::vec3(1,0,0)); 
+            lightComp->SetIntensity(glm::vec3(1,0,0)); 
         } else if (glfwGetKey('3')) {
             // Set Colour to green
-            lightComponent->SetIntensity(glm::vec3(0,1,1));         
+            lightComp->SetIntensity(glm::vec3(0,1,1));         
         } else if (glfwGetKey('4')) {
             // Set Colour to white
-            lightComponent->SetIntensity(glm::vec3(1,1,1));         
+            lightComp->SetIntensity(glm::vec3(1,1,1));         
         }
 
 
