@@ -14,7 +14,6 @@
 // #include "Texture.h"
 
 namespace utility {
-
     // utility functions
     std::string ResourcePath(std::string filename);
     GLuint GenerateComponentID();

@@ -15,6 +15,9 @@
 #include "Program.h"
 #include "Texture.h"
 #include "util.h"
+#include "enum.h"
+#include "GraphicsSystem.h"
+#include "InputSystem.h"
 #include "DrawComponent.h"
 #include "CameraComponent.h"
 #include "LightComponent.h"
@@ -167,14 +170,14 @@ namespace backlash {
     }
 
     void Engine::CreateSystems() {
-        mGraphics = GraphicsSystem::GetInstance();
-        mInput = InputSystem::GetInstance();
+        mGraphics = GraphicsSystem::GetInstance(mInstance);
+        mInput = InputSystem::GetInstance(mInstance);
 
         std::shared_ptr<CameraComponent> cameraComponent(new CameraComponent(SCREEN_SIZE));
         std::shared_ptr<Entity> player(new Entity());
 
         // Add the camera component to the player entity and systems
-        player->AddComponent(E_COMPONENT_CAMERA, cameraComponent->GetID());
+        player->AddComponent(E_COMPONENT::E_COMPONENT_CAMERA, cameraComponent->GetID());
         mGraphics->AddCameraComponent(cameraComponent->GetID());
         mInput->AddCameraComponent(cameraComponent->GetID());
 
@@ -197,7 +200,7 @@ namespace backlash {
         mComponents.insert(std::make_pair(dotDrawComponent->GetID(), dotDrawComponent));
         mGraphics->AddDrawComponent(dotDrawComponent->GetID());
         dotDrawComponent->SetTransform(glm::mat4());
-        dot->AddComponent(E_COMPONENT_DRAW, dotDrawComponent->GetID());
+        dot->AddComponent(E_COMPONENT::E_COMPONENT_DRAW, dotDrawComponent->GetID());
         mEntities.insert(std::make_pair(dot->GetID(),dot));
         gDotID = dot->GetID();
 
@@ -206,7 +209,7 @@ namespace backlash {
         mComponents.insert(std::make_pair(iDrawComponent->GetID(), iDrawComponent));
         mGraphics->AddDrawComponent(iDrawComponent->GetID());
         iDrawComponent->SetTransform(translate(0,-4,0) * scale(1,2,1));
-        i->AddComponent(E_COMPONENT_DRAW, iDrawComponent->GetID());
+        i->AddComponent(E_COMPONENT::E_COMPONENT_DRAW, iDrawComponent->GetID());
         mEntities.insert(std::make_pair(i->GetID(),i));
 
         std::shared_ptr<Entity> hLeft(new Entity());
@@ -214,7 +217,7 @@ namespace backlash {
         mComponents.insert(std::make_pair(hLeftDrawComponent->GetID(), hLeftDrawComponent));
         mGraphics->AddDrawComponent(hLeftDrawComponent->GetID());
         hLeftDrawComponent->SetTransform(translate(-8,0,0) * scale(1,6,1));
-        hLeft->AddComponent(E_COMPONENT_DRAW, hLeftDrawComponent->GetID());
+        hLeft->AddComponent(E_COMPONENT::E_COMPONENT_DRAW, hLeftDrawComponent->GetID());
         mEntities.insert(std::make_pair(hLeft->GetID(),hLeft));
 
         std::shared_ptr<Entity> hRight(new Entity());
@@ -222,7 +225,7 @@ namespace backlash {
         mComponents.insert(std::make_pair(hRightDrawComponent->GetID(), hRightDrawComponent));
         mGraphics->AddDrawComponent(hRightDrawComponent->GetID());
         hRightDrawComponent->SetTransform(translate(-4,0,0) * scale(1,6,1));
-        hRight->AddComponent(E_COMPONENT_DRAW, hRightDrawComponent->GetID());
+        hRight->AddComponent(E_COMPONENT::E_COMPONENT_DRAW, hRightDrawComponent->GetID());
         mEntities.insert(std::make_pair(hRight->GetID(),hRight));
 
         std::shared_ptr<Entity> hMid(new Entity());
@@ -230,7 +233,7 @@ namespace backlash {
         mComponents.insert(std::make_pair(hMidDrawComponent->GetID(), hMidDrawComponent));
         mGraphics->AddDrawComponent(hMidDrawComponent->GetID());
         hMidDrawComponent->SetTransform(translate(-6,0,0) * scale(2,1,0.8));
-        hMid->AddComponent(E_COMPONENT_DRAW, hMidDrawComponent->GetID());
+        hMid->AddComponent(E_COMPONENT::E_COMPONENT_DRAW, hMidDrawComponent->GetID());
         mEntities.insert(std::make_pair(hMid->GetID(),hMid));
 
         // Created the lights
@@ -239,7 +242,7 @@ namespace backlash {
         mComponents.insert(std::make_pair(lightComponent->GetID(), lightComponent));
         mGraphics->AddLightComponent(lightComponent->GetID());
         mInput->AddLightComponent(lightComponent->GetID());
-        light->AddComponent(E_COMPONENT_LIGHT, lightComponent->GetID());
+        light->AddComponent(E_COMPONENT::E_COMPONENT_LIGHT, lightComponent->GetID());
         mEntities.insert(std::make_pair(light->GetID(), light));
         lightComponent->SetPosition(glm::vec3(0,3,3));
         lightComponent->SetIntensity(glm::vec3(1,1,1));
@@ -289,14 +292,14 @@ namespace backlash {
     }
     
     void Engine::Update(double elapsedTime) {
-        mInput->HandleInput(mComponents, elapsedTime);
+        mInput->HandleInput(elapsedTime);
 
         // rotating the dot
         tempGDegreesRotated += elapsedTime * degreesPerSecond;
         while (tempGDegreesRotated > 360.0f) {
             tempGDegreesRotated -=360.0f;
         }
-        GLuint drawComponentID = mEntities.at(gDotID)->GetComponentID(E_COMPONENT_DRAW);
+        GLuint drawComponentID = mEntities.at(gDotID)->GetComponentID(E_COMPONENT::E_COMPONENT_DRAW);
         std::shared_ptr<DrawComponent> dotDrawComp = std::static_pointer_cast<DrawComponent>(mComponents.at(drawComponentID));
         dotDrawComp->SetTransform(glm::rotate(glm::mat4(), tempGDegreesRotated, glm::vec3(0,1,0)));
     }
@@ -329,7 +332,7 @@ namespace backlash {
                 // Update(1.0/60.0);
                 framePerSecond++;
                 timer -= 1.0/60.0;
-                mGraphics->Render(mComponents, mAssets);
+                mGraphics->Render();
             }
 
             lastFrame = currentTime;
@@ -341,5 +344,24 @@ namespace backlash {
 
         // clean up and exits 
         glfwTerminate();
+    }
+
+    template<class Derived>
+    std::shared_ptr<Derived> Engine::GetComponent(GLuint id) const {
+        assert(utility::IsValidComponentID(id));
+
+        return std::static_pointer_cast<Derived>(mComponents.at(id));
+    }
+
+    std::shared_ptr<ModelAsset> Engine::GetAsset(GLuint id) const {
+        assert(utility::IsValidAssetID(id));
+
+        return mAssets.at(id);
+    }
+
+    std::shared_ptr<Entity> Engine::GetEntity(GLuint id) const {
+        assert(utility::IsValidEntityID(id));
+
+        return mEntities.at(id);
     }
 }

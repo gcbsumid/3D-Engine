@@ -1,24 +1,27 @@
 #include "DrawComponent.h"
 
-backlash::DrawComponent::DrawComponent(GLuint id) : backlash::EntityComponent(), 
-                                                    mAssetID(id),
-                                                    mTransform(glm::mat4(1.0f)) {}
+namespace backlash {
+    DrawComponent::DrawComponent(GLuint id) : 
+        EntityComponent(E_COMPONENT::E_COMPONENT_DRAW), 
+        mAssetID(id),
+        mTransform(glm::mat4(1.0f)){}
 
-backlash::DrawComponent::~DrawComponent() {}
+    DrawComponent::~DrawComponent() {}
 
-void backlash::DrawComponent::Update() {
-    // Do something?
-}
+    void DrawComponent::Update() {
+        // Do something?
+    }
 
-void backlash::DrawComponent::SetTransform(glm::mat4 transform) {
-    // TODO: probably do some checks here to make sure transform is valid
-    mTransform = transform;
-}
+    void DrawComponent::SetTransform(glm::mat4 transform) {
+        // TODO: probably do some checks here to make sure transform is valid
+        mTransform = transform;
+    }
 
-glm::mat4 backlash::DrawComponent::GetTransform() const {
-    return mTransform;
-}
+    glm::mat4 DrawComponent::GetTransform() const {
+        return mTransform;
+    }
 
-GLuint backlash::DrawComponent::GetAssetID() const {
-    return mAssetID;
+    GLuint DrawComponent::GetAssetID() const {
+        return mAssetID;
+    }    
 }

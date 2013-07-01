@@ -6,8 +6,6 @@
 #include <memory>
 #include <map>
 
-#include "InputSystem.h"
-#include "GraphicsSystem.h"
 #include "Entity.h"
 #include "ModelAsset.h"
 #include "EntityComponent.h"
@@ -17,6 +15,9 @@ typedef std::map<GLuint,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST;
 typedef std::map<GLuint,std::shared_ptr<backlash::Entity> > ENTITY_LIST;
 
 namespace backlash {
+    class GraphicsSystem;
+    class InputSystem;
+    
     class Engine {
     public:
         static std::shared_ptr<Engine> GetInstance();
@@ -25,6 +26,11 @@ namespace backlash {
 
         void Run();             // The game loop
         void Init();            // Initialize Engine properties
+
+        template<class Derived> 
+        std::shared_ptr<Derived> GetComponent(GLuint) const; 
+        std::shared_ptr<ModelAsset> GetAsset(GLuint) const;
+        std::shared_ptr<Entity> GetEntity(GLuint) const;
 
     private:
         Engine();

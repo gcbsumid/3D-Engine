@@ -3,6 +3,7 @@
 
 #include "EntityComponent.h"
 #include "Camera.h"
+#include "enum.h"
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>

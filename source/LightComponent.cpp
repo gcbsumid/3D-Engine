@@ -1,25 +1,28 @@
 #include "LightComponent.h"
 
-backlash::LightComponent::LightComponent() : backlash::EntityComponent() {}
+namespace backlash {
+    LightComponent::LightComponent() : 
+            EntityComponent(E_COMPONENT::E_COMPONENT_LIGHT) {}
 
-backlash::LightComponent::~LightComponent() {}
+    LightComponent::~LightComponent() {}
 
-void backlash::LightComponent::Update() {
-    // Do something?
-}
+    void LightComponent::Update() {
+        // Do something?
+    }
 
-void backlash::LightComponent::SetPosition(glm::vec3 position) {
-    mPosition = position;
-}
+    void LightComponent::SetPosition(glm::vec3 position) {
+        mPosition = position;
+    }
 
-glm::vec3 backlash::LightComponent::GetPosition() const {
-    return mPosition;
-}
+    glm::vec3 LightComponent::GetPosition() const {
+        return mPosition;
+    }
 
-void backlash::LightComponent::SetIntensity(glm::vec3 intensity) {
-    mIntensity = intensity;
-}
+    void LightComponent::SetIntensity(glm::vec3 intensity) {
+        mIntensity = intensity;
+    }
 
-glm::vec3 backlash::LightComponent::GetIntensity() const {
-    return mIntensity;
+    glm::vec3 LightComponent::GetIntensity() const {
+        return mIntensity;
+    }
 }

@@ -3,12 +3,15 @@
 
 #include "EntityComponent.h"
 #include "ModelAsset.h"
+#include "enum.h"
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace backlash {
+    enum class E_COMPONENT;
+
     class DrawComponent : public EntityComponent {
     public:
         DrawComponent(GLuint);

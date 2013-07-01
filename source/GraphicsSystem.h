@@ -3,10 +3,12 @@
 
 #include <GL/glew.h>
 
+#include "Engine.h"
 #include "EntityComponent.h"
 #include "DrawComponent.h"
 #include "CameraComponent.h"
 #include "LightComponent.h"
+#include "ModelAsset.h"
 
 #include <map>
 #include <list>
@@ -17,17 +19,20 @@ typedef std::map<GLuint,std::shared_ptr<backlash::EntityComponent> > COMPONENT_L
 typedef std::map<GLuint,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST;
 
 namespace backlash {
+    class Engine;
+
     class GraphicsSystem {
+        typedef std::shared_ptr<GraphicsSystem> GraphicsSystem_ptr;
+        typedef std::shared_ptr<Engine> Engine_ptr;
     public:
-        static std::shared_ptr<GraphicsSystem> GetInstance();
+        static GraphicsSystem_ptr GetInstance(Engine_ptr parent);
 
         ~GraphicsSystem() {}
 
         void AddCameraComponent(GLuint);
         void AddDrawComponent(GLuint);
         void AddLightComponent(GLuint);
-        void Render(COMPONENT_LIST& components, 
-                    ASSET_LIST& assets) const ;
+        void Render() const ;
 
     private:
         void RenderInstance(std::shared_ptr<DrawComponent>, 
@@ -35,9 +40,11 @@ namespace backlash {
                             std::shared_ptr<LightComponent>,
                             std::shared_ptr<CameraComponent>) const;
 
-        GraphicsSystem();      
+        GraphicsSystem(Engine_ptr parent);      
 
-        static std::shared_ptr<GraphicsSystem> mInstance;
+        static GraphicsSystem_ptr mInstance;
+
+        const Engine_ptr mParent;
 
         std::list<GLuint> mDrawComponentIDs;
         std::vector<GLuint> mLightComponentIDs;

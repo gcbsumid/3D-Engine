@@ -8,7 +8,7 @@
 #include <cassert>
 
 static bool IsValid(backlash::E_COMPONENT comp) {
-    return (comp >= backlash::E_COMPONENT::E_COMPONENT_FIRST && 
+    return (comp >= backlash::E_COMPONENT::E_COMPONENT_DRAW && 
             comp < backlash::E_COMPONENT::E_COMPONENT_MAX) ? true : false;
 }
 
@@ -29,7 +29,7 @@ void backlash::Entity::AddComponent(backlash::E_COMPONENT comp, GLuint id) {
 GLuint backlash::Entity::GetComponentID(E_COMPONENT comp) const {
     if (mComponents.count(comp) == 0) {
         std::stringstream msg;
-        msg << "The component " << comp << " doesn't exist in this entity." << std::endl;
+        msg << "The component " << (unsigned int)comp << " doesn't exist in this entity." << std::endl;
         throw std::runtime_error(msg.str());
     }
 
