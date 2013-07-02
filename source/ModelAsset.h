@@ -25,6 +25,8 @@ namespace backlash {
         GLint mDrawStart;
         GLint mDrawCount;
 
+        GLfloat mShininess; 
+        glm::vec3 mSpecularColor;
         const GLuint mID;
     };
 }

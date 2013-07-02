@@ -95,9 +95,14 @@ namespace backlash {
         // set shader uniforms
         shaders->SetUniform("camera", camera->Matrix());
         shaders->SetUniform("model", renderComp->GetTransform());
-        shaders->SetUniform("tex", 0); // texture is bounded to GL_TEXTURE0
+        shaders->SetUniform("material.tex", 0); // texture is bounded to GL_TEXTURE0
+        shaders->SetUniform("material.shininess", asset->mShininess);
+        shaders->SetUniform("material.specularColor", asset->mSpecularColor);
         shaders->SetUniform("light.position", lightComp->GetPosition());
         shaders->SetUniform("light.intensities", lightComp->GetIntensity());
+        shaders->SetUniform("light.attenuation", lightComp->GetAttenuation());
+        shaders->SetUniform("light.ambientCoefficient", lightComp->GetAmbientCoefficient());
+        shaders->SetUniform("cameraPosition", camera->Position());
 
         // bind the texture
         glActiveTexture(GL_TEXTURE0);

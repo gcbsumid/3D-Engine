@@ -21,9 +21,16 @@ namespace backlash {
         void SetIntensity(glm::vec3);
         glm::vec3 GetIntensity() const;
 
+        void SetAttenuation(GLfloat);
+        GLfloat GetAttenuation() const;
+
+        void SetAmbientCoefficient(GLfloat);
+        GLfloat GetAmbientCoefficient() const;
     private:
         glm::vec3 mPosition;
         glm::vec3 mIntensity;
+        GLfloat mAttenuation; 
+        GLfloat mAmbientCoefficient;
     };
 }
 

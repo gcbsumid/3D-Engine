@@ -25,4 +25,20 @@ namespace backlash {
     glm::vec3 LightComponent::GetIntensity() const {
         return mIntensity;
     }
+
+    void LightComponent::SetAttenuation(GLfloat attenuation) {
+        mAttenuation = attenuation;
+    }
+
+    GLfloat LightComponent::GetAttenuation() const {
+        return mAttenuation;
+    }
+
+    void LightComponent::SetAmbientCoefficient(GLfloat ambientCoefficient) {
+        mAmbientCoefficient = ambientCoefficient;
+    }
+
+    GLfloat LightComponent::GetAmbientCoefficient() const {
+        return mAmbientCoefficient;
+    }
 }

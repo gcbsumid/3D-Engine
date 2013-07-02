@@ -1,12 +1,20 @@
 #version 150
 
 uniform mat4 model;
-uniform sampler2D tex; // This is the texture
+uniform vec3 cameraPosition;
 
 uniform struct Light {
     vec3 position;
     vec3 intensities;   // color of the light
+    float ambientCoefficient;
+    float attenuation;
 } light;
+
+uniform struct Material {
+    sampler2D tex; // This is the texture
+    float shininess;
+    vec3 specularColor;
+} material;
 
 in vec2 fragTexCoord; // This is the texture coordinates
 in vec3 fragNormal;
@@ -18,23 +26,34 @@ out vec4 finalColor;   // This is the output color for pixels
 // color of each pixel that is drawn
 
 void main() {
-    // calculate the normal in world coordinates
-    mat3 normalMatrix = transpose(inverse(mat3(model)));
-    vec3 normal = normalize(normalMatrix * fragNormal);
+    vec3 fragNormalInWorld = normalize(transpose(inverse(mat3(model))) * fragNormal);
 
-    // calculate the location of this fragment in world coords
-    vec3 fragPosition = vec3(model * vec4(fragVert, 1));
+    vec3 surfacePos = vec3(model * vec4(fragVert, 1));
+    vec4 surfaceColor = texture(material.tex, fragTexCoord);
+    vec3 surfaceToLight = normalize(light.position - surfacePos);
 
-    // calculate the vector from this pixels surface to the light source
-    vec3 surfaceToLight = light.position - fragPosition;
+    // calulate for the diffuse
+    float diffuseCoefficient = max(0.0, dot(fragNormalInWorld, surfaceToLight));
+    vec3 diffuse = diffuseCoefficient * surfaceColor.rgb * light.intensities;
 
-    // calculate the cosine of the angle of inscidence (brightness)
-    float brightness = dot(surfaceToLight, normal) / (length(surfaceToLight) * length(normal));
-    brightness = clamp(brightness, 0, 1);
+    // Calculate the ambience
+    vec3 ambient = light.ambientCoefficient * surfaceColor.rgb * light.intensities;
 
-    // calculate the final colour of the pixel based on:
-    // 1. brightness, 
-    // 2. light.intensities
-    // 3. texture(tex, fragTexCoord)
-    finalColor = brightness * vec4(light.intensities, 1) * texture(tex, fragTexCoord);
+    // Calculate the specular
+    vec3 surfaceToCamera = normalize(cameraPosition - surfacePos);
+    float specularCoefficient = 0.0;
+    if(diffuseCoefficient > 0.0) {
+        specularCoefficient = pow(max(0.0, dot(surfaceToCamera, reflect(-surfaceToLight, fragNormalInWorld))), material.shininess);
+    }
+    vec3 specular = specularCoefficient * material.specularColor * light.intensities;
+
+    // Calculate the light attenuation (as light source fades)
+    float distanceToLight = length(light.position - surfacePos);
+    float attenuation = 1.0 / (1.0 + light.attenuation * pow(distanceToLight, 2));
+
+    // Calculate the color at that point
+    vec3 linearColor = ambient + attenuation*(diffuse + specular);
+
+    vec3 gamma = vec3(1.0/2.2);
+    finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);
 }

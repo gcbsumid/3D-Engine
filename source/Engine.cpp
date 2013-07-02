@@ -163,6 +163,8 @@ namespace backlash {
         woodenCrate->mDrawStart = 0;
         woodenCrate->mDrawCount = 6*2*3;
         woodenCrate->mTextures = LoadTexture("wooden-crate.jpg");
+        woodenCrate->mShininess = 80.0;
+        woodenCrate->mSpecularColor = glm::vec3(1.0f, 1.0f, 1.0f);
         glGenBuffers(1, &woodenCrate->mVBO);
         glGenVertexArrays(1, &woodenCrate->mVAO);
 
@@ -246,6 +248,8 @@ namespace backlash {
         mEntities.insert(std::make_pair(light->GetID(), light));
         lightComponent->SetPosition(glm::vec3(0,3,3));
         lightComponent->SetIntensity(glm::vec3(1,1,1));
+        lightComponent->SetAttenuation(0.1f);
+        lightComponent->SetAmbientCoefficient(0.005f);
     }
 
     void Engine::Init() {    

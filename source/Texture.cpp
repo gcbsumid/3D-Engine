@@ -1,12 +1,12 @@
 #include "Texture.h"
 #include <stdexcept>
 
-static GLenum TextureFormatForBitmapFormat(backlash::Bitmap::E_FORMAT format) {
+static GLenum TextureFormatForBitmapFormat(backlash::Bitmap::E_FORMAT format, bool srgb) {
     switch (format) {
         case backlash::Bitmap::E_FORMAT_GREYSCALE: return GL_LUMINANCE;
         case backlash::Bitmap::E_FORMAT_GREYSCALEALPHA: return GL_LUMINANCE_ALPHA;
-        case backlash::Bitmap::E_FORMAT_RGB: return GL_RGB;
-        case backlash::Bitmap::E_FORMAT_RGBA: return GL_RGBA;
+        case backlash::Bitmap::E_FORMAT_RGB: return (srgb ? GL_SRGB : GL_RGB);
+        case backlash::Bitmap::E_FORMAT_RGBA: return (srgb ? GL_SRGB_ALPHA : GL_RGBA);
         default: throw std::runtime_error("Unrecognised Bitmap::Format");
     }
 }
@@ -31,11 +31,11 @@ backlash::Texture::Texture(const backlash::Bitmap& bitmap, GLint minMagFiler, GL
     // setting the data
     glTexImage2D(GL_TEXTURE_2D,
                     0,
-                    TextureFormatForBitmapFormat(bitmap.Format()),
+                    TextureFormatForBitmapFormat(bitmap.Format(), true),
                     (GLsizei)bitmap.Width(),
                     (GLsizei)bitmap.Height(),
                     0,
-                    TextureFormatForBitmapFormat(bitmap.Format()),
+                    TextureFormatForBitmapFormat(bitmap.Format(), false),
                     GL_UNSIGNED_BYTE,
                     bitmap.PixelBuffer());
 
