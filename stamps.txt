@@ -29,3 +29,7 @@ an extremely tiny step for alot of people." - Christian
 June 27, 2013: It's now an entity system. It also compiles and runs! I'm so 
 freaking happy. I'm making progress. PROGRESS, I SAY! Next up: Add lighting! 
 and then some new shaders! Woooooooot!
+
+July 3, 2013: I've managed to add some lighting now. I've also figured out how 
+to install and link to Assimp libraries. I next have to figure out how to use 
+assimp to load files into assets. 

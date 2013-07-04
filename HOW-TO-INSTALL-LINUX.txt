@@ -1,0 +1,31 @@
+# First download and extract assimp - source only from their website.
+# then install boost (if you don't already have it)
+# then go to the assimp directory and install assimp.
+# final note: To those new like me, use "-lassimp" as a linker flag in your 
+-             makefile. 
+
+(Use GIT to checkout assimp)
+# For debian/ubuntu/mint
+sudo apt-get install libboost-dev-all
+# For Fedora
+sudo yum install boost-devel
+cd assimp
+cmake -G 'Unix Makefiles'
+  -- Boost version: 1.42.0
+  -- Found ZLIB: /usr/include (found version "1.2.3.4")
+  -- checking for module 'minizip'
+  --   package 'minizip' not found
+  -- Configuring done
+  -- Generating done
+  -- Build files have been written to: /home/.../src/assimp
+make
+   Scanning dependencies of target assimp
+  ...
+  [100%] Built target assimp_cmd
+ 
+sudo make install
+sudo ldconfig
+
+# Note, if "cmake" fails with glut not found, try this (on ubuntu)
+
+$ sudo apt-get install freeglut3-dev freeglut3 libxmu-dev libxi-dev

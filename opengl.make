@@ -25,7 +25,7 @@ ifeq ($(config),debug)
 	CPPFLAGS   += -MMD -MP $(DEFINES) -g -Wall $(INCLUDES) $(COMPILER)
 	CXXFLAGS 	= $(CPPFLAGS)
 	LDFLAGS 	= 
-	LIBS      += -lGL -lglfw -lGLEW
+	LIBS       += -lGL -lglfw -lGLEW -lassimp
 endif
 
 ifeq ($(config),release)
@@ -37,6 +37,7 @@ ifeq ($(config),release)
 	CPPFLAGS   += -MMD -MP $(DEFINES) -02 -Wall $(COMPILER)
 	CXXFLAGS 	= $(CPPFLAGS)
 	LDFLAGS 	= -s
+	LIBS       += -lGL -lglfw -lGLEW -lassimp
 endif
 
 OBJECTS := \
