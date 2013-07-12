@@ -1,5 +1,5 @@
-#ifndef ENTITYCOMPONENT_H
-#define ENTITYCOMPONENT_H
+#ifndef COMPONENT_H
+#define COMPONENT_H
 
 #include <GL/glew.h>
 
@@ -8,10 +8,10 @@
 namespace backlash {
     enum class E_COMPONENT ;
 
-    class EntityComponent {
+    class Component {
     public:
-        EntityComponent(E_COMPONENT);
-        ~EntityComponent();
+        Component(E_COMPONENT);
+        ~Component();
 
         virtual void Update() = 0;
         GLuint GetID() const;

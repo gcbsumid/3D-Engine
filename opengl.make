@@ -48,12 +48,12 @@ OBJECTS := \
 	$(OBJDIR)/Bitmap.o \
 	$(OBJDIR)/Camera.o \
 	$(OBJDIR)/Entity.o \
-	$(OBJDIR)/EntityComponent.o \
+	$(OBJDIR)/Component.o \
 	$(OBJDIR)/DrawComponent.o \
 	$(OBJDIR)/CameraComponent.o \
 	$(OBJDIR)/LightComponent.o \
-	$(OBJDIR)/GraphicsSystem.o \
-	$(OBJDIR)/InputSystem.o \
+	$(OBJDIR)/GraphicsManager.o \
+	$(OBJDIR)/InputManager.o \
 	$(OBJDIR)/Asset.o \
 	$(OBJDIR)/Engine.o \
 	$(OBJDIR)/util.o \
@@ -113,7 +113,7 @@ $(OBJDIR)/Entity.o: source/Entity.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/EntityComponent.o: source/EntityComponent.cpp 
+$(OBJDIR)/Component.o: source/Component.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
@@ -129,11 +129,11 @@ $(OBJDIR)/LightComponent.o: source/LightComponent.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/InputSystem.o: source/InputSystem.cpp 
+$(OBJDIR)/InputManager.o: source/InputManager.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/GraphicsSystem.o: source/GraphicsSystem.cpp 
+$(OBJDIR)/GraphicsManager.o: source/GraphicsManager.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 

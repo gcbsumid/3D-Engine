@@ -2,7 +2,7 @@
 
 namespace backlash {
     DrawComponent::DrawComponent(GLuint id) : 
-        EntityComponent(E_COMPONENT::E_COMPONENT_DRAW), 
+        Component(E_COMPONENT::E_COMPONENT_DRAW), 
         mAssetID(id),
         mTransform(glm::mat4(1.0f)){}
 

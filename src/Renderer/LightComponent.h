@@ -1,14 +1,14 @@
 #ifndef LIGHTCOMPONENT_H
 #define LIGHTCOMPONENT_H
 
-#include "EntityComponent.h"
+#include "Component.h"
 #include "enum.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace backlash {
-    class LightComponent : public EntityComponent {
+    class LightComponent : public Component {
     public:
         LightComponent();
         ~LightComponent();

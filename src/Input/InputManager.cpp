@@ -1,4 +1,4 @@
-#include "InputSystem.h"
+#include "InputManager.h"
 #include "CameraComponent.h"
 #include "LightComponent.h"
 #include "Camera.h"
@@ -10,42 +10,42 @@ static const float mouseSensitivity = 0.1f;
 static const float zoomSensitivity = 5.0f;
 
 // Global static pointer used to ensure my singleton
-std::shared_ptr<backlash::InputSystem> backlash::InputSystem::mInstance;
+std::shared_ptr<backlash::InputManager> backlash::InputManager::mInstance;
 
 namespace backlash {
-    InputSystem::InputSystem(Engine_ptr parent) : 
+    InputManager::InputManager(Engine_ptr parent) : 
             mParent(parent),
             mCameraComponentID(UINT_MAX), 
             mLightComponentID(UINT_MAX) {}
 
-    std::shared_ptr<InputSystem> InputSystem::GetInstance(Engine_ptr parent) {
+    std::shared_ptr<InputManager> InputManager::GetInstance(Engine_ptr parent) {
         if (mInstance.use_count() < 1) {
-            mInstance = std::shared_ptr<InputSystem>(new InputSystem(parent));
+            mInstance = std::shared_ptr<InputManager>(new InputManager(parent));
         }
         return mInstance;
     }
 
-    void InputSystem::AddCameraComponent(GLuint id) {
+    void InputManager::AddCameraComponent(GLuint id) {
         assert(utility::IsValidComponentID(id));
 
         mCameraComponentID = id;
     }
 
-    void InputSystem::AddLightComponent(GLuint id) {
+    void InputManager::AddLightComponent(GLuint id) {
         assert(utility::IsValidComponentID(id));
 
         mLightComponentID = id;
     }
 
-    void InputSystem::Init() {
+    void InputManager::Init() {
         // TODO: you need to learn how to multi-thread
 
-        // glfwSetMouseWheelCallback(InputSystem::HandleMouseWheelEvents);
-        // glfwSetMousePosCallback(InputSystem::HandleMousePosEvents);
-        // glfwSetKeyCallback(InputSystem::HandleKeyEvents);
+        // glfwSetMouseWheelCallback(InputManager::HandleMouseWheelEvents);
+        // glfwSetMousePosCallback(InputManager::HandleMousePosEvents);
+        // glfwSetKeyCallback(InputManager::HandleKeyEvents);
     }
 
-    void InputSystem::HandleInput(double elapsedTime) {
+    void InputManager::HandleInput(double elapsedTime) {
         assert(utility::IsValidComponentID(mCameraComponentID));
 
         auto cameraComp = std::static_pointer_cast<CameraComponent>(mParent->GetComponent(mCameraComponentID));
@@ -105,15 +105,15 @@ namespace backlash {
 
     }
 
-    // void GLFWCALL InputSystem::HandleKeyEvents(int key, int action) {
+    // void GLFWCALL InputManager::HandleKeyEvents(int key, int action) {
     //     // TODO: Everything in here.
     // }
 
-    // void GLFWCALL InputSystem::HandleMousePosEvents(int xpos, int ypos) {
+    // void GLFWCALL InputManager::HandleMousePosEvents(int xpos, int ypos) {
     //     // TODO: Everything in here.
     // }
 
-    // void GLFWCALL InputSystem::HandleMouseWheelEvents(int pos) {
+    // void GLFWCALL InputManager::HandleMouseWheelEvents(int pos) {
     //     // TODO: Everything in here.
     // }
 }

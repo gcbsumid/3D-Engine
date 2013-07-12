@@ -24,6 +24,8 @@ namespace backlash {
         GLuint mID;
         // TODO: Make Entities have a static boolean. Optimization for 
         //       Entity updates.
+        // TODO: Make Entities have status that will affect what AI Algorithm 
+        //       they will run.
     };
 }
 

@@ -2,7 +2,7 @@
 
 namespace backlash {
     LightComponent::LightComponent() : 
-            EntityComponent(E_COMPONENT::E_COMPONENT_LIGHT) {}
+            Component(E_COMPONENT::E_COMPONENT_LIGHT) {}
 
     LightComponent::~LightComponent() {}
 

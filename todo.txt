@@ -1,10 +1,15 @@
 TODO List:
 
+HIGHER PRIORITY
+- Implement a bunch of .cpp files
+- Turn the Algorithms into a decorator type (so that you can do two updates at the same time?)
+- Use Assimp for resource managing. Basically, for the resource manager. (Resource Manager)
+
+LOWER PRIORITY
 - Make Entities either static or dynamic (Update optimization)
 - make a room
 - Create new shaders
 - Add more lighting
-- Use Assimp for resource managing. Basically, for the resource manager. (Resource Manager)
 
 TODO eventually List:
 - Physics System - Something simple. Probably Just gravity first. 

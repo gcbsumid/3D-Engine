@@ -16,8 +16,8 @@
 #include "Texture.h"
 #include "util.h"
 #include "enum.h"
-#include "GraphicsSystem.h"
-#include "InputSystem.h"
+#include "GraphicsManager.h"
+#include "InputManager.h"
 #include "DrawComponent.h"
 #include "CameraComponent.h"
 #include "LightComponent.h"
@@ -172,8 +172,8 @@ namespace backlash {
     }
 
     void Engine::CreateSystems() {
-        mGraphics = GraphicsSystem::GetInstance(mInstance);
-        mInput = InputSystem::GetInstance(mInstance);
+        mGraphics = GraphicsManager::GetInstance(mInstance);
+        mInput = InputManager::GetInstance(mInstance);
 
         std::shared_ptr<CameraComponent> cameraComponent(new CameraComponent(SCREEN_SIZE));
         std::shared_ptr<Entity> player(new Entity());
@@ -350,7 +350,7 @@ namespace backlash {
         glfwTerminate();
     }
 
-    std::shared_ptr<EntityComponent> Engine::GetComponent(GLuint id) const {
+    std::shared_ptr<Component> Engine::GetComponent(GLuint id) const {
         assert(utility::IsValidComponentID(id));
 
         return mComponents.at(id);

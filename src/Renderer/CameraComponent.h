@@ -1,7 +1,7 @@
 #ifndef CAMERACOMPONENT_H
 #define CAMERACOMPONENT_H
 
-#include "EntityComponent.h"
+#include "Component.h"
 #include "Camera.h"
 #include "enum.h"
 
@@ -10,7 +10,7 @@
 #include <memory>
 
 namespace backlash {
-    class CameraComponent : public EntityComponent {
+    class CameraComponent : public Component {
     public:
         CameraComponent(glm::vec2);
         ~CameraComponent();

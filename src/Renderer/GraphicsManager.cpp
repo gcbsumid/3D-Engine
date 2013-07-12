@@ -1,11 +1,11 @@
-#include "GraphicsSystem.h"
+#include "GraphicsManager.h"
 #include "Program.h"
 #include "util.h"
 #include <cassert>
 #include <iostream>
 
 // Global static pointer used to ensure my singleton
-std::shared_ptr<backlash::GraphicsSystem> backlash::GraphicsSystem::mInstance;
+std::shared_ptr<backlash::GraphicsManager> backlash::GraphicsManager::mInstance;
 
 // Typedefs 
 
@@ -16,37 +16,37 @@ typedef std::shared_ptr<backlash::ModelAsset> MODELASSET_PTR;
 
 
 namespace backlash {
-    GraphicsSystem::GraphicsSystem_ptr GraphicsSystem::GetInstance(
-        GraphicsSystem::Engine_ptr parent) {
+    GraphicsManager::GraphicsManager_ptr GraphicsManager::GetInstance(
+        GraphicsManager::Engine_ptr parent) {
         if (mInstance.get() == 0) {
-            mInstance = std::shared_ptr<GraphicsSystem>(new GraphicsSystem(parent));
+            mInstance = std::shared_ptr<GraphicsManager>(new GraphicsManager(parent));
         }
         return mInstance;
     }
 
-    GraphicsSystem::GraphicsSystem(GraphicsSystem::Engine_ptr parent) : 
+    GraphicsManager::GraphicsManager(GraphicsManager::Engine_ptr parent) : 
             mParent(parent), 
             mCameraComponentID(UINT_MAX) {}
 
-    void GraphicsSystem::AddDrawComponent(GLuint id) {
+    void GraphicsManager::AddDrawComponent(GLuint id) {
         assert(utility::IsValidComponentID(id));
 
         mDrawComponentIDs.push_back(id);
     }
 
-    void GraphicsSystem::AddCameraComponent(GLuint id) {
+    void GraphicsManager::AddCameraComponent(GLuint id) {
         assert(utility::IsValidComponentID(id));
 
         mCameraComponentID = id;
     }
 
-    void GraphicsSystem::AddLightComponent(GLuint id) {
+    void GraphicsManager::AddLightComponent(GLuint id) {
         assert(utility::IsValidComponentID(id));
 
         mLightComponentIDs.push_back(id);
     }
 
-    void GraphicsSystem::Render() const {
+    void GraphicsManager::Render() const {
         /* TODO: Lets have it like this for now. Maybe you can figure out later where the 
          *       Assets should actually be located ~ either as a global variable or as a 
          *       member of the Graphics System.
@@ -85,7 +85,7 @@ namespace backlash {
         glfwSwapBuffers();
     }
 
-    void GraphicsSystem::RenderInstance(DRAWCOMP_PTR renderComp, 
+    void GraphicsManager::RenderInstance(DRAWCOMP_PTR renderComp, 
                                         MODELASSET_PTR asset,
                                         LIGHTCOMP_PTR lightComp,
                                         CAMERACOMP_PTR cameraComp) const {

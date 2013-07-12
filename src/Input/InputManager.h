@@ -1,26 +1,26 @@
-#ifndef INPUTSYSTEM_H
-#define INPUTSYSTEM_H
+#ifndef INPUTMANAGER_H
+#define INPUTMANAGER_H
 
 #include <glm/glm.hpp>
 #include <map>
 #include <memory>
 
 #include "Engine.h"
-#include "EntityComponent.h"
+#include "Component.h"
 
-typedef std::map<GLuint,std::shared_ptr<backlash::EntityComponent> > COMPONENT_LIST;
+typedef std::map<GLuint,std::shared_ptr<backlash::Component> > COMPONENT_LIST;
 
 namespace backlash {
     class Engine;
 
-    class InputSystem {
-        typedef std::shared_ptr<InputSystem> InputSystem_ptr;
+    class InputManager {
+        typedef std::shared_ptr<InputManager> InputSystem_ptr;
         typedef std::shared_ptr<Engine> Engine_ptr;
 
     public:
         static InputSystem_ptr GetInstance(Engine_ptr);
         
-        ~InputSystem() {}
+        ~InputManager() {}
 
         void AddCameraComponent(GLuint);
         void AddLightComponent(GLuint);
@@ -43,11 +43,11 @@ namespace backlash {
         // static void HandleMousePosEvents(int xpos, int ypos);
         // static void HandleMouseWheelEvents(int pos);
 
-        InputSystem(Engine_ptr);
+        InputManager(Engine_ptr);
 
         // Don't Implement copy constructors
-        InputSystem(const InputSystem&); 
-        void operator=(const InputSystem&);
+        InputManager(const InputManager&); 
+        void operator=(const InputManager&);
     };
 
 }

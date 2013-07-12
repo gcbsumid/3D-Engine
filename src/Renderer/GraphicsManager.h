@@ -1,10 +1,10 @@
-#ifndef GRAPHICSSYSTEM_H
-#define GRAPHICSSYSTEM_H
+#ifndef GRAPHICSMANAGER_H
+#define GRAPHICSMANAGER_H
 
 #include <GL/glew.h>
 
 #include "Engine.h"
-#include "EntityComponent.h"
+#include "Component.h"
 #include "DrawComponent.h"
 #include "CameraComponent.h"
 #include "LightComponent.h"
@@ -15,19 +15,19 @@
 #include <vector>
 #include <memory>
 
-typedef std::map<GLuint,std::shared_ptr<backlash::EntityComponent> > COMPONENT_LIST;
+typedef std::map<GLuint,std::shared_ptr<backlash::Component> > COMPONENT_LIST;
 typedef std::map<GLuint,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST;
 
 namespace backlash {
     class Engine;
 
-    class GraphicsSystem {
-        typedef std::shared_ptr<GraphicsSystem> GraphicsSystem_ptr;
+    class GraphicsManager {
+        typedef std::shared_ptr<GraphicsManager> GraphicsManager_ptr;
         typedef std::shared_ptr<Engine> Engine_ptr;
     public:
-        static GraphicsSystem_ptr GetInstance(Engine_ptr parent);
+        static GraphicsManager_ptr GetInstance(Engine_ptr parent);
 
-        ~GraphicsSystem() {}
+        ~GraphicsManager() {}
 
         void AddCameraComponent(GLuint);
         void AddDrawComponent(GLuint);
@@ -40,9 +40,9 @@ namespace backlash {
                             std::shared_ptr<LightComponent>,
                             std::shared_ptr<CameraComponent>) const;
 
-        GraphicsSystem(Engine_ptr parent);      
+        GraphicsManager(Engine_ptr parent);      
 
-        static GraphicsSystem_ptr mInstance;
+        static GraphicsManager_ptr mInstance;
 
         const Engine_ptr mParent;
 
@@ -51,8 +51,8 @@ namespace backlash {
         GLuint mCameraComponentID;
 
         // Don't Implement copy constructor
-        GraphicsSystem(const GraphicsSystem&);
-        void operator=(const GraphicsSystem&);
+        GraphicsManager(const GraphicsManager&);
+        void operator=(const GraphicsManager&);
     };
 }
 

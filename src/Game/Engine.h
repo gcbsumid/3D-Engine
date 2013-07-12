@@ -8,15 +8,15 @@
 
 #include "Entity.h"
 #include "ModelAsset.h"
-#include "EntityComponent.h"
+#include "Component.h"
 
-typedef std::map<GLuint,std::shared_ptr<backlash::EntityComponent> > COMPONENT_LIST;
+typedef std::map<GLuint,std::shared_ptr<backlash::Component> > COMPONENT_LIST;
 typedef std::map<GLuint,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST; 
 typedef std::map<GLuint,std::shared_ptr<backlash::Entity> > ENTITY_LIST;
 
 namespace backlash {
-    class GraphicsSystem;
-    class InputSystem;
+    class GraphicsManager;
+    class InputManager;
     
     class Engine {
     public:
@@ -28,7 +28,7 @@ namespace backlash {
         void Init();            // Initialize Engine properties
 
         // Figure out a way how to do this better
-        std::shared_ptr<EntityComponent> GetComponent(GLuint) const; 
+        std::shared_ptr<Component> GetComponent(GLuint) const; 
         std::shared_ptr<ModelAsset> GetAsset(GLuint) const;
         std::shared_ptr<Entity> GetEntity(GLuint) const;
 
@@ -46,8 +46,8 @@ namespace backlash {
         ASSET_LIST mAssets;
         ENTITY_LIST mEntities;
 
-        std::shared_ptr<GraphicsSystem> mGraphics;
-        std::shared_ptr<InputSystem> mInput;
+        std::shared_ptr<GraphicsManager> mGraphics;
+        std::shared_ptr<InputManager> mInput;
 
         // Don't implement copy constructors
         Engine(const Engine&);

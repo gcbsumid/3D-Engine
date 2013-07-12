@@ -1,7 +1,7 @@
 #ifndef DRAWCOMPONENT_H
 #define DRAWCOMPONENT_H
 
-#include "EntityComponent.h"
+#include "Component.h"
 #include "ModelAsset.h"
 #include "enum.h"
 
@@ -12,7 +12,7 @@
 namespace backlash {
     enum class E_COMPONENT;
 
-    class DrawComponent : public EntityComponent {
+    class DrawComponent : public Component {
     public:
         DrawComponent(GLuint);
         ~DrawComponent();
