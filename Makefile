@@ -1,28 +1,28 @@
 # Standard flags
-PROJECTS := opengl
+PROJECTS := engine
 
 .PHONY: all clean help $(PROJECTS)
 
 all: ${PROJECTS}
 
-opengl:
-	@echo "==== Building opengl ===="
-	@${MAKE} --no-print-directory -C . -f opengl.make clang=1
-	@echo "==== Finished opengl ===="
+engine:
+	@echo "==== Building engine ===="
+	@${MAKE} --no-print-directory -C . -f engine.make clang=1
+	@echo "==== Finished engine ===="
 
 verbose:
-	@echo "==== Building opengl ===="
-	@${MAKE} --no-print-directory -C . -f opengl.make clang=1 verbose=1
-	@echo "==== Finished opengl ===="
+	@echo "==== Building engine ===="
+	@${MAKE} --no-print-directory -C . -f engine.make clang=1 verbose=1
+	@echo "==== Finished engine ===="
 
 release:
-	@echo "==== Building opengl ===="
-	@${MAKE} --no-print-directory -C . -f opengl.make clang=1 release=1
-	@echo "==== Finished opengl ===="
+	@echo "==== Building engine ===="
+	@${MAKE} --no-print-directory -C . -f engine.make clang=1 release=1
+	@echo "==== Finished engine ===="
 
 run: 
-	@echo "==== Running opengl ===="
-	@${MAKE} --no-print-directory -C . -f opengl.make clang=1 run
+	@echo "==== Running engine ===="
+	@${MAKE} --no-print-directory -C . -f engine.make clang=1 run
 
 clean:
-	@${MAKE} --no-print-directory -C . -f opengl.make clean
+	@${MAKE} --no-print-directory -C . -f engine.make clean

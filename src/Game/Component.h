@@ -1,7 +1,7 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
-#include <GL/glew.h>
+#include <enum.h>
 
 // Standard C++ libraries
 
@@ -14,11 +14,11 @@ namespace backlash {
         ~Component();
 
         virtual void Update() = 0;
-        GLuint GetID() const;
+        int GetID() const;
         E_COMPONENT GetType() const;
 
     private:
-        const GLuint mID;
+        const int mID;
         const E_COMPONENT mType;
 
     };
