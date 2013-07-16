@@ -4,6 +4,7 @@ HIGHER PRIORITY
 - Implement a bunch of .cpp files
 - Turn the Algorithms into a decorator type (so that you can do two updates at the same time?)
 - Use Assimp for resource managing. Basically, for the resource manager. (Resource Manager)
+- Install libxml++ (its already in the temp folder btw)
 
 LOWER PRIORITY
 - Make Entities either static or dynamic (Update optimization)

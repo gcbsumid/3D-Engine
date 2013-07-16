@@ -1,5 +1,16 @@
 #include "Algorithm.h"
 
-backlash::Algorithm::Algorithm() {}
+namespace backlash {
+    Algorithm::Algorithm(Algorithm::AICompPtr comp) : 
+        mChild(NULL),
+        mCompParent(comp) 
+        {}
 
-backlash::Algorithm::~Algorithm() {}
+    Algorithm::Algorithm(Algorithm::AICompPtr comp, 
+                         std::shared_ptr<Algorithm> alg) : 
+        mChild(alg),
+        mComponent(comp) 
+        {}
+
+    Algorithm::~Algorithm() {}
+}

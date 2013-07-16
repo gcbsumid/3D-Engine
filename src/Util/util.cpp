@@ -10,9 +10,9 @@
 
 #include "util.h"
 
-static GLuint CURRENT_COMPONENT_ID = 0;
-static GLuint CURRENT_ASSET_ID = 0;
-static GLuint CURRENT_ENTITY_ID = 0;
+static int CURRENT_COMPONENT_ID = 0;
+static int CURRENT_ASSET_ID = 0;
+static int CURRENT_ENTITY_ID = 0;
 
 std::string utility::ResourcePath(std::string fileName){
     // Gets the full directory of the program on linux
@@ -34,26 +34,26 @@ unsigned long utility::now() {
     return tv.tv_sec * 1000000 + tv.tv_usec;
 }
 
-GLuint utility::GenerateComponentID() {
+int utility::GenerateComponentID() {
     return CURRENT_COMPONENT_ID++;
 }
 
-GLuint utility::GenerateAssetID() {
+int utility::GenerateAssetID() {
     return CURRENT_ASSET_ID++;
 }
 
-GLuint utility::GenerateEntityID() {
+int utility::GenerateEntityID() {
     return CURRENT_ENTITY_ID++;
 }
 
-bool utility::IsValidComponentID(GLuint id) {
+bool utility::IsValidComponentID(int id) {
     return (id < CURRENT_COMPONENT_ID) ? true : false;
 }
 
-bool utility::IsValidAssetID(GLuint id) {
+bool utility::IsValidAssetID(int id) {
     return (id < CURRENT_ASSET_ID) ? true : false;
 }
 
-bool utility::IsValidEntityID(GLuint id) {
+bool utility::IsValidEntityID(int id) {
     return (id < CURRENT_ENTITY_ID) ? true : false;
 }

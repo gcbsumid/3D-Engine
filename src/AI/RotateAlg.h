@@ -2,7 +2,6 @@
 #define ROTATEALG_H
 
 #include "Algorithm.h"
-#include "AlgorithmFactory.h"
 
 #include <memory>
 
@@ -10,23 +9,13 @@
 
 namespace backlash {
     class RotateAlg : public Algorithm {
-        friend class AlgorithmFactoryInitializer;
-        friend class Factory;
-
-        RotateAlg();
-        ~RotateAlg();
-
-        class Factory : public AlgorithmFactory {
-            friend class AlgorithmFactoryInitializer;
-        
-        public:
-            Algorithm* creatE() {
-                return new RotateAlg();
-            }
-        };
-
     public:
-        virtual void Update();
+        RotateAlg(Algorithm::AICompPtr comp);
+        RotateAlg(Algorithm::AICompPtr comp, shared_ptr<Algorithm>);
+
+        ~RotateAlg();
+        
+        virtual void Run();
     };
 }
 
