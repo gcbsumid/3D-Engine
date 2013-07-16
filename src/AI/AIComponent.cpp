@@ -1,17 +1,28 @@
 #include "AIComponent.h"
 
 namespace backlash {
-    AIComponent::AIComponent(shared_ptr<ModelAttrib> attrib) :
+    AIComponent::AIComponent() :
         Component(E_COMPONENT::E_COMPONENT_AI), 
-        mAttrib(attrib),
         mAlgorithm(NULL) {}
 
     AIComponent::~AIComponent() {}
+
+    void AIComponent::Init() {
+        // Do Something here?
+    }
 
     void AIComponent::Update() {
         if (mAlgorithm) {
             mAlgorithm->Action();
         }
+    }
+
+    void AIComponent::Render() {
+        // There is nothing to be done here
+    }
+
+    void AIComponent::SetModelAttrib(shared_ptr<ModelAttrib> attrib) {
+        mAttrib = attrib;
     }
 
     void AIComponent::GenereateAlgorithm(E_ALGORITHM algo) {

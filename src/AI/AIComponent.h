@@ -4,27 +4,41 @@
 #include <GL/glew.h>
 
 #include "Algorithm.h"
-#include "Component.h"
-#include "ModelAttrib.h"
-#include "enum.h"
+#include "../Game/Component.h"
+#include "../Game/ComponentFactory.h"
+#include "../Game/ModelAttrib.h"
+#include "../Util/enum.h"
 
 #include <vector> 
 #include <memory>
 
-// TODO: AIComponent.cpp - implement AIComponent and the Factories
+ // TODO: will pass in the status to determine which algorithm will be used.
 
 namespace backlash {
     enum class E_ALGORITHM;
 
     class AIComponent : public Component {
-        friend Algorithm;
-    public:
-        AIComponent(shared_ptr<ModelAttrib>);
+        friend class Algorithm;
+        friend class ComponentFactoryInitializer;
+        friend class Factory;
+
+        AIComponent();
         ~AIComponent();
 
-        void Update(); // TODO: will pass in the status to determine which 
-                       //       algorithm will be used.
+        class Factory : public ComponentFactory {
+        friend class ComponentFactoryInitializer;
+        public:
+            Component* Create() {
+                return new AIComponent;
+            }
+        };
 
+    public:
+        virtual void Init();
+        virtual void Update();
+        virtual void Render(); 
+
+        void SetModelAttrib(std::shared_ptr<ModelAttrib> attrib);
         void GenerateAlgorithm(E_ALGORITHM);
         void ClearAlgorithm();
     private: 

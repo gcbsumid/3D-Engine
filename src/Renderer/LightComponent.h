@@ -1,19 +1,35 @@
 #ifndef LIGHTCOMPONENT_H
 #define LIGHTCOMPONENT_H
 
-#include "Component.h"
-#include "enum.h"
+#include "../Game/Component.h"
+#include "../Game/ComponentFactory.h"
+#include "../Util/enum.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+// TODO: The Do the rendering stuff for each light
+
 namespace backlash {
     class LightComponent : public Component {
-    public:
-        LightComponent();
-        ~LightComponent();
+    friend class ComponentFactoryInitializer;
+    friend class Factory;
 
-        void Update();
+    LightComponent();
+    ~LightComponent();
+
+    class Factory : public ComponentFactory {
+    friend class ComponentFactoryInitializer;
+    public: 
+        Component* Create() {
+            return new LightComponent;
+        }
+    };
+
+    public:
+        virtual void init();
+        virtual void Update();
+        virtual void Render();
 
         void SetPosition(glm::vec3);
         glm::vec3 GetPosition() const;

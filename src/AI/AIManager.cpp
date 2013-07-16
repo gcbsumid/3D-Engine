@@ -1,5 +1,5 @@
 #include "AIManager.h"
-#include "util.h"
+#include "../Util/util.h"
 
 std::shareD_ptr<backlash::AIManager> backlash::AIManager::mInstance;
 

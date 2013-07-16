@@ -6,7 +6,8 @@
 
 namespace backlash {
     struct ModelAttrib {
-        glm::mat4 mMatrix;
+        glm::mat4 mTransform;
+
         glm::vec3 mPosition;
         glm::vec4 mOrientation; // Quaternion btw
     };

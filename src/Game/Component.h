@@ -13,7 +13,10 @@ namespace backlash {
         Component(E_COMPONENT);
         ~Component();
 
+        virtual void init() = 0;
         virtual void Update() = 0;
+        virtual void Render() = 0;
+        
         int GetID() const;
         E_COMPONENT GetType() const;
 

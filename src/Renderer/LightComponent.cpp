@@ -6,8 +6,16 @@ namespace backlash {
 
     LightComponent::~LightComponent() {}
 
+    void LightComponent::Init() {
+        //. Do Something?
+    }
+
     void LightComponent::Update() {
         // Do something?
+    }
+
+    void LightComponent::Render() {
+        // Do the rendering stuff here
     }
 
     void LightComponent::SetPosition(glm::vec3 position) {

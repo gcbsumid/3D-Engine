@@ -5,6 +5,7 @@
 #include "enum.h"
 
 #include <memory>
+#include <map>
 
 // TODO: Implement ComponentFactory.cpp. Modify all components to be only 
 //       created by the component factories
@@ -18,12 +19,11 @@ namespace backlash {
         friend class ComponentFactoryInitializer;
 
         // Static function so it can be called without an instantiation
-        // TODO: do the static pointer cast in this function
-        static std::shared_ptr<Component> CreateComponent(E_COMPONENT);
-
+        // Super inconsistent. shoulda used a shared_ptr but its too much work.
+        static Component* CreateComponent(E_COMPONENT);
     private:
-        virtual Component* create() = 0;
-        static std::map<E_ComponentS, ComponentFactory*> CountryInit;
+        virtual Component* Create() = 0;
+        static std::map<E_ComponentS, std::unique_ptr<ComponentFactory> > ComponentInit;
     };
 
     class ComponentFactoryInitializer {

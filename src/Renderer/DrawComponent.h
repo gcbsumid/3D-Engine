@@ -1,32 +1,50 @@
 #ifndef DRAWCOMPONENT_H
 #define DRAWCOMPONENT_H
 
-#include "Component.h"
-#include "ModelAsset.h"
-#include "enum.h"
+#include "../Renderer/ModelAsset.h"
+#include "../Game/Component.h"
+#include "../Game/ModelAttrib.h"
+#include "../Game/ComponentFactory.h"
+#include "../Util/enum.h"
 
-#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+#include <memory>
+
+// TODO: Render each draw component
 
 namespace backlash {
     enum class E_COMPONENT;
 
     class DrawComponent : public Component {
+    friend class ComponentFactoryInitializer;
+    friend class Factory;
+
+    Drawcomponent();
+    ~DrawComponent();
+
+    class Factory : public ComponentFactory {
+    friend class ComponentFactoryInitializer;
     public:
-        DrawComponent(GLuint);
-        ~DrawComponent();
+        Component* Create() {
+            return new DrawComponent;
+        }
+    };
 
-        void Update();
+    public:
+        virtual void Init();
+        virtual void Update();
+        virtual void Render();
 
-        void SetTransform(glm::mat4);
-        glm::mat4 GetTransform() const;
-        
-        GLuint GetAssetID() const;
+        void SetAsset(int id);
+        void SetModelAttrib(std::shared_ptr<ModelAttrib> attrib);
+
+        int GetAssetID() const;
 
     private:
-        GLuint mAssetID;
-        glm::mat4 mTransform;
+        int mAssetID;
+        std::shared_ptr<ModelAttrib> mAttrib;
     } ;
 }
 
