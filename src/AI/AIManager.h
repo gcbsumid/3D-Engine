@@ -7,8 +7,6 @@
 #include <vector> // Probably for the Algorithms to update.
 #include <memory>
 
-// TODO: The .cpp file 
-
 namespace backlash {
     class Engine;
 
@@ -17,7 +15,7 @@ namespace backlash {
         typedef std::weak_ptr<Engine> EnginePtr;
 
     public:
-        static AIManagerPtr GetInstance(EnginePtr parent);
+        static AIManagerPtr GetInstance(EnginePtr);
         ~AIManager();
 
         // Prereq: Install the xml parser and create objects

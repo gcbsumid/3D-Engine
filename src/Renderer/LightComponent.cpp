@@ -14,8 +14,9 @@ namespace backlash {
         // Do something?
     }
 
-    void LightComponent::Render() {
+    bool LightComponent::Render() {
         // Do the rendering stuff here
+        return true;
     }
 
     void LightComponent::SetPosition(glm::vec3 position) {

@@ -12,30 +12,41 @@ static bool IsValid(backlash::E_COMPONENT comp) {
             comp < backlash::E_COMPONENT::E_COMPONENT_MAX) ? true : false;
 }
 
-backlash::Entity::Entity() : mID(utility::GenerateEntityID()) {}
-
-backlash::Entity::~Entity() {}
-
-void backlash::Entity::AddComponent(backlash::E_COMPONENT comp, GLuint id) {
-    assert(IsValid(comp));
-
-    if (mComponents.count(comp)) {
-        mComponents[comp] = id;
-    } else {
-        mComponents.insert(std::make_pair(comp, id));
-    }
-}
-
-GLuint backlash::Entity::GetComponentID(E_COMPONENT comp) const {
-    if (mComponents.count(comp) == 0) {
-        std::stringstream msg;
-        msg << "The component " << (unsigned int)comp << " doesn't exist in this entity." << std::endl;
-        throw std::runtime_error(msg.str());
+namespace backlash {
+    Entity::Entity() : mID(utility::GenerateEntityID()) {
+        mModel = std::shared_ptr<ModelAttrib> (new ModelAttrib);
+        mModel->mTransform = glm::mat4();
+        mModel->mPosition = glm::vec3();
+        mModel->mOrientation = glm::quat();
     }
 
-    return mComponents.at(comp);
-}
+    Entity::~Entity() {}
 
-GLuint backlash::Entity::GetID() const {
-    return mID;
+    void Entity::AddComponent(E_COMPONENT type, std::shared_ptr<Component> comp) {
+        assert(IsValid(type));
+
+        if (mComponents.count(type)) {
+            mComponents[type] = comp;
+        } else {
+            mComponents.insert(std::make_pair(type, comp));
+        }
+    }
+
+    int Entity::GetComponent(E_COMPONENT type) const {
+        if (mComponents.count(type) == 0) {
+            std::stringstream msg;
+            msg << "The component " << (unsigned int)type << " doesn't exist in this entity." << std::endl;
+            throw std::runtime_error(msg.str());
+        }
+
+        return mComponents.at(type);
+    }
+
+    int Entity::GetID() const {
+        return mID;
+    }
+
+    std::shared_ptr<ModelAttrib> GetModelAttrib() {
+        return mModel;
+    }
 }

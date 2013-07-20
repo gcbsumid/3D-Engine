@@ -1,10 +1,8 @@
 #ifndef GRAPHICSMANAGER_H
 #define GRAPHICSMANAGER_H
 
-#include <GL/glew.h>
-
-#include "Engine.h"
-#include "Component.h"
+#include "../Game/Engine.h"
+#include "../Game/Component.h"
 #include "DrawComponent.h"
 #include "CameraComponent.h"
 #include "LightComponent.h"
@@ -15,23 +13,24 @@
 #include <vector>
 #include <memory>
 
-typedef std::map<GLuint,std::shared_ptr<backlash::Component> > COMPONENT_LIST;
-typedef std::map<GLuint,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST;
+// TODO: Modify the cpp file
+
+typedef std::map<int,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST;
 
 namespace backlash {
     class Engine;
 
     class GraphicsManager {
-        typedef std::shared_ptr<GraphicsManager> GraphicsManager_ptr;
-        typedef std::shared_ptr<Engine> Engine_ptr;
+        typedef std::shared_ptr<GraphicsManager> GraphicsManagerPtr;
+        typedef std::weak_ptr<Engine> EnginePtr;
     public:
-        static GraphicsManager_ptr GetInstance(Engine_ptr parent);
+        static GraphicsManagerPtr GetInstance(EnginePtr parent);
 
         ~GraphicsManager() {}
 
-        void AddCameraComponent(GLuint);
-        void AddDrawComponent(GLuint);
-        void AddLightComponent(GLuint);
+        void AddCameraComponent(std::weak_ptr<CameraComponent>);
+        void AddDrawComponent(std::weak_ptr<DrawComponent>);
+        void AddLightComponent(std::weak_ptr<LightComponent>);
         void Render() const ;
 
     private:
@@ -40,15 +39,15 @@ namespace backlash {
                             std::shared_ptr<LightComponent>,
                             std::shared_ptr<CameraComponent>) const;
 
-        GraphicsManager(Engine_ptr parent);      
+        GraphicsManager(EnginePtr parent);      
 
-        static GraphicsManager_ptr mInstance;
+        static GraphicsManagerPtr mInstance;
 
-        const Engine_ptr mParent;
+        const EnginePtr mParent;
 
-        std::list<GLuint> mDrawComponentIDs;
-        std::vector<GLuint> mLightComponentIDs;
-        GLuint mCameraComponentID;
+        std::list<std::weak_ptr<DrawComponent> > mDrawComponents;
+        std::vector<std::weak_ptr<LightComponent> > mLightComponents;
+        std::weak_ptr<CameraComponent> mCameraComponent;
 
         // Don't Implement copy constructor
         GraphicsManager(const GraphicsManager&);

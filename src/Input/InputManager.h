@@ -2,40 +2,37 @@
 #define INPUTMANAGER_H
 
 #include <glm/glm.hpp>
-#include <map>
 #include <memory>
+#include <vector>
 
-#include "Engine.h"
-#include "Component.h"
-
-typedef std::map<GLuint,std::shared_ptr<backlash::Component> > COMPONENT_LIST;
+#include "../Game/Engine.h"
+#include "../Game/Component.h"
 
 namespace backlash {
     class Engine;
 
     class InputManager {
-        typedef std::shared_ptr<InputManager> InputSystem_ptr;
-        typedef std::shared_ptr<Engine> Engine_ptr;
+        typedef std::shared_ptr<InputManager> InputSystemPtr;
+        typedef std::weak_ptr<Engine> EnginePtr;
 
     public:
-        static InputSystem_ptr GetInstance(Engine_ptr);
-        
+        static InputSystemPtr GetInstance(EnginePtr);
         ~InputManager() {}
 
-        void AddCameraComponent(GLuint);
-        void AddLightComponent(GLuint);
+        void AddCameraComponent(std::weak_ptr<CameraComponent>);
+        void AddLightComponent(std::weak_ptr<LightComponent>);
 
-        void Init();
+        // void Init(); // Don't need this right now.
 
         void HandleInput(double);
 
     private:
-        static InputSystem_ptr mInstance;
+        static InputSystemPtr mInstance;
 
-        const Engine_ptr mParent;
+        const EnginePtr mParent;
 
-        GLuint mCameraComponentID;
-        GLuint mLightComponentID; // temp
+        std::weak_ptr<CameraComponent> mCameraComponent;
+        std::vector<std::weak_ptr<LightComponent> > mLightComponent; // temp
 
 
         // TODO: I can't do this yet. I don't know how to use threads. yet.
@@ -43,7 +40,7 @@ namespace backlash {
         // static void HandleMousePosEvents(int xpos, int ypos);
         // static void HandleMouseWheelEvents(int pos);
 
-        InputManager(Engine_ptr);
+        InputManager(EnginePtr);
 
         // Don't Implement copy constructors
         InputManager(const InputManager&); 

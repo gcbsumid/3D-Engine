@@ -7,9 +7,6 @@
 #include <memory>
 #include <map>
 
-// TODO: Implement ComponentFactory.cpp. Modify all components to be only 
-//       created by the component factories
-
 namespace backlash {
     enum class E_COMPONENT;
 

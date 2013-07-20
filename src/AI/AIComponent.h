@@ -5,8 +5,8 @@
 
 #include "Algorithm.h"
 #include "../Game/Component.h"
-#include "../Game/ComponentFactory.h"
 #include "../Game/ModelAttrib.h"
+#include "../Game/ComponentFactory.h"
 #include "../Util/enum.h"
 
 #include <vector> 
@@ -36,14 +36,14 @@ namespace backlash {
     public:
         virtual void Init();
         virtual void Update();
-        virtual void Render(); 
+        virtual bool Render(); 
 
-        void SetModelAttrib(std::shared_ptr<ModelAttrib> attrib);
+        void SetModelMatrix(std::weak_ptr<ModelAttrib> model);
         void GenerateAlgorithm(E_ALGORITHM);
         void ClearAlgorithm();
     private: 
         std::shared_ptr<Algorithm> mAlgorithm; 
-        std::shared_ptr<ModelAttrib> mAttrib; 
+        std::weak_ptr<ModelAttrib> mModel bv; 
     };
 }
 

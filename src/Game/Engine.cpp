@@ -12,18 +12,17 @@
 #include <unistd.h>
 
 #include "Engine.h"
+#include "ComponentFactory.h"
+
 #include "Program.h"
 #include "Texture.h"
 #include "util.h"
 #include "enum.h"
-#include "GraphicsManager.h"
-#include "InputManager.h"
 #include "DrawComponent.h"
 #include "CameraComponent.h"
 #include "LightComponent.h"
 
 // constants
-const glm::vec2 SCREEN_SIZE(800, 600);
 static const float degreesPerSecond = 180.0f;
 
 // Global static pointer used to ensure my singleton
@@ -171,17 +170,26 @@ namespace backlash {
         LoadTriangle(woodenCrate);
     }
 
-    void Engine::CreateSystems() {
+    void Engine::CreateManagers() {
         mGraphics = GraphicsManager::GetInstance(mInstance);
         mInput = InputManager::GetInstance(mInstance);
+        mResource = ResourceManager::GetInstance(mInstance);
+        mAI = AIManager::GetInstance(mInstance);
 
-        std::shared_ptr<CameraComponent> cameraComponent(new CameraComponent(SCREEN_SIZE));
+        InitManagers();
+    }
+
+    void Engine::InitManagers() {
+        // Set up the camera
+        // TODO: Move the camera translation from the Camera class to the Camera Component Class
+        // TODO: Modify the Input Manager Class accordingly
+        std::shared_ptr<CameraComponent> cameraComp(ComponentFactory::CreateComponent(E_COMPONENT::E_COMPONENT_CAMERA));
         std::shared_ptr<Entity> player(new Entity());
+        player->AddComponent(E_COMPONENT::E_COMPONENT_CAMERA, cameraComp);
 
         // Add the camera component to the player entity and systems
-        player->AddComponent(E_COMPONENT::E_COMPONENT_CAMERA, cameraComponent->GetID());
-        mGraphics->AddCameraComponent(cameraComponent->GetID());
-        mInput->AddCameraComponent(cameraComponent->GetID());
+        mGraphics->AddCameraComponent(std::weak_ptr<CameraComponent> (cameraComponent));
+        mInput->AddCameraComponent(std::weak_ptr<CameraComponent> (cameraComponent));
 
         // Add camera component to components list
         mComponents.insert(std::make_pair(cameraComponent->GetID(), cameraComponent));
@@ -290,8 +298,8 @@ namespace backlash {
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
 
+        CreateManagers();
         LoadAssets();
-        CreateSystems();
         CreateObjects();
     }
     

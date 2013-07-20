@@ -1,8 +1,8 @@
 #include "InputManager.h"
-#include "CameraComponent.h"
-#include "LightComponent.h"
-#include "Camera.h"
-#include "util.h"
+#include "../Renderer/CameraComponent.h"
+#include "../Renderer/LightComponent.h"
+#include "../Renderer/Camera.h"
+#include "../Util/util.h"
 
 #include <GL/glfw.h>
 
@@ -13,12 +13,12 @@ static const float zoomSensitivity = 5.0f;
 std::shared_ptr<backlash::InputManager> backlash::InputManager::mInstance;
 
 namespace backlash {
-    InputManager::InputManager(Engine_ptr parent) : 
+    InputManager::InputManager(EnginePtr parent) : 
             mParent(parent),
             mCameraComponentID(UINT_MAX), 
             mLightComponentID(UINT_MAX) {}
 
-    std::shared_ptr<InputManager> InputManager::GetInstance(Engine_ptr parent) {
+    std::shared_ptr<InputManager> InputManager::GetInstance(EnginePtr parent) {
         if (mInstance.use_count() < 1) {
             mInstance = std::shared_ptr<InputManager>(new InputManager(parent));
         }
@@ -37,13 +37,13 @@ namespace backlash {
         mLightComponentID = id;
     }
 
-    void InputManager::Init() {
+    // void InputManager::Init() {
         // TODO: you need to learn how to multi-thread
 
         // glfwSetMouseWheelCallback(InputManager::HandleMouseWheelEvents);
         // glfwSetMousePosCallback(InputManager::HandleMousePosEvents);
         // glfwSetKeyCallback(InputManager::HandleKeyEvents);
-    }
+    // }
 
     void InputManager::HandleInput(double elapsedTime) {
         assert(utility::IsValidComponentID(mCameraComponentID));

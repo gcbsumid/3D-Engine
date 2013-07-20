@@ -5,8 +5,6 @@
 
 #include <memory>
 
-// TODO: Implement RotateAlg.cpp and other algorithms
-
 namespace backlash {
     class RotateAlg : public Algorithm {
     public:

@@ -29,7 +29,7 @@ namespace backlash {
     public:
         virtual void init();
         virtual void Update();
-        virtual void Render();
+        virtual bool Render();
 
         void SetPosition(glm::vec3);
         glm::vec3 GetPosition() const;

@@ -35,16 +35,16 @@ namespace backlash {
     public:
         virtual void Init();
         virtual void Update();
-        virtual void Render();
+        virtual bool Render();
 
         void SetAsset(int id);
-        void SetModelAttrib(std::shared_ptr<ModelAttrib> attrib);
+        void SetModelAttrib(std::weak_ptr<ModelAttrib> model);
 
         int GetAssetID() const;
 
     private:
         int mAssetID;
-        std::shared_ptr<ModelAttrib> mAttrib;
+        std::weak_ptr<ModelAttrib> mModel;
     } ;
 }
 

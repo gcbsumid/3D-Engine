@@ -6,13 +6,18 @@
 #include <memory>
 #include <map>
 
-#include "Entity.h"
-#include "ModelAsset.h"
-#include "Component.h"
+#include "../AI/AIManager.h"
+#include "../Input/InputManager.h"
+#include "../Renderer/GraphicsManager.h"
+#include "../Resource/ResourceManager.h"
 
-typedef std::map<GLuint,std::shared_ptr<backlash::Component> > COMPONENT_LIST;
-typedef std::map<GLuint,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST; 
-typedef std::map<GLuint,std::shared_ptr<backlash::Entity> > ENTITY_LIST;
+#include "Entity.h"
+#include "Component.h"
+#include "../Renderer/ModelAsset.h"
+
+typedef std::map<int,std::shared_ptr<backlash::Component> > COMPONENT_LIST;
+typedef std::map<int,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST; 
+typedef std::map<int,std::shared_ptr<backlash::Entity> > ENTITY_LIST;
 
 namespace backlash {
     class GraphicsManager;
@@ -28,17 +33,17 @@ namespace backlash {
         void Init();            // Initialize Engine properties
 
         // Figure out a way how to do this better
-        std::shared_ptr<Component> GetComponent(GLuint) const; 
-        std::shared_ptr<ModelAsset> GetAsset(GLuint) const;
-        std::shared_ptr<Entity> GetEntity(GLuint) const;
+        std::shared_ptr<Component> GetComponent(int) const; 
+        std::shared_ptr<ModelAsset> GetAsset(int) const;
+        std::shared_ptr<Entity> GetEntity(int) const;
 
     private:
         Engine();
 
-        void LoadAssets();      // Loads Assets
-        void CreateSystems();   // Create All Systems
-        void CreateObjects();   // Creates all instances
-        void Update(double);    // TODO: create an object system which updates all entities
+        void LoadAssets();      // Should happen in the resource manager
+        void CreateManagers();   // happens in the init()
+        void CreateObjects();   // should make calls to the resource manager
+        void Update(double);    // This should happen in the AI manager
 
         static std::shared_ptr<Engine> mInstance;
 
@@ -48,6 +53,8 @@ namespace backlash {
 
         std::shared_ptr<GraphicsManager> mGraphics;
         std::shared_ptr<InputManager> mInput;
+        std::shared_ptr<ResourceManager> mResource;
+        std::shared_ptr<AIManager> mAI;
 
         // Don't implement copy constructors
         Engine(const Engine&);

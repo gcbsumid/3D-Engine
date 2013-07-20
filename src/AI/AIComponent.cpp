@@ -17,12 +17,14 @@ namespace backlash {
         }
     }
 
-    void AIComponent::Render() {
+    bool AIComponent::Render() {
         // There is nothing to be done here
+        // I should be here in the first place so return false
+        return false;
     }
 
-    void AIComponent::SetModelAttrib(shared_ptr<ModelAttrib> attrib) {
-        mAttrib = attrib;
+    void AIComponent::SetModelAttrib(std::shared_ptr<ModelAttrib> model) {
+        mModel = model;
     }
 
     void AIComponent::GenereateAlgorithm(E_ALGORITHM algo) {

@@ -15,18 +15,17 @@ namespace backlash {
         Entity();
         ~Entity();
 
-        void AddComponent(E_COMPONENT, int);
-        int GetComponentID(E_COMPONENT) const;
+        void AddComponent(E_COMPONENT, std::shared_ptr<Component> comp);
+        int GetComponent(E_COMPONENT) const;
         int GetID() const;
-        int GetModelAttrib();
+        std::shared_ptr<ModelAttrib> GetModelAttrib();
 
     private:
-        std::map<E_COMPONENT,int> mComponents;
+        std::map<E_COMPONENT,std::shareD_ptr<Component> > mComponents;
         int mID;
 
-        std::shared_ptr<ModelAttrib> mAttrib;
-        // TODO: Make Entities have a static boolean. Optimization for 
-        //       Entity updates.
+        std::shared_ptr<ModelAttrib> mModel;
+
         // TODO: Make Entities have status that will affect what AI Algorithm 
         //       they will run.
     };

@@ -14,16 +14,18 @@ namespace backlash {
         // Do something?
     }
 
-    void DrawComponent::Render() {
+    bool DrawComponent::Render() {
         // Do the rendering here
+
+        return true;
     }
 
     void DrawComponent::SetAsset(int id) {
         mAssetID = id;
     }
 
-    void DrawComponent::SetModelAttrib(std::shareD_ptr<ModelAttrib> attrib) {
-        mAttrib = attrib;
+    void DrawComponent::SetModelAttrib(std::shareD_ptr<ModelAttrib> model) {
+        mModel = model;
     }
 
     glm::mat4 DrawComponent::GetTransform() const {

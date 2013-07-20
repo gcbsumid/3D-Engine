@@ -5,30 +5,67 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "Engine.h" 
-#include "ModelAsset.h"
+#include "../Game/Engine.h" 
+#include "../Renderer/ModelAsset.h"
 
 #include <memory>
+#include <vector>
 
 namespace backlash {
     class Engine;
 
+    struct Vertex {
+        glm::vec3 mPosition;    // (x,y,z)
+        glm::vec2 mTexCoord;    // (u,v)
+        glm::vec3 mNormal;      // (x,y,z)
+
+        Vertex() {};
+        Vertex(const glm::vec3& pos, const glm::vec2& tex, const glm::vec3 normal) {
+            mPosition = pos;
+            mTexCoord = tex;
+            mNormal = normal;
+        }
+    };
+
+    struct Mesh {
+        struct MeshEntry {
+            MeshEntry();
+            ~MeshEntry();
+
+            // Probably don't need this right now
+            // void Init(const std::vector<Vertex>* vertices, const std::vector<unsigned int>& indices);
+
+            GLuint mVertexBuffer;
+            GLuint mIndexBuffer;
+
+            unsigned int mNumIndices; 
+            unsigned int mMaterialIndex;
+        };
+
+        std::vector<MeshEntry> mEntries;
+        std::vector<std::weak_ptr<Texture> > mTextures;
+    };
+
     class ResourceManager {
-        typedef std::shared_ptr<ResourceManager> ResourceManager_ptr;
-        typedef std::shared_ptr<Engine> Engine_ptr;
-        typedef std::shared_ptr<ModelAsset> Asset_ptr;
+        typedef std::shared_ptr<ResourceManager> ResourceManagerPtr;
+        typedef std::weak_ptr<Engine> EnginePtr;
+        typedef std::shared_ptr<ModelAsset> AssetPtr;
     public:
-        static ResourceManager_ptr GetInstance(Engine_ptr parent);
+        static ResourceManagerPtr GetInstance(EnginePtr parent);
 
         ~ResourceManager() {}
 
-        Asset_ptr LoadAssetFromFile(const char* file); 
-        Asset_ptr ProcessScene(aiScene*);
+        void LoadAllFiles();
+
+        AssetPtr LoadAssetFromFile(const char* file); 
+        AssetPtr ProcessScene(aiScene*);
 
     private:
-        ResourceManager(Engine_ptr parent);
+        vector<
+
+        ResourceManager(EnginePtr parent);
         
-        static ResourceManager_ptr mInstance;
+        static ResourceManagerPtr mInstance;
 
         ResourceManager(const ResourceManager&);
         void operator=(const ResourceManager&);
