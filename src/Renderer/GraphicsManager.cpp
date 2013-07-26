@@ -46,11 +46,21 @@ namespace backlash {
         mLightComponentIDs.push_back(id);
     }
 
+    void GraphicsManager::SetTextureSharedPointer(std::map<std::string, Texture*> textures) {
+        assert(textures);
+        mTextures = std::shared_ptr<std::map<std::string, Texture*> >  (textures);
+    }
+
+    void GraphicsManager::SetMeshSharedPointer(std::vector<Mesh> meshes) {
+        assert(meshes);
+        mMeshes = std::shared_ptr<std::vector<Mesh> > (meshes);
+    }
+
+    // TODO: Graphics Render and render instance 
+    
+    /**********************************************************************************
     void GraphicsManager::Render() const {
-        /* TODO: Lets have it like this for now. Maybe you can figure out later where the 
-         *       Assets should actually be located ~ either as a global variable or as a 
-         *       member of the Graphics System.
-         */
+
 
         // clear everything
         glClearColor(0, 0, 0, 1); // black
@@ -108,9 +118,10 @@ namespace backlash {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, asset->mTextures->Object());
 
-        /* Note: Consider using glDrawArraysInstanced instead
-         *       of glDrawArrays. You can get better performance.
-         */
+        // Note: Consider using glDrawArraysInstanced instead
+        //       of glDrawArrays. You can get better performance.
+        //
+
         // bind VAO and draw 
         glBindVertexArray(asset->mVAO);
         glDrawArrays(asset->mDrawType, asset->mDrawStart, asset->mDrawCount);
@@ -120,4 +131,6 @@ namespace backlash {
         glBindVertexArray(0);
 
     }    
+
+    ***************************************************************************************/
 }

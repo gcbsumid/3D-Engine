@@ -1,5 +1,7 @@
 #include "LightComponent.h"
 
+#define CHECKINVALID(a) ((a==INVALID_UNIFORM_LOCATION) ? true : false ;)
+
 namespace backlash {
     LightComponent::LightComponent() : 
             Component(E_COMPONENT::E_COMPONENT_LIGHT) {}
@@ -15,7 +17,20 @@ namespace backlash {
     }
 
     bool LightComponent::Render() {
-        // Do the rendering stuff here
+        GLuint position = GetUniformLocation("light.position");
+        GLuint intensities = GetUniformLocation("light.intensities");
+        GLuint attenuation = GetUniformLocation("light.attenuation");
+        GLuint ambientCoefficient= GetUniformLocation("light.ambientCoefficient");
+
+        assert(CHECKINVALID(position));
+        assert(CHECKINVALID(intensities));
+        assert(CHECKINVALID(attenuation));
+        assert(CHECKINVALID(ambientCoefficient));
+
+        glUniform3f(position, mPosition.x, mPosition.y, mPosition.z);
+        glUniform3f(intensities, mIntensity.x, mIntensity.y, mIntensity.z);
+        glUniform1f(attenuation, mAttenuation);
+        glUniform1f(ambientCoefficient, mAmbientCoefficient);
         return true;
     }
 

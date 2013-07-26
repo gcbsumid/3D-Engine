@@ -14,6 +14,8 @@ static int CURRENT_COMPONENT_ID = 0;
 static int CURRENT_ASSET_ID = 0;
 static int CURRENT_ENTITY_ID = 0;
 
+#define INVALID_OGL_VALUE 0xFFFFFFFF
+
 std::string utility::ResourcePath(std::string fileName){
     // Gets the full directory of the program on linux
     char exe_file[PATH_MAX + 1];
@@ -24,7 +26,7 @@ std::string utility::ResourcePath(std::string fileName){
     } else {
         exe_file[size] = '\0';
         // dirname reports the parent directory of a file
-        return std::string(dirname(exe_file)) + "/../resource/" + fileName;
+        return std::string(dirname(exe_file)) + "/../assets/" + fileName;
     }
 }
 

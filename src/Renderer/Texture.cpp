@@ -11,50 +11,57 @@ static GLenum TextureFormatForBitmapFormat(backlash::Bitmap::E_FORMAT format, bo
     }
 }
 
-// Initializing a texture object
-backlash::Texture::Texture(const backlash::Bitmap& bitmap, GLint minMagFiler, GLint wrapMode) :
-    mOriginalWidth((GLfloat)bitmap.Width()),
-    mOriginalHeight((GLfloat)bitmap.Height())
-{
-    // generating a texture name
-    glGenTextures(1, &mObject);
+namespace backlash {
+    // Initializing a texture object
+    Texture::Texture(const Bitmap& bitmap, const std::string name, GLint minMagFiler, GLint wrapMode) :
+        mName(name),
+        mOriginalWidth((GLfloat)bitmap.Width()),
+        mOriginalHeight((GLfloat)bitmap.Height())
+    {
+        // generating a texture name
+        glGenTextures(1, &mObject);
 
-    // binding the name
-    glBindTexture(GL_TEXTURE_2D, mObject);
+        // binding the name
+        glBindTexture(GL_TEXTURE_2D, mObject);
 
-    // setting parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minMagFiler);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, minMagFiler);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
+        // setting parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minMagFiler);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, minMagFiler);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 
-    // setting the data
-    glTexImage2D(GL_TEXTURE_2D,
-                    0,
-                    TextureFormatForBitmapFormat(bitmap.Format(), true),
-                    (GLsizei)bitmap.Width(),
-                    (GLsizei)bitmap.Height(),
-                    0,
-                    TextureFormatForBitmapFormat(bitmap.Format(), false),
-                    GL_UNSIGNED_BYTE,
-                    bitmap.PixelBuffer());
+        // setting the data
+        glTexImage2D(GL_TEXTURE_2D,
+                        0,
+                        TextureFormatForBitmapFormat(bitmap.Format(), true),
+                        (GLsizei)bitmap.Width(),
+                        (GLsizei)bitmap.Height(),
+                        0,
+                        TextureFormatForBitmapFormat(bitmap.Format(), false),
+                        GL_UNSIGNED_BYTE,
+                        bitmap.PixelBuffer());
 
-    // unbinding the name 
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
+        // unbinding the name 
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
 
-backlash::Texture::~Texture() {
-    glDeleteTextures(1, &mObject);
-}
+    Texture::~Texture() {
+        glDeleteTextures(1, &mObject);
+    }
 
-GLuint backlash::Texture::Object() const {
-    return mObject;
-}
+    GLuint Texture::Object() const {
+        return mObject;
+    }
 
-GLfloat backlash::Texture::OriginalWidth() const {
-    return mOriginalWidth;
-}
+    GLfloat Texture::OriginalWidth() const {
+        return mOriginalWidth;
+    }
 
-GLfloat backlash::Texture::OriginalHeight() const {
-    return mOriginalHeight;
+    GLfloat Texture::OriginalHeight() const {
+        return mOriginalHeight;
+    }
+
+    std::string Texture::GetName() const {
+        return mName;
+    }
 }

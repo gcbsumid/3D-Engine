@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 #include <GL/glew.h>
+#include <string>
 #include "Bitmap.h"
 
 namespace backlash {
@@ -15,7 +16,7 @@ namespace backlash {
         // The texture is loaded upside down because backlash::Bitmap pixel
         // data is ordered from the top row down, but OpenGl expects 
         // the data to be from the bottom row up.
-        Texture(const Bitmap& bitmap, GLint minMagFiler = GL_LINEAR,
+        Texture(const Bitmap& bitmap, const string name, GLint minMagFiler = GL_LINEAR,
             GLint wrapMode = GL_CLAMP_TO_EDGE);
 
 
@@ -33,7 +34,11 @@ namespace backlash {
         // was made from
         GLfloat OriginalHeight() const;
 
+        // The name of the current texture
+        std::string GetName() const;
+
     private:
+        std::string mName;
         GLuint mObject;
         GLfloat mOriginalWidth;
         GLfloat mOriginalHeight;

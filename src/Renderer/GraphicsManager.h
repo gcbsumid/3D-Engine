@@ -7,6 +7,8 @@
 #include "CameraComponent.h"
 #include "LightComponent.h"
 #include "ModelAsset.h"
+#include "Program.h"
+#include "Texture.h"
 
 #include <map>
 #include <list>
@@ -31,7 +33,12 @@ namespace backlash {
         void AddCameraComponent(std::weak_ptr<CameraComponent>);
         void AddDrawComponent(std::weak_ptr<DrawComponent>);
         void AddLightComponent(std::weak_ptr<LightComponent>);
+        void AddTextures(std::vector<Texture>);
+
         void Render() const ;
+
+        void SetTextureSharedPointer(std::map<std::string, Texture*> textures);
+        void SetMeshSharedPointer(std::vector<Mesh> meshes);
 
     private:
         void RenderInstance(std::shared_ptr<DrawComponent>, 
@@ -48,6 +55,12 @@ namespace backlash {
         std::list<std::weak_ptr<DrawComponent> > mDrawComponents;
         std::vector<std::weak_ptr<LightComponent> > mLightComponents;
         std::weak_ptr<CameraComponent> mCameraComponent;
+
+        std::map<int, std::unique_ptr<Program> > mShaders;
+
+        // this is shared with the resource manager
+        std::shared_ptr<std::map<std::string, Texture*> > mTextures;
+        std::shared_ptr<std::vector<Mesh> > mMeshes;
 
         // Don't Implement copy constructor
         GraphicsManager(const GraphicsManager&);

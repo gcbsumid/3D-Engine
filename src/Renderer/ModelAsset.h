@@ -14,12 +14,12 @@ namespace backlash {
         ~ModelAsset();
 
         // Material data
-        std::shared_ptr<backlash::Program> mShaders;    // the program
-        std::shared_ptr<backlash::Texture> mTextures;   // textures
+        int mShaderID;    // this is now in the mesh entry
+        int mTextureID;   // this is now in the mesh entry
 
         // Mesh data
-        GLuint mVBO;                    // vertex buffer object id; 
-        GLuint mVAO;                    // vertex array object id
+        GLuint mVBO;                    // now in the mesh data
+        GLuint mVAO;                    // now in the mesh data
         // The following are parameters to glDrawArrays
         GLenum mDrawType;
         GLint mDrawStart;

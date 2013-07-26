@@ -7,9 +7,11 @@
 
 #include "../Game/Engine.h" 
 #include "../Renderer/ModelAsset.h"
+#include "../Renderer/Texture.h"
 
 #include <memory>
 #include <vector>
+#include <string>
 
 namespace backlash {
     class Engine;
@@ -28,40 +30,45 @@ namespace backlash {
     };
 
     struct Mesh {
-        struct MeshEntry {
-            MeshEntry();
-            ~MeshEntry();
+        Mesh(int);
+        ~Mesh();
 
-            // Probably don't need this right now
-            // void Init(const std::vector<Vertex>* vertices, const std::vector<unsigned int>& indices);
+        // Probably don't need this right now
+        void Init(const std::vector<Vertex>* vertices, const std::vector<unsigned int>& indices);
 
-            GLuint mVertexBuffer;
-            GLuint mIndexBuffer;
+        int mID;
+        GLuint mVertexBuffer;
+        GLuint mIndexBuffer;
 
-            unsigned int mNumIndices; 
-            unsigned int mMaterialIndex;
-        };
-
-        std::vector<MeshEntry> mEntries;
-        std::vector<std::weak_ptr<Texture> > mTextures;
+        unsigned int mNumIndices; 
+        std::string mMaterialName;        
     };
 
     class ResourceManager {
         typedef std::shared_ptr<ResourceManager> ResourceManagerPtr;
         typedef std::weak_ptr<Engine> EnginePtr;
-        typedef std::shared_ptr<ModelAsset> AssetPtr;
     public:
         static ResourceManagerPtr GetInstance(EnginePtr parent);
 
         ~ResourceManager() {}
 
-        void LoadAllFiles();
+        void SetTextureSharedPointer(std::map<std::string, Texture*> textures);
+        void SetMeshSharedPointer(std::vector<Mesh> meshes);
 
-        AssetPtr LoadAssetFromFile(const char* file); 
-        AssetPtr ProcessScene(aiScene*);
+        void LoadAllFiles();
+        void Clear();
+
+        void LoadAssetFromFile(const string file); 
+        void ProcessScene(aiScene*);
 
     private:
-        vector<
+        // This is shared with the Graphics manager
+        std::shared_ptr<std::map<std::string, Texture*> > mTextures;
+        std::shared_ptr<std::vector<Mesh> > mMeshes;
+
+        // std::vector<Mesh> mLocalMeshes;
+        // std::map<std::string, Texture*> mLocalTexture;
+        std::vector<std::string> mLocalTexture;
 
         ResourceManager(EnginePtr parent);
         
