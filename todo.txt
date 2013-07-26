@@ -1,9 +1,12 @@
 TODO List:
 
+What to do next: 
+- Implement the Render and Render Instance functions in the graphics manager using the data
+you got from the resource manager (after using assimp to get the data out of a blender file).
+
 HIGHER PRIORITY
 - Implement a bunch of .cpp files
 - Turn the Algorithms into a decorator type (so that you can do two updates at the same time?)
-- Use Assimp for resource managing. Basically, for the resource manager. (Resource Manager)
 - Install libxml++ (its already in the temp folder btw)
 
 LOWER PRIORITY
