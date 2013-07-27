@@ -1,11 +1,12 @@
 #ifndef DRAWCOMPONENT_H
 #define DRAWCOMPONENT_H
 
-#include "../Renderer/ModelAsset.h"
 #include "../Game/Component.h"
 #include "../Game/ModelAttrib.h"
 #include "../Game/ComponentFactory.h"
 #include "../Util/enum.h"
+#include "Program.h"
+#include "ModelAsset.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -37,13 +38,14 @@ namespace backlash {
         virtual void Update();
         virtual bool Render();
 
-        void SetAsset(int id);
-        void SetModelAttrib(std::weak_ptr<ModelAttrib> model);
-
-        int GetAssetID() const;
+        void SetShader(Program* program);
+        void SetMesh(Mesh* mesh);
+        void SetModelAttrib(ModelAttrib* model);
 
     private:
-        int mAssetID;
+        std::weak_ptr<Mesh> mMesh;
+        std::weak_ptr<Program> mShader;
+
         std::weak_ptr<ModelAttrib> mModel;
     } ;
 }

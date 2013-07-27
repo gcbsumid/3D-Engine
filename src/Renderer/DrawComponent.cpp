@@ -1,4 +1,6 @@
 #include "DrawComponent.h"
+#include <GL/glew.h>
+#include <cassert>
 
 namespace backlash {
     DrawComponent::DrawComponent() : 
@@ -16,23 +18,30 @@ namespace backlash {
 
     bool DrawComponent::Render() {
         // Do the rendering here
+        if (!mShader->IsInUuse()) 
+            mShader->Use();
 
+        // TODO: Render the materials for each mesh and then render each mesh. 
+        
         return true;
     }
 
-    void DrawComponent::SetAsset(int id) {
-        mAssetID = id;
+    void DrawComponent::SetShader(Program* program) {
+        assert(program);
+        mShader = std::weak_ptr<Program>(program);
     }
 
-    void DrawComponent::SetModelAttrib(std::shareD_ptr<ModelAttrib> model) {
-        mModel = model;
+    void DrawComponent::SetMesh(Mesh* mesh) {
+        assert(mesh);
+        mMesh = std::weak_ptr<Mesh>(mesh);
     }
 
-    glm::mat4 DrawComponent::GetTransform() const {
-        return mTransform;
+    void DrawComponent::SetModelAttrib(ModelAttrib* model) {
+        assert(model);
+        mModel = std::weak_ptr<ModelAttrib>(model);
     }
 
-    int DrawComponent::GetAssetID() const {
-        return mAssetID;
-    }    
+    Program* DrawComponent::GetShader() const {
+        return mShader.lock().get();
+    }
 }

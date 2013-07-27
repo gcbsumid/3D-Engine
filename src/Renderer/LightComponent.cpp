@@ -1,4 +1,5 @@
 #include "LightComponent.h"
+#include <GL/glew.h>
 
 #define CHECKINVALID(a) ((a==INVALID_UNIFORM_LOCATION) ? true : false ;)
 

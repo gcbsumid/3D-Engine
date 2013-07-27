@@ -18,7 +18,7 @@ static std::map<int, string> indexToName;
 
 namespace backlash {
 
-    void static color4_to_float4(const aiColor4D *c, float f[4])
+    static void color4_to_float4(const aiColor4D *c, float f[4])
     {
         f[0] = c->r;
         f[1] = c->g;
@@ -26,39 +26,6 @@ namespace backlash {
         f[3] = c->a;
     }
 
-    // Mesh stuff
-    Mesh::Mesh(int id) : mID(id) {
-        mVertexBuffer = INVALID_OGL_VALUE;
-        mIndexBuffer = INVALID_OGL_VALUE;
-        mNumIndices = 0;
-        mMaterialIndex = 0;
-    }
-
-    Mesh::~Mesh() {
-        if (mVertexBuffer != INVALID_OGL_VALUE) {
-            glDeleteBuffers(1, &mVertexBuffer);
-        }
-
-        if (mIndexBuffer != INVALID_OGL_VALUE) {
-            glDeleteBuffers(1, &mIndexBuffer);
-        }
-    }
-
-    void Mesh::Init(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
-        mNumIndices = indices.size();
-
-        glGenBuffers(1, &mVertexBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glGenBuffers(1, &mIndexBuffer) ;
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mNumIndices, &indices[0], GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    }
-
-    // Resource Manager stuff
     ResourceManager::ResourceManager_ptr ResourceManager::GetInstance( 
         ResourceManager::Engine_ptr parent) {
         if (mInstance.get() == 0) {
@@ -197,12 +164,15 @@ namespace backlash {
             } 
 
             if (!gotTexture) {
-                mLocalTexture.push_back("white.png");
-                if (mTextures.count("white.png") == 0) {
-                    Bitmap bmp = Bitmap::BitmapFromFile(utility::ResourcePath("white.png"));
+                std::string name = "white.png";
+                mLocalTexture.push_back(name);
+                if (mTextures.count(name) == 0) {
+                    Bitmap bmp = Bitmap::BitmapFromFile(utility::ResourcePath(name));
                     bmp.FlipVertically();
 
-                    mTextures.push_back(std::make_pair("white.png", new Texture(bmp, "white.png")));
+                    Texture* texture = new Texture(bmp, name);
+                    mTextures.push_back(std::make_pair(name, texture));
+                    SetMaterialData(material, texture);
                 }
             }
         }

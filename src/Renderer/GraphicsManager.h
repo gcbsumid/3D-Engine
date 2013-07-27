@@ -56,11 +56,11 @@ namespace backlash {
         std::vector<std::weak_ptr<LightComponent> > mLightComponents;
         std::weak_ptr<CameraComponent> mCameraComponent;
 
-        std::map<int, std::unique_ptr<Program> > mShaders;
-
         // this is shared with the resource manager
         std::shared_ptr<std::map<std::string, Texture*> > mTextures;
         std::shared_ptr<std::vector<Mesh> > mMeshes;
+
+        Program* mActiveShader;
 
         // Don't Implement copy constructor
         GraphicsManager(const GraphicsManager&);

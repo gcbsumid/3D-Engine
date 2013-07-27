@@ -8,6 +8,7 @@
 #include "../Game/Engine.h" 
 #include "../Renderer/ModelAsset.h"
 #include "../Renderer/Texture.h"
+#include "../Renderer/Mesh.h"
 
 #include <memory>
 #include <vector>
@@ -15,34 +16,6 @@
 
 namespace backlash {
     class Engine;
-
-    struct Vertex {
-        glm::vec3 mPosition;    // (x,y,z)
-        glm::vec2 mTexCoord;    // (u,v)
-        glm::vec3 mNormal;      // (x,y,z)
-
-        Vertex() {};
-        Vertex(const glm::vec3& pos, const glm::vec2& tex, const glm::vec3 normal) {
-            mPosition = pos;
-            mTexCoord = tex;
-            mNormal = normal;
-        }
-    };
-
-    struct Mesh {
-        Mesh(int);
-        ~Mesh();
-
-        // Probably don't need this right now
-        void Init(const std::vector<Vertex>* vertices, const std::vector<unsigned int>& indices);
-
-        int mID;
-        GLuint mVertexBuffer;
-        GLuint mIndexBuffer;
-
-        unsigned int mNumIndices; 
-        std::string mMaterialName;        
-    };
 
     class ResourceManager {
         typedef std::shared_ptr<ResourceManager> ResourceManagerPtr;

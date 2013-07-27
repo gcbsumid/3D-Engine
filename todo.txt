@@ -1,8 +1,8 @@
 TODO List:
 
 What to do next: 
-- Implement the Render and Render Instance functions in the graphics manager using the data
-you got from the resource manager (after using assimp to get the data out of a blender file).
+- Render each material and then render each mesh. Goto: line 24 in DrawComponent.cpp and Line 
+  91 in GraphicsManager.cpp
 
 HIGHER PRIORITY
 - Implement a bunch of .cpp files

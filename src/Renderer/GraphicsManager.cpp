@@ -3,6 +3,7 @@
 #include "util.h"
 #include <cassert>
 #include <iostream>
+#include <GL/glew.h>
 
 // Global static pointer used to ensure my singleton
 std::shared_ptr<backlash::GraphicsManager> backlash::GraphicsManager::mInstance;
@@ -26,7 +27,13 @@ namespace backlash {
 
     GraphicsManager::GraphicsManager(GraphicsManager::Engine_ptr parent) : 
             mParent(parent), 
-            mCameraComponentID(UINT_MAX) {}
+            mCameraComponentID(UINT_MAX),
+            mDrawComponents(NULL),
+            mLightComponents(NULL),
+            mCameraComponent(NULL),
+            mTextures(NULL),
+            mMeshes(NULL),
+            mActiveShader(NULL) {}
 
     void GraphicsManager::AddDrawComponent(GLuint id) {
         assert(utility::IsValidComponentID(id));
@@ -61,15 +68,28 @@ namespace backlash {
         glClearColor(0,0,0,1); // black.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Render Camera Component
-        mCameraComponent->Render();
+        mActiveShader = NULL;
+        for (auto draw : mDrawComponents) {
+            Program* curShader = draw->GetShader();
+            if (mActiveShader != curShader) {
+                mActiveShader = curShader;
+            }
 
-        // Render Light Components
-        for (auto it : mLightComponents) {
-            (*it)->Render();
+            if (!mActiveShader->IsInUse()) {
+                // make the shader active 
+                mActiveShader->Use();
+
+                // Render the Camera Component
+                mCameraComponent->Render();
+
+                // Render Light Components
+                for (auto it : mLightComponents) {
+                    it->Render();
+                }
+            }
+
+            draw->Render();
         }
-
-        // TODO:: Finish writing this. You're just starting to render the mesh
     }
 
     // TODO: Graphics Render and render instance 
@@ -121,9 +141,11 @@ namespace backlash {
         // set shader uniforms
         shaders->SetUniform("camera", camera->Matrix());
         shaders->SetUniform("model", renderComp->GetTransform());
+        
         shaders->SetUniform("material.tex", 0); // texture is bounded to GL_TEXTURE0
         shaders->SetUniform("material.shininess", asset->mShininess);
         shaders->SetUniform("material.specularColor", asset->mSpecularColor);
+        
         shaders->SetUniform("light.position", lightComp->GetPosition());
         shaders->SetUniform("light.intensities", lightComp->GetIntensity());
         shaders->SetUniform("light.attenuation", lightComp->GetAttenuation());
