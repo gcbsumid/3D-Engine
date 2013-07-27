@@ -104,4 +104,28 @@ namespace backlash {
     GLfloat Texture::GetShininess() const {
         return mShininess;
     }
+
+    bool Texture::BindTexture(Program* shader) const {
+        GLuint shaderLoc = shader->Object();
+        GLuint tex = glGetUniformLocation(shaderLoc, "material.tex");
+        GLuint shininess = glGetUniformLocation(shaderLoc, "material.shininess");
+        GLuint specularColor = glGetUniformLocation(shaderLoc, "material.specularColor");
+
+        assert(CHECKINVALID(tex));
+        assert(CHECKINVALID(shininess));
+        assert(CHECKINVALID(specularColor));
+
+        glUniform1f(tex, 0);
+        glUniform1f(shininess, mShininess);
+        glUniform3f(specularColor, mSpecular[0], mSpecular[1], mSpecular[2]); // not sure if this is right though.
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, mObject);
+        return true;
+    }
+
+    bool Texture::UnbindTexture() {
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindVertexArray(0);
+    }
 }

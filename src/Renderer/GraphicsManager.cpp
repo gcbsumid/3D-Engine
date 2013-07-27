@@ -68,6 +68,10 @@ namespace backlash {
         glClearColor(0,0,0,1); // black.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+        glEnableVertexAttribArray(2);
+
         mActiveShader = NULL;
         for (auto draw : mDrawComponents) {
             Program* curShader = draw->GetShader();
@@ -80,16 +84,24 @@ namespace backlash {
                 mActiveShader->Use();
 
                 // Render the Camera Component
-                mCameraComponent->Render();
+                mCameraComponent->Render(mActiveShader);
 
                 // Render Light Components
                 for (auto it : mLightComponents) {
-                    it->Render();
+                    it->Render(mActiveShader);
                 }
             }
+            std::string materialName = draw->GetMaterialName();
+            mTextures.at(materialName)->BindTexture(mActiveShader);
 
-            draw->Render();
+            draw->Render(mActiveShader);
+
+            mTextures.at(materialName)->UnbindTexture();
         }
+
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
     }
 
     // TODO: Graphics Render and render instance 

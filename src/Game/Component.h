@@ -2,6 +2,7 @@
 #define COMPONENT_H
 
 #include <enum.h>
+#include "../Renderer/Program.h"
 
 // Standard C++ libraries
 
@@ -15,7 +16,7 @@ namespace backlash {
 
         virtual void init() = 0;
         virtual void Update() = 0;
-        virtual bool Render() = 0;
+        virtual bool Render(Program*) = 0;
         
         int GetID() const;
         E_COMPONENT GetType() const;

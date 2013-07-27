@@ -8,6 +8,7 @@
 #include "../Game/ModelAttrib.h"
 #include "../Game/ComponentFactory.h"
 #include "../Util/enum.h"
+#include "../Renderer/Program.h"
 
 #include <vector> 
 #include <memory>
@@ -36,7 +37,7 @@ namespace backlash {
     public:
         virtual void Init();
         virtual void Update();
-        virtual bool Render(); 
+        virtual bool Render(Program*); 
 
         void SetModelMatrix(std::weak_ptr<ModelAttrib> model);
         void GenerateAlgorithm(E_ALGORITHM);

@@ -4,6 +4,7 @@
 #include "../Game/Component.h"
 #include "../Util/enum.h"
 #include "../Game/ModelAttrib.h"
+#include "Program.h"
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -31,7 +32,7 @@ namespace backlash {
     public:
         virtual void Init();
         virtual void Update();
-        virtual bool Render();
+        virtual bool Render(Program*);
 
         void SetModelAttrib(std::weak_ptr<ModelAttrib>);
 

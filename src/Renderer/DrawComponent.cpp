@@ -16,13 +16,16 @@ namespace backlash {
         // Do something?
     }
 
-    bool DrawComponent::Render() {
-        // Do the rendering here
-        if (!mShader->IsInUuse()) 
-            mShader->Use();
+    bool DrawComponent::Render(Program* shader) {
 
-        // TODO: Render the materials for each mesh and then render each mesh. 
-        
+        glBindBuffer(GL_ARRAY_BUFFER, mMesh->mVertexBuffer);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)12);
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)20);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mMesh->mIndexBuffer);
+        glDrawElements(GL_TRIANGLES, mMesh->mNumIndices, GL_UNSIGNED_INT, 0);
+
         return true;
     }
 
@@ -39,6 +42,10 @@ namespace backlash {
     void DrawComponent::SetModelAttrib(ModelAttrib* model) {
         assert(model);
         mModel = std::weak_ptr<ModelAttrib>(model);
+    }
+
+    std::string DrawComponent::GetMaterialName() const {
+        return mMesh->mMaterialName;
     }
 
     Program* DrawComponent::GetShader() const {

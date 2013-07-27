@@ -31,9 +31,10 @@ namespace backlash {
         mAttrib->mTransform = camera;
     }
 
-    bool CameraComponent::Render() {
-        GLuint cameraMatrix = GetUniformLocation("camera");
-        GLuint cameraPosition = GetUniformLocation("cameraPosition");
+    bool CameraComponent::Render(Program* shader) {
+        GLuint shaderLoc = shader->Object();
+        GLuint cameraMatrix = glGetUniformLocation(shaderLoc, "camera");
+        GLuint cameraPosition = glGetUniformLocation(shaderLoc, "cameraPosition");
 
         if (cameraMatrix == INVALID_UNIFORM_LOCATION || 
             cameraPosition == INVALID_UNIFORM_LOCATION) {

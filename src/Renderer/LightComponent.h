@@ -4,6 +4,7 @@
 #include "../Game/Component.h"
 #include "../Game/ComponentFactory.h"
 #include "../Util/enum.h"
+#include "Program.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -29,7 +30,7 @@ namespace backlash {
     public:
         virtual void init();
         virtual void Update();
-        virtual bool Render();
+        virtual bool Render(Program*);
 
         void SetPosition(glm::vec3);
         glm::vec3 GetPosition() const;

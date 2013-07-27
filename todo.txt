@@ -1,8 +1,7 @@
 TODO List:
 
 What to do next: 
-- Render each material and then render each mesh. Goto: line 24 in DrawComponent.cpp and Line 
-  91 in GraphicsManager.cpp
+- Figure out what to do next before you implement the engine.cpp file.
 
 HIGHER PRIORITY
 - Implement a bunch of .cpp files

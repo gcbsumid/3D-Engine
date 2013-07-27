@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <string>
 #include "Bitmap.h"
+#include "Program.h"
 
 namespace backlash {
 
@@ -36,6 +37,8 @@ namespace backlash {
 
         // The name of the current texture
         std::string GetName() const;
+
+        void UnbindTexture(Program*) const;
 
         void SetDiffuse(glm::vec4 diffuse);
         void SetAmbient(glm::vec4 ambient);

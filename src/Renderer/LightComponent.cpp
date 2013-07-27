@@ -17,11 +17,12 @@ namespace backlash {
         // Do something?
     }
 
-    bool LightComponent::Render() {
-        GLuint position = GetUniformLocation("light.position");
-        GLuint intensities = GetUniformLocation("light.intensities");
-        GLuint attenuation = GetUniformLocation("light.attenuation");
-        GLuint ambientCoefficient= GetUniformLocation("light.ambientCoefficient");
+    bool LightComponent::Render(Program* shader) {
+        GLuint shaderLoc = shader->Object();
+        GLuint position = glGetUniformLocation(shaderLoc,"light.position");
+        GLuint intensities = glGetUniformLocation(shaderLoc,"light.intensities");
+        GLuint attenuation = glGetUniformLocation(shaderLoc,"light.attenuation");
+        GLuint ambientCoefficient= glGetUniformLocation(shaderLoc,"light.ambientCoefficient");
 
         assert(CHECKINVALID(position));
         assert(CHECKINVALID(intensities));

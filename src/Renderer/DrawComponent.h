@@ -5,6 +5,7 @@
 #include "../Game/ModelAttrib.h"
 #include "../Game/ComponentFactory.h"
 #include "../Util/enum.h"
+#include "Mesh.h"
 #include "Program.h"
 #include "ModelAsset.h"
 
@@ -36,11 +37,13 @@ namespace backlash {
     public:
         virtual void Init();
         virtual void Update();
-        virtual bool Render();
+        virtual bool Render(Program*);
 
         void SetShader(Program* program);
         void SetMesh(Mesh* mesh);
         void SetModelAttrib(ModelAttrib* model);
+        std::string GetMaterialName() const;
+        Program* GetShader() const;
 
     private:
         std::weak_ptr<Mesh> mMesh;

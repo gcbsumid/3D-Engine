@@ -17,7 +17,7 @@ namespace backlash {
         }
     }
 
-    bool AIComponent::Render() {
+    bool AIComponent::Render(Program* shader) {
         // There is nothing to be done here
         // I should be here in the first place so return false
         return false;
