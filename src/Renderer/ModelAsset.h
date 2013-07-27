@@ -18,15 +18,15 @@ namespace backlash {
         int mTextureID;   // this is now in the mesh entry
 
         // Mesh data
-        GLuint mVBO;                    // now in the mesh data
-        GLuint mVAO;                    // now in the mesh data
+        std::weak_ptr<Mesh> mMesh;
+        
         // The following are parameters to glDrawArrays
-        GLenum mDrawType;
-        GLint mDrawStart;
-        GLint mDrawCount;
+        // GLenum mDrawType;
+        // GLint mDrawStart;
+        // GLint mDrawCount;
 
-        GLfloat mShininess; 
-        glm::vec3 mSpecularColor;
+        // GLfloat mShininess; 
+        // glm::vec3 mSpecularColor;
         const GLuint mID;
     };
 }

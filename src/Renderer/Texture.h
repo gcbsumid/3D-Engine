@@ -37,11 +37,29 @@ namespace backlash {
         // The name of the current texture
         std::string GetName() const;
 
+        void SetDiffuse(glm::vec4 diffuse);
+        void SetAmbient(glm::vec4 ambient);
+        void SetSpecular(glm::vec4 specular);
+        // void SetEmission (glm::vec4 emission);
+        void SetShininess(glm::vec4 shininess);
+
+        glm::vec4 GetDiffuse() const;
+        glm::vec4 GetAmbient() const;
+        glm::vec4 GetSpecular() const;
+        // glm::vec4 GetEmission() const; 
+        GLfloat GetShininess() const;
+
     private:
         std::string mName;
         GLuint mObject;
         GLfloat mOriginalWidth;
         GLfloat mOriginalHeight;
+
+        glm::vec4 mDiffuse;
+        glm::vec4 mAmbient;
+        glm::vec4 mSpecular;
+        // glm::vec4 mEmission; // No idea what this is yet.
+        GLfloat mShininess;
 
         // copying disabled 
         Texture(const Texture&);

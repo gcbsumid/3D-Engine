@@ -64,4 +64,44 @@ namespace backlash {
     std::string Texture::GetName() const {
         return mName;
     }
+
+    void Texture::SetDiffuse(glm::vec4 diffuse) {
+        mDiffuse = diffuse;
+    } 
+
+    void Texture::SetAmbient(glm::vec4 ambient) {
+        mAmbient = ambient;
+    } 
+
+    void Texture::SetSpecular(glm::vec4 specular) {
+        mSpecular = specular;
+    } 
+
+    // void Texture::SetEmission(glm::vec4 emission) {
+    //     mEmission = emission;
+    // } 
+
+    void Texture::SetShininess(float shininess) {
+        mShininess = shininess;
+    }
+
+    glm::vec4 Texture::GetDiffuse() const {
+        return mDiffuse;
+    }
+
+    glm::vec4 Texture::GetAmbient() const {
+        return mAmbient;
+    }
+
+    glm::vec4 Texture::GetSpecular() const {
+        return mSpecular;
+    }
+
+    // glm::vec4 Texture::GetEmission() const {
+    //     return mEmission;
+    // }
+
+    GLfloat Texture::GetShininess() const {
+        return mShininess;
+    }
 }

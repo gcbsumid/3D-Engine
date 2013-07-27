@@ -18,6 +18,14 @@ static std::map<int, string> indexToName;
 
 namespace backlash {
 
+    void static color4_to_float4(const aiColor4D *c, float f[4])
+    {
+        f[0] = c->r;
+        f[1] = c->g;
+        f[2] = c->b;
+        f[3] = c->a;
+    }
+
     // Mesh stuff
     Mesh::Mesh(int id) : mID(id) {
         mVertexBuffer = INVALID_OGL_VALUE;
@@ -181,7 +189,9 @@ namespace backlash {
                         Bitmap bmp = Bitmap::BitmapFromFile(fullPath);
                         bmp.FlipVertically();
 
-                        mTextures.push_back(std::make_pair(name, new Texture(bmp, name)));
+                        Texture* texture = new Texture(bmp, name);
+                        mTextures.push_back(std::make_pair(name, texture));
+                        SetMaterialData(material, texture);
                     }
                 }
             } 
@@ -196,5 +206,42 @@ namespace backlash {
                 }
             }
         }
+    }
+
+    void ResourceManager::SetMaterialData(aiMaterial* material, Texture* texture) {
+        glm::vec4 diffuse = glm::vec4(0.8f,0.8f,0.8f,1.0f);
+        glm::vec4 ambient = glm::vec4(0.2f,0.2f,0.2f,1.0f);
+        glm::vec4 specular = glm::vec4(0.0f,0.0f,0.0f,1.0f);
+        // glm::vec4 emission = glm::vec4(0.0f,0.0f,0.0f,1.0f);
+
+        aiColor4D aiDiffuse; 
+        aiColor4D aiAmbient;
+        aiColor4D aiSpecular;
+        // aiColor4D aiEmission;
+
+        if (aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &aiDiffuse)) {
+            color4_to_float4(&aiDiffuse, diffuse);
+        }
+        texture.SetDiffuse(diffuse);
+
+        if (aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &aiAmbient)) {
+            color4_to_float4(&aiAmbient, ambient);
+        }
+        texture.SetAmbient(ambient);
+
+        if (aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &aiSpecular)) {
+            color4_to_float4(&aiSpecular, specular);
+        }
+        texture.SetSpecular(specular);
+
+        // if (aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &aiEmission)) {
+        //     color4_to_float4(&aiEmission, emission);
+        // }
+        // texture.SetEmission(emission);
+
+        float shininess 0.0;
+        unsigned int max;
+        aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max);
+        texture.SetShininess(shininess);        
     }
 }

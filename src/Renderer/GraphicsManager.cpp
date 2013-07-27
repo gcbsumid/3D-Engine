@@ -56,6 +56,22 @@ namespace backlash {
         mMeshes = std::shared_ptr<std::vector<Mesh> > (meshes);
     }
 
+    void GraphicsManager::Render() {
+        // Clearing everything
+        glClearColor(0,0,0,1); // black.
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Render Camera Component
+        mCameraComponent->Render();
+
+        // Render Light Components
+        for (auto it : mLightComponents) {
+            (*it)->Render();
+        }
+
+        // TODO:: Finish writing this. You're just starting to render the mesh
+    }
+
     // TODO: Graphics Render and render instance 
     
     /**********************************************************************************
