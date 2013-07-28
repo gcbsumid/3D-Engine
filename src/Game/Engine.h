@@ -15,8 +15,8 @@
 #include "Component.h"
 #include "../Renderer/ModelAsset.h"
 
-typedef std::map<int,std::shared_ptr<backlash::Component> > COMPONENT_LIST;
-typedef std::map<int,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST; 
+// typedef std::map<int,std::shared_ptr<backlash::Component> > COMPONENT_LIST;
+// typedef std::map<int,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST; 
 typedef std::map<int,std::shared_ptr<backlash::Entity> > ENTITY_LIST;
 
 namespace backlash {
@@ -42,13 +42,14 @@ namespace backlash {
 
         void LoadAssets();      // Should happen in the resource manager
         void CreateManagers();   // happens in the init()
+        void InitManagers();
         void CreateObjects();   // should make calls to the resource manager
         void Update(double);    // This should happen in the AI manager
 
         static std::shared_ptr<Engine> mInstance;
 
-        COMPONENT_LIST mComponents;
-        ASSET_LIST mAssets;
+        // COMPONENT_LIST mComponents;
+        // ASSET_LIST mAssets;
         ENTITY_LIST mEntities;
 
         std::shared_ptr<GraphicsManager> mGraphics;

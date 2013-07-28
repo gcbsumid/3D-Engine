@@ -11,8 +11,6 @@
 #include <glm/gtc/quaternion.hpp>
 #include <memory>
 
-// TODO: Move the individual render stuff for the camera here.
-
 namespace backlash {
     class CameraComponent : public Component {
     friend class ComponentFactoryInitializer;

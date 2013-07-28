@@ -6,7 +6,6 @@
 #include <assimp/postprocess.h>
 
 #include "../Game/Engine.h" 
-#include "../Renderer/ModelAsset.h"
 #include "../Renderer/Texture.h"
 #include "../Renderer/Mesh.h"
 
@@ -25,16 +24,16 @@ namespace backlash {
 
         ~ResourceManager() {}
 
-        void SetTextureSharedPointer(std::map<std::string, Texture*> textures);
-        void SetMeshSharedPointer(std::vector<Mesh> meshes);
+        void SetTextureSharedPointer(std::map<std::string, Texture*>* textures);
+        void SetMeshSharedPointer(std::vector<Mesh>* meshes);
 
         void LoadAllFiles();
-        void Clear();
 
+    private:
+        void Clear();
         void LoadAssetFromFile(const string file); 
         void ProcessScene(aiScene*);
 
-    private:
         // This is shared with the Graphics manager
         std::shared_ptr<std::map<std::string, Texture*> > mTextures;
         std::shared_ptr<std::vector<Mesh> > mMeshes;

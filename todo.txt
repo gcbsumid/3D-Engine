@@ -1,7 +1,7 @@
 TODO List:
 
 What to do next: 
-- Figure out what to do next before you implement the engine.cpp file.
+- Continue working on Engine.cpp. You need to work on creating the objects next.
 
 HIGHER PRIORITY
 - Implement a bunch of .cpp files

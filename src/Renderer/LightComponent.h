@@ -9,8 +9,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-// TODO: The Do the rendering stuff for each light
-
 namespace backlash {
     class LightComponent : public Component {
     friend class ComponentFactoryInitializer;

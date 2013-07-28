@@ -37,12 +37,12 @@ namespace backlash {
     ResourceManager::ResourceManager(ResourceManager::Engine_ptr parent) : 
         mParent(parent) {}
 
-    void ResourceManager::SetTextureSharedPointer(std::map<std::string, Texture*> textures) {
+    void ResourceManager::SetTextureSharedPointer(std::map<std::string, Texture*>* textures) {
         assert(textures);
         mTextures = std::shared_ptr<std::map<std::string, Texture*> >  (textures);
     }
 
-    void ResourceManager::SetMeshSharedPointer(std::vector<Mesh> meshes) {
+    void ResourceManager::SetMeshSharedPointer(std::vector<Mesh>* meshes) {
         assert(meshes);
         mMeshes = std::shared_ptr<std::vector<Mesh> > (meshes);
     }

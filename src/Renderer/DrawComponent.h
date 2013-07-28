@@ -14,8 +14,6 @@
 
 #include <memory>
 
-// TODO: Render each draw component
-
 namespace backlash {
     enum class E_COMPONENT;
 

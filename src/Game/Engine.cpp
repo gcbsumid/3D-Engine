@@ -40,110 +40,109 @@ static inline glm::mat4 scale(GLfloat x, GLfloat y, GLfloat z) {
     return glm::scale(glm::mat4(), glm::vec3(x,y,z));
 }
 
-static void LoadTriangle(std::shared_ptr<backlash::ModelAsset> asset) {
-    // make and bind the VAO 
-    glGenVertexArrays(1, &asset->mVAO);
-    glBindVertexArray(asset->mVAO);
+// static void LoadTriangle(std::shared_ptr<backlash::ModelAsset> asset) {
+//     // make and bind the VAO 
+//     glGenVertexArrays(1, &asset->mVAO);
+//     glBindVertexArray(asset->mVAO);
 
-    // make and bind the VBO
-    glGenBuffers(1, &asset->mVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, asset->mVBO);
+//     // make and bind the VBO
+//     glGenBuffers(1, &asset->mVBO);
+//     glBindBuffer(GL_ARRAY_BUFFER, asset->mVBO);
 
-    // Put the three triangle vertices into the VBO
-    GLfloat vertexData[] = {
-    //      X     Y     Z       U     V         Normals
-    // bottom
-        -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,     0.0f, -1.0f, 0.0f,
-        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
-        -1.0f,-1.0f, 1.0f,  0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
-        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
-        1.0f,-1.0f, 1.0f,   1.0f, 1.0f,     0.0f, -1.0f, 0.0f,
-        -1.0f,-1.0f, 1.0f,  0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+//     // Put the three triangle vertices into the VBO
+//     GLfloat vertexData[] = {
+//     //      X     Y     Z       U     V         Normals
+//     // bottom
+//         -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+//         1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+//         -1.0f,-1.0f, 1.0f,  0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+//         1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     0.0f, -1.0f, 0.0f,
+//         1.0f,-1.0f, 1.0f,   1.0f, 1.0f,     0.0f, -1.0f, 0.0f,
+//         -1.0f,-1.0f, 1.0f,  0.0f, 1.0f,     0.0f, -1.0f, 0.0f,
 
-    // top
-        -1.0f, 1.0f,-1.0f,  0.0f, 0.0f,     0.0f, 1.0f, 0.0f,
-        -1.0f, 1.0f, 1.0f,  0.0f, 1.0f,     0.0f, 1.0f, 0.0f,
-        1.0f, 1.0f,-1.0f,   1.0f, 0.0f,     0.0f, 1.0f, 0.0f,
-        1.0f, 1.0f,-1.0f,   1.0f, 0.0f,     0.0f, 1.0f, 0.0f,
-        -1.0f, 1.0f, 1.0f,  0.0f, 1.0f,     0.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,   1.0f, 1.0f,     0.0f, 1.0f, 0.0f,
+//     // top
+//         -1.0f, 1.0f,-1.0f,  0.0f, 0.0f,     0.0f, 1.0f, 0.0f,
+//         -1.0f, 1.0f, 1.0f,  0.0f, 1.0f,     0.0f, 1.0f, 0.0f,
+//         1.0f, 1.0f,-1.0f,   1.0f, 0.0f,     0.0f, 1.0f, 0.0f,
+//         1.0f, 1.0f,-1.0f,   1.0f, 0.0f,     0.0f, 1.0f, 0.0f,
+//         -1.0f, 1.0f, 1.0f,  0.0f, 1.0f,     0.0f, 1.0f, 0.0f,
+//         1.0f, 1.0f, 1.0f,   1.0f, 1.0f,     0.0f, 1.0f, 0.0f,
 
-    // front
-        -1.0f,-1.0f, 1.0f,  1.0f, 0.0f,     0.0f, 0.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,   0.0f, 0.0f,     0.0f, 0.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,  1.0f, 1.0f,     0.0f, 0.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,   0.0f, 0.0f,     0.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,   0.0f, 1.0f,     0.0f, 0.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,  1.0f, 1.0f,     0.0f, 0.0f, 1.0f,
+//     // front
+//         -1.0f,-1.0f, 1.0f,  1.0f, 0.0f,     0.0f, 0.0f, 1.0f,
+//         1.0f,-1.0f, 1.0f,   0.0f, 0.0f,     0.0f, 0.0f, 1.0f,
+//         -1.0f, 1.0f, 1.0f,  1.0f, 1.0f,     0.0f, 0.0f, 1.0f,
+//         1.0f,-1.0f, 1.0f,   0.0f, 0.0f,     0.0f, 0.0f, 1.0f,
+//         1.0f, 1.0f, 1.0f,   0.0f, 1.0f,     0.0f, 0.0f, 1.0f,
+//         -1.0f, 1.0f, 1.0f,  1.0f, 1.0f,     0.0f, 0.0f, 1.0f,
 
-    // back
-        -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,     0.0f, 0.0f, -1.0f,
-        -1.0f, 1.0f,-1.0f,  0.0f, 1.0f,     0.0f, 0.0f, -1.0f,
-        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     0.0f, 0.0f, -1.0f,
-        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     0.0f, 0.0f, -1.0f,
-        -1.0f, 1.0f,-1.0f,  0.0f, 1.0f,     0.0f, 0.0f, -1.0f,
-        1.0f, 1.0f,-1.0f,   1.0f, 1.0f,     0.0f, 0.0f, -1.0f,
+//     // back
+//         -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,     0.0f, 0.0f, -1.0f,
+//         -1.0f, 1.0f,-1.0f,  0.0f, 1.0f,     0.0f, 0.0f, -1.0f,
+//         1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     0.0f, 0.0f, -1.0f,
+//         1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     0.0f, 0.0f, -1.0f,
+//         -1.0f, 1.0f,-1.0f,  0.0f, 1.0f,     0.0f, 0.0f, -1.0f,
+//         1.0f, 1.0f,-1.0f,   1.0f, 1.0f,     0.0f, 0.0f, -1.0f,
 
-    // left
-        -1.0f,-1.0f, 1.0f,  0.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
-        -1.0f, 1.0f,-1.0f,  1.0f, 0.0f,     -1.0f, 0.0f, 0.0f,
-        -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,     -1.0f, 0.0f, 0.0f,
-        -1.0f,-1.0f, 1.0f,  0.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
-        -1.0f, 1.0f, 1.0f,  1.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
-        -1.0f, 1.0f,-1.0f,  1.0f, 0.0f,     -1.0f, 0.0f, 0.0f,
+//     // left
+//         -1.0f,-1.0f, 1.0f,  0.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
+//         -1.0f, 1.0f,-1.0f,  1.0f, 0.0f,     -1.0f, 0.0f, 0.0f,
+//         -1.0f,-1.0f,-1.0f,  0.0f, 0.0f,     -1.0f, 0.0f, 0.0f,
+//         -1.0f,-1.0f, 1.0f,  0.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
+//         -1.0f, 1.0f, 1.0f,  1.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
+//         -1.0f, 1.0f,-1.0f,  1.0f, 0.0f,     -1.0f, 0.0f, 0.0f,
 
-    // right
-        1.0f,-1.0f, 1.0f,   1.0f, 1.0f,     1.0f, 0.0f, 0.0f,
-        1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     1.0f, 0.0f, 0.0f,
-        1.0f, 1.0f,-1.0f,   0.0f, 0.0f,     1.0f, 0.0f, 0.0f,
-        1.0f,-1.0f, 1.0f,   1.0f, 1.0f,     1.0f, 0.0f, 0.0f,
-        1.0f, 1.0f,-1.0f,   0.0f, 0.0f,     1.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,   0.0f, 1.0f,     1.0f, 0.0f, 0.0f
-    };
+//     // right
+//         1.0f,-1.0f, 1.0f,   1.0f, 1.0f,     1.0f, 0.0f, 0.0f,
+//         1.0f,-1.0f,-1.0f,   1.0f, 0.0f,     1.0f, 0.0f, 0.0f,
+//         1.0f, 1.0f,-1.0f,   0.0f, 0.0f,     1.0f, 0.0f, 0.0f,
+//         1.0f,-1.0f, 1.0f,   1.0f, 1.0f,     1.0f, 0.0f, 0.0f,
+//         1.0f, 1.0f,-1.0f,   0.0f, 0.0f,     1.0f, 0.0f, 0.0f,
+//         1.0f, 1.0f, 1.0f,   0.0f, 1.0f,     1.0f, 0.0f, 0.0f
+//     };
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+//     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
-    // connect the xyz to the "vert" attribute of the vertex shader 
-    GLuint vertAttrib = asset->mShaders->Attrib("vert");
-    glEnableVertexAttribArray(vertAttrib);
-    glVertexAttribPointer(vertAttrib, 3, GL_FLOAT, GL_FALSE, 8*sizeof(GLfloat), NULL);
+//     // connect the xyz to the "vert" attribute of the vertex shader 
+//     GLuint vertAttrib = asset->mShaders->Attrib("vert");
+//     glEnableVertexAttribArray(vertAttrib);
+//     glVertexAttribPointer(vertAttrib, 3, GL_FLOAT, GL_FALSE, 8*sizeof(GLfloat), NULL);
     
-    // connect the uv coordinates to the "vertTexCoord" attribute of the vertex shader
-    GLuint vertTexCoordAttrib = asset->mShaders->Attrib("vertTexCoord");
-    glEnableVertexAttribArray(vertTexCoordAttrib);
-    glVertexAttribPointer(vertTexCoordAttrib, 2, GL_FLOAT, GL_TRUE, 8*sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));
+//     // connect the uv coordinates to the "vertTexCoord" attribute of the vertex shader
+//     GLuint vertTexCoordAttrib = asset->mShaders->Attrib("vertTexCoord");
+//     glEnableVertexAttribArray(vertTexCoordAttrib);
+//     glVertexAttribPointer(vertTexCoordAttrib, 2, GL_FLOAT, GL_TRUE, 8*sizeof(GLfloat), (const GLvoid*)(3 * sizeof(GLfloat)));
 
-    GLuint vertNormalAttrib = asset->mShaders->Attrib("vertNormal");
-    glEnableVertexAttribArray(vertNormalAttrib);
-    glVertexAttribPointer(vertNormalAttrib, 3, GL_FLOAT, GL_TRUE, 8*sizeof(GLfloat), (const GLvoid*)(5 * sizeof(GLfloat)));
+//     GLuint vertNormalAttrib = asset->mShaders->Attrib("vertNormal");
+//     glEnableVertexAttribArray(vertNormalAttrib);
+//     glVertexAttribPointer(vertNormalAttrib, 3, GL_FLOAT, GL_TRUE, 8*sizeof(GLfloat), (const GLvoid*)(5 * sizeof(GLfloat)));
 
-    // unbind the VBO and VAO
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-}
+//     // unbind the VBO and VAO
+//     glBindBuffer(GL_ARRAY_BUFFER, 0);
+//     glBindVertexArray(0);
+// }
 
-static std::shared_ptr<backlash::Program> LoadShaders(const std::string vertex, const std::string fragment) {
-    std::vector<backlash::Shader> shaders;
+// static std::shared_ptr<backlash::Program> LoadShaders(const std::string vertex, const std::string fragment) {
+//     std::vector<backlash::Shader> shaders;
 
-    shaders.push_back(backlash::Shader::ShaderFromFile(
-        utility::ResourcePath(vertex), 
-        GL_VERTEX_SHADER));
-    shaders.push_back(backlash::Shader::ShaderFromFile(
-        utility::ResourcePath(fragment), 
-        GL_FRAGMENT_SHADER));
-    return std::shared_ptr<backlash::Program>(new backlash::Program(shaders));
-}
+//     shaders.push_back(backlash::Shader::ShaderFromFile(
+//         utility::ResourcePath(vertex), 
+//         GL_VERTEX_SHADER));
+//     shaders.push_back(backlash::Shader::ShaderFromFile(
+//         utility::ResourcePath(fragment), 
+//         GL_FRAGMENT_SHADER));
+//     return std::shared_ptr<backlash::Program>(new backlash::Program(shaders));
+// }
 
-static std::shared_ptr<backlash::Texture> LoadTexture(const std::string texture) {
-    backlash::Bitmap bmp = backlash::Bitmap::BitmapFromFile(utility::ResourcePath(texture));
-    bmp.FlipVertically();
-    return std::shared_ptr<backlash::Texture>(new backlash::Texture(bmp));
-}
+// static std::shared_ptr<backlash::Texture> LoadTexture(const std::string texture) {
+//     backlash::Bitmap bmp = backlash::Bitmap::BitmapFromFile(utility::ResourcePath(texture));
+//     bmp.FlipVertically();
+//     return std::shared_ptr<backlash::Texture>(new backlash::Texture(bmp));
+// }
 
 namespace backlash {
     Engine::Engine() : mGraphics(NULL), mInput(NULL) {
     }
-
 
     std::shared_ptr<Engine> Engine::GetInstance() {
         if (mInstance.use_count() < 1) {
@@ -153,22 +152,22 @@ namespace backlash {
         return mInstance;
     }
 
-    void Engine::LoadAssets() {
-        std::shared_ptr<ModelAsset> woodenCrate(new ModelAsset());
-        mAssets.insert(std::make_pair(woodenCrate->mID, woodenCrate));
+    // void Engine::LoadAssets() {
+    //     std::shared_ptr<ModelAsset> woodenCrate(new ModelAsset());
+    //     mAssets.insert(std::make_pair(woodenCrate->mID, woodenCrate));
 
-        woodenCrate->mShaders = LoadShaders("vertex-shader.vert", "fragment-shader.frag");
-        woodenCrate->mDrawType = GL_TRIANGLES;
-        woodenCrate->mDrawStart = 0;
-        woodenCrate->mDrawCount = 6*2*3;
-        woodenCrate->mTextures = LoadTexture("wooden-crate.jpg");
-        woodenCrate->mShininess = 80.0;
-        woodenCrate->mSpecularColor = glm::vec3(1.0f, 1.0f, 1.0f);
-        glGenBuffers(1, &woodenCrate->mVBO);
-        glGenVertexArrays(1, &woodenCrate->mVAO);
+    //     woodenCrate->mShaders = LoadShaders("vertex-shader.vert", "fragment-shader.frag");
+    //     woodenCrate->mDrawType = GL_TRIANGLES;
+    //     woodenCrate->mDrawStart = 0;
+    //     woodenCrate->mDrawCount = 6*2*3;
+    //     woodenCrate->mTextures = LoadTexture("wooden-crate.jpg");
+    //     woodenCrate->mShininess = 80.0;
+    //     woodenCrate->mSpecularColor = glm::vec3(1.0f, 1.0f, 1.0f);
+    //     glGenBuffers(1, &woodenCrate->mVBO);
+    //     glGenVertexArrays(1, &woodenCrate->mVAO);
 
-        LoadTriangle(woodenCrate);
-    }
+    //     LoadTriangle(woodenCrate);
+    // }
 
     void Engine::CreateManagers() {
         mGraphics = GraphicsManager::GetInstance(mInstance);
@@ -181,8 +180,6 @@ namespace backlash {
 
     void Engine::InitManagers() {
         // Set up the camera
-        // TODO: Move the camera translation from the Camera class to the Camera Component Class
-        // TODO: Modify the Input Manager Class accordingly
         std::shared_ptr<CameraComponent> cameraComp(ComponentFactory::CreateComponent(E_COMPONENT::E_COMPONENT_CAMERA));
         std::shared_ptr<Entity> player(new Entity());
         player->AddComponent(E_COMPONENT::E_COMPONENT_CAMERA, cameraComp);
@@ -196,6 +193,16 @@ namespace backlash {
 
         // Add player entity to Entity List 
         mEntities.insert(std::make_pair(player->GetID(), player));
+
+        // Create the Texture and Mesh containers
+        std::map<std::string, Texture*>* textures = new std::map<std::string, Texture*>();
+        std::vector<Mesh>* meshes = new std::vector<Mesh>();
+        mGraphics->SetTextureSharedPointer(textures);
+        mGraphics->SetMeshSharedPointer(meshes);
+        mInput->SetTextureSharedPointer(textures);
+        mInput->SetMeshSharedPointer(meshes);
+
+        mResourceManager->LoadAllFiles();
     }
 
     void Engine::CreateObjects() {
@@ -299,7 +306,6 @@ namespace backlash {
         glDepthFunc(GL_LESS);
 
         CreateManagers();
-        LoadAssets();
         CreateObjects();
     }
     

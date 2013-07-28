@@ -13,7 +13,6 @@ std::shared_ptr<backlash::GraphicsManager> backlash::GraphicsManager::mInstance;
 typedef std::shared_ptr<backlash::DrawComponent> DRAWCOMP_PTR;
 typedef std::shared_ptr<backlash::CameraComponent> CAMERACOMP_PTR;
 typedef std::shared_ptr<backlash::LightComponent> LIGHTCOMP_PTR;
-typedef std::shared_ptr<backlash::ModelAsset> MODELASSET_PTR;
 
 
 namespace backlash {
@@ -35,6 +34,16 @@ namespace backlash {
             mMeshes(NULL),
             mActiveShader(NULL) {}
 
+    void GraphicsManager::LoadShaders() {
+        std::vector<Shader> shaders;
+
+        shaders.push_back(Shader::ShaderFromFile(utility::ResourcePath("vertex-shader.vert"), GL_VERTEX_SHADER));
+
+        shaders.push_back(Shader::ShaderFromFile(utility::ResourcePath("fragment-shader.frag"), GL_FRAGMENT_SHADER));
+
+        mShaders.push_back(new Program(shaders));
+    }
+
     void GraphicsManager::AddDrawComponent(GLuint id) {
         assert(utility::IsValidComponentID(id));
 
@@ -53,17 +62,17 @@ namespace backlash {
         mLightComponentIDs.push_back(id);
     }
 
-    void GraphicsManager::SetTextureSharedPointer(std::map<std::string, Texture*> textures) {
+    void GraphicsManager::SetTextureSharedPointer(std::map<std::string, Texture*>* textures) {
         assert(textures);
         mTextures = std::shared_ptr<std::map<std::string, Texture*> >  (textures);
     }
 
-    void GraphicsManager::SetMeshSharedPointer(std::vector<Mesh> meshes) {
+    void GraphicsManager::SetMeshSharedPointer(std::vector<Mesh>* meshes) {
         assert(meshes);
         mMeshes = std::shared_ptr<std::vector<Mesh> > (meshes);
     }
 
-    void GraphicsManager::Render() {
+    void GraphicsManager::Render() const {
         // Clearing everything
         glClearColor(0,0,0,1); // black.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -108,8 +117,6 @@ namespace backlash {
         // swap the display buffers (displays what was just drawn)
         glfwSwapBuffers();
     }
-
-    // TODO: Graphics Render and render instance 
     
     /**********************************************************************************
     void GraphicsManager::Render() const {

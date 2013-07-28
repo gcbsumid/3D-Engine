@@ -6,18 +6,14 @@
 #include "DrawComponent.h"
 #include "CameraComponent.h"
 #include "LightComponent.h"
-#include "ModelAsset.h"
 #include "Program.h"
+#include "Shader.h"
 #include "Texture.h"
 
 #include <map>
 #include <list>
 #include <vector>
 #include <memory>
-
-// TODO: Modify the cpp file
-
-typedef std::map<int,std::shared_ptr<backlash::ModelAsset> > ASSET_LIST;
 
 namespace backlash {
     class Engine;
@@ -30,6 +26,8 @@ namespace backlash {
 
         ~GraphicsManager() {}
 
+        void LoadShaders();
+
         void AddCameraComponent(std::weak_ptr<CameraComponent>);
         void AddDrawComponent(std::weak_ptr<DrawComponent>);
         void AddLightComponent(std::weak_ptr<LightComponent>);
@@ -37,14 +35,14 @@ namespace backlash {
 
         void Render() const ;
 
-        void SetTextureSharedPointer(std::map<std::string, Texture*> textures);
-        void SetMeshSharedPointer(std::vector<Mesh> meshes);
+        void SetTextureSharedPointer(std::map<std::string, Texture*>* textures);
+        void SetMeshSharedPointer(std::vector<Mesh>* meshes);
 
     private:
-        void RenderInstance(std::shared_ptr<DrawComponent>, 
-                            std::shared_ptr<ModelAsset>, 
-                            std::shared_ptr<LightComponent>,
-                            std::shared_ptr<CameraComponent>) const;
+        // void RenderInstance(std::shared_ptr<DrawComponent>, 
+        //                     std::shared_ptr<ModelAsset>, 
+        //                     std::shared_ptr<LightComponent>,
+        //                     std::shared_ptr<CameraComponent>) const;
 
         GraphicsManager(EnginePtr parent);      
 
@@ -61,6 +59,7 @@ namespace backlash {
         std::shared_ptr<std::vector<Mesh> > mMeshes;
 
         Program* mActiveShader;
+        std::vector<Program*> mShaders;
 
         // Don't Implement copy constructor
         GraphicsManager(const GraphicsManager&);
