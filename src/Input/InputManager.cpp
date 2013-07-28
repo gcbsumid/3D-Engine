@@ -25,16 +25,16 @@ namespace backlash {
         return mInstance;
     }
 
-    void InputManager::AddCameraComponent(GLuint id) {
-        assert(utility::IsValidComponentID(id));
+    void InputManager::AddCameraComponent(CameraComponent* comp) {
+        assert(comp);
 
-        mCameraComponentID = id;
+        mCameraComponent = std::weak_ptr<CameraComponent> (comp);
     }
 
-    void InputManager::AddLightComponent(GLuint id) {
-        assert(utility::IsValidComponentID(id));
+    void InputManager::AddLightComponent(LightComponent* comp) {
+        assert(comp);
 
-        mLightComponentID = id;
+        mLightComponent = std::weak_ptr<LightComponent> (comp);
     }
 
     // void InputManager::Init() {
@@ -46,61 +46,61 @@ namespace backlash {
     // }
 
     void InputManager::HandleInput(double elapsedTime) {
-        assert(utility::IsValidComponentID(mCameraComponentID));
+        assert(mCameraComponent.use_count());
 
-        auto cameraComp = std::static_pointer_cast<CameraComponent>(mParent->GetComponent(mCameraComponentID));
-        auto camera = cameraComp->GetCamera();
-        auto lightComp = std::static_pointer_cast<LightComponent>(mParent->GetComponent(mLightComponentID));
+        // auto cameraComp = std::static_pointer_cast<CameraComponent>(mParent->GetComponent(mCameraComponentID));
+        // auto camera = cameraComp->GetCamera();
+        // auto lightComp = std::static_pointer_cast<LightComponent>(mParent->GetComponent(mLightComponentID));
 
         // move position based on wasd keys
         if (glfwGetKey('S')) {
-            camera->MoveCamera(elapsedTime, -camera->Forward());
+            mCameraComponent->MoveCamera(elapsedTime, -mCameraComponent->Forward());
         } else if (glfwGetKey('W')) {
-            camera->MoveCamera(elapsedTime, camera->Forward());
+            mCameraComponent->MoveCamera(elapsedTime, mCameraComponent->Forward());
         }
 
         if (glfwGetKey('A')){
-            camera->MoveCamera(elapsedTime, -camera->Right());
+            mCameraComponent->MoveCamera(elapsedTime, -mCameraComponent->Right());
         } else if (glfwGetKey('D')){
-            camera->MoveCamera(elapsedTime, camera->Right());
+            mCameraComponent->MoveCamera(elapsedTime, mCameraComponent->Right());
         }
 
         if (glfwGetKey('X')){
-            camera->MoveCamera(elapsedTime, -camera->Up());
+            mCameraComponent->MoveCamera(elapsedTime, -mCameraComponent->Up());
         } else if (glfwGetKey('Z')){
-            camera->MoveCamera(elapsedTime, camera->Up());
+            mCameraComponent->MoveCamera(elapsedTime, mCameraComponent->Up());
         }
 
         if (glfwGetKey('1')) {
-            lightComp->SetPosition(camera->Position());
+            mLightComponent->SetPosition(mCameraComponent->Position());
         }
 
         if (glfwGetKey('2')) {
             // Set Colour to red
-            lightComp->SetIntensity(glm::vec3(1,0,0)); 
+            mLightComponent->SetIntensity(glm::vec3(1,0,0)); 
         } else if (glfwGetKey('3')) {
             // Set Colour to green
-            lightComp->SetIntensity(glm::vec3(0,1,1));         
+            mLightComponent->SetIntensity(glm::vec3(0,1,1));         
         } else if (glfwGetKey('4')) {
             // Set Colour to white
-            lightComp->SetIntensity(glm::vec3(1,1,1));         
+            mLightComponent->SetIntensity(glm::vec3(1,1,1));         
         }
 
 
         // View rotation based on mouse movements
         int mouseX = 0, mouseY = 0;
         glfwGetMousePos(&mouseX, &mouseY);
-        camera->OffsetOrientation(mouseSensitivity * mouseY, mouseSensitivity * mouseX);
+        mCameraComponent->OffsetOrientation(mouseSensitivity * mouseY, mouseSensitivity * mouseX);
         glfwSetMousePos(0,0);
 
-        float fieldOfView = camera->FieldOfView() + zoomSensitivity * (float)glfwGetMouseWheel();
+        float fieldOfView = mCameraComponent->FieldOfView() + zoomSensitivity * (float)glfwGetMouseWheel();
         if (fieldOfView < 5.0f) {
             fieldOfView = 5.0f;
         }
         if (fieldOfView > 130.0f) {
             fieldOfView = 130.0f;
         }
-        camera->SetFieldOfView(fieldOfView);
+        mCameraComponent->SetFieldOfView(fieldOfView);
         glfwSetMouseWheel(0);
 
     }

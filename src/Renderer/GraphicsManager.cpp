@@ -102,6 +102,11 @@ namespace backlash {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(2);
+
+        mActiveShader->Stop();
+        
+        // swap the display buffers (displays what was just drawn)
+        glfwSwapBuffers();
     }
 
     // TODO: Graphics Render and render instance 

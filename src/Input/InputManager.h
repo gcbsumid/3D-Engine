@@ -19,8 +19,10 @@ namespace backlash {
         static InputSystemPtr GetInstance(EnginePtr);
         ~InputManager() {}
 
-        void AddCameraComponent(std::weak_ptr<CameraComponent>);
-        void AddLightComponent(std::weak_ptr<LightComponent>);
+        void AddCameraComponent(CameraComponent*);
+
+        // Temporary
+        void AddLightComponent(LightComponent*);
 
         // void Init(); // Don't need this right now.
 
@@ -32,7 +34,7 @@ namespace backlash {
         const EnginePtr mParent;
 
         std::weak_ptr<CameraComponent> mCameraComponent;
-        std::vector<std::weak_ptr<LightComponent> > mLightComponent; // temp
+        std::weak_ptr<LightComponent> mLightComponent; // temp
 
 
         // TODO: I can't do this yet. I don't know how to use threads. yet.

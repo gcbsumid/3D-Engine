@@ -12,7 +12,7 @@ namespace backlash {
         // Do something?
     }
 
-    void DrawComponent::Update() {
+void DrawComponent::Update() {
         // Do something?
     }
 
