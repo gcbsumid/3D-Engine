@@ -3,8 +3,10 @@
 #include <sstream>
 #include <iostream>
 
+static int CURRENT_ID = 0;
+
 backlash::Program::Program(const std::vector<Shader> &shaders) 
-    : mObject(0) 
+    : mObject(0), mID(CURRENT_ID++) 
 {
     if (shaders.size() <= 0) {
         throw std::runtime_error("No Shaders were provided to create the program.");
@@ -47,6 +49,10 @@ backlash::Program::Program(const std::vector<Shader> &shaders)
         mObject = 0;
         throw std::runtime_error(msg.str().c_str());
     } 
+}
+
+int backlash::Program::GetID() const {
+    return mID;
 }
 
 backlash::Program::~Program() {

@@ -15,10 +15,13 @@ namespace backlash {
         Entity();
         ~Entity();
 
-        void AddComponent(E_COMPONENT, std::shared_ptr<Component> comp);
+        void AddComponent(E_COMPONENT, Component* comp);
         int GetComponent(E_COMPONENT) const;
         int GetID() const;
         std::shared_ptr<ModelAttrib> GetModelAttrib();
+
+        void SetDrawComponentModelAttrib();
+        void SetAIComponentModelAttrib();
 
     private:
         std::map<E_COMPONENT,std::shareD_ptr<Component> > mComponents;

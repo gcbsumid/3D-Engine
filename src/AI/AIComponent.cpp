@@ -5,7 +5,10 @@ namespace backlash {
         Component(E_COMPONENT::E_COMPONENT_AI), 
         mAlgorithm(NULL) {}
 
-    AIComponent::~AIComponent() {}
+    AIComponent::~AIComponent() {
+        if (mAlgorithm) 
+            delete mAlgorithm;
+    }
 
     void AIComponent::Init() {
         // Do Something here?
@@ -30,10 +33,10 @@ namespace backlash {
     void AIComponent::GenereateAlgorithm(E_ALGORITHM algo) {
         switch (algo) {
             case E_ALGORITHM::E_ALGORITHM_ROTATE: 
-                mAlgorithm = shared_ptr<Alogirthm>(new Algorithm(mAlgorithm));
+                mAlgorithm = new RotateAlg(mAlgorithm);
                 break;
             case E_ALGORITHM::E_ALGORITHM_TRANSLATE:
-                mAlgorithm = shared_ptr<Algorithm>(new Algorithm(mAlgorithm))
+                mAlgorithm = new Algorithm(mAlgorithm);
                 break;
             default: 
                 throw std::runtime_error("Invalid Algorithm Generated.");

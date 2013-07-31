@@ -28,15 +28,18 @@ namespace backlash {
 
         void LoadShaders();
 
-        void AddCameraComponent(std::weak_ptr<CameraComponent>);
-        void AddDrawComponent(std::weak_ptr<DrawComponent>);
-        void AddLightComponent(std::weak_ptr<LightComponent>);
+        void AddCameraComponent(CameraComponent*);
+        void AddDrawComponent(DrawComponent*);
+        void AddLightComponent(LightComponent*);
         void AddTextures(std::vector<Texture>);
+
+        void AttachShaderToDrawComponent(DrawComponent*, int);
+        void AttachMeshToDrawComponent(DrawComponent*, std::string);
 
         void Render() const ;
 
         void SetTextureSharedPointer(std::map<std::string, Texture*>* textures);
-        void SetMeshSharedPointer(std::vector<Mesh>* meshes);
+        void SetMeshSharedPointer(std::map<std::string, Mesh*>* meshes);
 
     private:
         // void RenderInstance(std::shared_ptr<DrawComponent>, 
@@ -56,7 +59,7 @@ namespace backlash {
 
         // this is shared with the resource manager
         std::shared_ptr<std::map<std::string, Texture*> > mTextures;
-        std::shared_ptr<std::vector<Mesh> > mMeshes;
+        std::shared_ptr<std::map<std::string, Mesh*> > mMeshes;
 
         Program* mActiveShader;
         std::vector<Program*> mShaders;

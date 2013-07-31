@@ -8,6 +8,7 @@ namespace backlash {
         mIndexBuffer = INVALID_OGL_VALUE;
         mNumIndices = 0;
         mMaterialIndex = 0;
+        mName = "";
     }
 
     Mesh::~Mesh() {
@@ -33,5 +34,4 @@ namespace backlash {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mNumIndices, &indices[0], GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
-
 }

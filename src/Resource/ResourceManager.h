@@ -10,6 +10,7 @@
 #include "../Renderer/Mesh.h"
 
 #include <memory>
+#include <map>
 #include <vector>
 #include <string>
 
@@ -25,7 +26,7 @@ namespace backlash {
         ~ResourceManager() {}
 
         void SetTextureSharedPointer(std::map<std::string, Texture*>* textures);
-        void SetMeshSharedPointer(std::vector<Mesh>* meshes);
+        void SetMeshSharedPointer(std::map<std::string, Mesh*>* meshes);
 
         void LoadAllFiles();
 
@@ -36,7 +37,7 @@ namespace backlash {
 
         // This is shared with the Graphics manager
         std::shared_ptr<std::map<std::string, Texture*> > mTextures;
-        std::shared_ptr<std::vector<Mesh> > mMeshes;
+        std::shared_ptr<std::map<std::string, Mesh*> > mMeshes;
 
         // std::vector<Mesh> mLocalMeshes;
         // std::map<std::string, Texture*> mLocalTexture;

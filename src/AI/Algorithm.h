@@ -15,9 +15,9 @@ namespace backlash {
 
         virtual ~Algorithm(); // Probably create this, just in case.
 
-        virtual void Run() = 0; 
+        virtual void Run(double) = 0; 
 
-    private:
+    protected:
         std::shared_ptr<Algorithm> mChild;
         AICompPtr mCompParent;
     };

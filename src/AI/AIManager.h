@@ -23,21 +23,21 @@ namespace backlash {
         //       create the Algorithms to be attached to the individual 
         //       AI components by passing an object of some sort that contains
         //       the needed data from the xml file 
-        void AddAIComponent(std::shared_ptr<AIComponent> comp);
+        void AddAIComponent(AIComponent* comp);
 
         // This actually updates the algorithms to run depending on the state 
         // of each object
         // TODO: Create states to which each object will be updated
         void UpdateAll();
 
-        // This runs all actions in all the AI Components
-        void Run()
+        // This runs all actions in all the AI Components. This may need to pass an elapsed time
+        void Run(double)
 
     private:
         AIManager(EnginePtr parent);
 
         const Engine_ptr mParent;
-        std::vector<shared_ptr<AIComponent> > mComponents;
+        std::vector<std::weak_ptr<AIComponent> > mComponents;
 
         // Don't Implement the copy constructors
         AIManager(const AIManager&);

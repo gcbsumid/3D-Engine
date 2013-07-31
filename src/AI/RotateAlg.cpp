@@ -11,7 +11,9 @@ namespace backlash  {
 
     RotateAlg::~RotateAlg() {}
 
-    void RotateAlg::Run() {
+    void RotateAlg::Run(double timeTick) {
+        // TODO: rotate the fucking thing. Remember, mOrientation is a quaternion. 
+        
         // Mess with the parent's stuff
         // ex. mCompParent->mAttrib
     }  

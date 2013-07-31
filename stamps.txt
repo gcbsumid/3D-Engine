@@ -38,6 +38,9 @@ July 26, 2013: I'm doing some refactoring that uses the Assimp library to load
 meshes from files. It's currently very broken. There are tons of stuff to do. 
 Why the shit am I so freakin lazy.
 
+July 30, 2013: I'm chipping away at the code. Slowly but surely getting shit 
+done. Chipping away. Slowly. 
+
 ========================
 Things to Remember:
 ========================

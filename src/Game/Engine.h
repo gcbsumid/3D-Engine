@@ -30,7 +30,6 @@ namespace backlash {
         ~Engine() {}
 
         void Run();             // The game loop
-        void Init();            // Initialize Engine properties
 
         // Figure out a way how to do this better
         std::shared_ptr<Component> GetComponent(int) const; 
@@ -42,9 +41,13 @@ namespace backlash {
 
         void LoadAssets();      // Should happen in the resource manager
         void CreateManagers();   // happens in the init()
-        void InitManagers();
         void CreateObjects();   // should make calls to the resource manager
         void Update(double);    // This should happen in the AI manager
+
+        // Creates different types of entities
+        void CreatePlayer();
+        void CreateLight();
+        void CreateObjects();
 
         static std::shared_ptr<Engine> mInstance;
 

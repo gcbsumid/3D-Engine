@@ -16,18 +16,18 @@ namespace backlash {
     
     AIManager::~AIManager() {}
 
-    void AIManager::AddAIComponent(std::shared_ptr<AIComponent> comp) {
-        utility::IsValidComponent(comp->GetID());
-        mComponents.push_back(comp); 
+    void AIManager::AddAIComponent(AIComponent* comp) {
+        assert(comp);
+        mComponents.push_back(std::weak_ptr<AIComponent> (comp)); 
     }
 
     void AIManager::UpdateAll() {
-        // I haven't created states yet so this is empty.
+        // I haven't created states yet so this is empty.        
     }
 
-    void AIManager::Run() {
+    void AIManager::Run(double timeTick) {
         for (auto comp : mComponents) {
-            comp->Run();
+            comp->Run(timeTick);
         }
     }
 }

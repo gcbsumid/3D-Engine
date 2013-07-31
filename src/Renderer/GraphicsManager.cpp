@@ -44,22 +44,32 @@ namespace backlash {
         mShaders.push_back(new Program(shaders));
     }
 
-    void GraphicsManager::AddDrawComponent(GLuint id) {
-        assert(utility::IsValidComponentID(id));
+    void GraphicsManager::AddDrawComponent(DrawComponent* comp) {
+        assert(comp);
 
-        mDrawComponentIDs.push_back(id);
+        mDrawComponents.push_back(std::weak_ptr<DrawComponent>(comp));
     }
 
-    void GraphicsManager::AddCameraComponent(GLuint id) {
-        assert(utility::IsValidComponentID(id));
-
-        mCameraComponentID = id;
+    void GraphicsManager::AddCameraComponent(CameraComponent* comp) {
+        assert(comp);
+        assert(mCameraComponent == NULL);
+        mCameraComponent = std::weak_ptr<CameraComponent>(comp);
     }
 
-    void GraphicsManager::AddLightComponent(GLuint id) {
-        assert(utility::IsValidComponentID(id));
+    void GraphicsManager::AddLightComponent(LightComponent* comp) {
+        assert(comp);
 
-        mLightComponentIDs.push_back(id);
+        mLightComponents.push_back(std::weak_ptr<LightComponent> (comp));
+    }
+
+    void AttachShaderToDrawComponent(DrawComponent* comp, int id) {
+        assert(id < mShaders.size());
+        comp->SetShader(mShaders.at(id));
+    }
+
+    void AttachMeshToDrawComponent(DrawComponent* comp, std::string id) {
+        assert(mMeshes.count(id) > 0);
+        comp->SetShader(mMeshes.at(id));
     }
 
     void GraphicsManager::SetTextureSharedPointer(std::map<std::string, Texture*>* textures) {
@@ -67,9 +77,9 @@ namespace backlash {
         mTextures = std::shared_ptr<std::map<std::string, Texture*> >  (textures);
     }
 
-    void GraphicsManager::SetMeshSharedPointer(std::vector<Mesh>* meshes) {
+    void GraphicsManager::SetMeshSharedPointer(std::map<std::string, Mesh*>* meshes) {
         assert(meshes);
-        mMeshes = std::shared_ptr<std::vector<Mesh> > (meshes);
+        mMeshes = std::shared_ptr<std::map<std::string, Mesh*> > (meshes);
     }
 
     void GraphicsManager::Render() const {
@@ -82,8 +92,16 @@ namespace backlash {
         glEnableVertexAttribArray(2);
 
         mActiveShader = NULL;
-        for (auto draw : mDrawComponents) {
-            Program* curShader = draw->GetShader();
+
+        for (auto it = mDrawComponents.begin(); it != mDrawComponents.end(); ++it) 
+            auto& drawComp = *it;
+            if (drawComp->expired()) {
+                it = mDrawComponents.erase(drawComp);
+                it--;
+                continue;
+            }
+
+            Program* curShader = drawComp->GetShader();
             if (mActiveShader != curShader) {
                 mActiveShader = curShader;
             }
@@ -96,14 +114,14 @@ namespace backlash {
                 mCameraComponent->Render(mActiveShader);
 
                 // Render Light Components
-                for (auto it : mLightComponents) {
-                    it->Render(mActiveShader);
+                for (auto lightComp : mLightComponents) {
+                    lightComp->Render(mActiveShader);
                 }
             }
-            std::string materialName = draw->GetMaterialName();
+            std::string materialName = drawComp->GetMaterialName();
             mTextures.at(materialName)->BindTexture(mActiveShader);
 
-            draw->Render(mActiveShader);
+            drawComp->Render(mActiveShader);
 
             mTextures.at(materialName)->UnbindTexture();
         }

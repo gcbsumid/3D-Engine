@@ -13,7 +13,7 @@ namespace backlash {
 
         ~RotateAlg();
         
-        virtual void Run();
+        virtual void Run(double);
     };
 }
 

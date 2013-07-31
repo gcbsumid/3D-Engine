@@ -43,7 +43,7 @@ namespace backlash {
         void GenerateAlgorithm(E_ALGORITHM);
         void ClearAlgorithm();
     private: 
-        std::shared_ptr<Algorithm> mAlgorithm; 
+        Algorithm* mAlgorithm; 
         std::weak_ptr<ModelAttrib> mModel bv; 
     };
 }

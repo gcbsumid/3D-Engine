@@ -33,6 +33,7 @@ namespace backlash {
         // as returned by glGetUniformLocation
         GLint Uniform(const GLchar* uniformName) const;
 
+        int GetID() const;
 
         // Setters for attribute and uniform variables.
         // These are convenience methoods for the glVertexAttrib* and 
@@ -75,6 +76,7 @@ namespace backlash {
 
     private:
         GLuint mObject;
+        int mID;
 
         // removing the copying this object by removing the 
         // copy constructor and the equals operator

@@ -1,10 +1,10 @@
 TODO List:
 
 What to do next: 
-- Continue working on Engine.cpp. You need to work on creating the objects next.
+- Making the AI Rotate algorithm.
+- Seriously, you have to get it compiling. then you have to get it running. 
 
 HIGHER PRIORITY
-- Implement a bunch of .cpp files
 - Turn the Algorithms into a decorator type (so that you can do two updates at the same time?)
 - Install libxml++ (its already in the temp folder btw)
 
@@ -12,7 +12,7 @@ LOWER PRIORITY
 - Make Entities either static or dynamic (Update optimization)
 - make a room
 - Create new shaders
-- Add more lighting
+- Get the lighting from the blender file. 
 
 TODO eventually List:
 - Physics System - Something simple. Probably Just gravity first. 

@@ -22,14 +22,25 @@ namespace backlash {
 
     Entity::~Entity() {}
 
-    void Entity::AddComponent(E_COMPONENT type, std::shared_ptr<Component> comp) {
+    void Entity::AddComponent(E_COMPONENT type, Component* comp) {
         assert(IsValid(type));
+        assert(comp);
 
         if (mComponents.count(type)) {
-            mComponents[type] = comp;
+            mComponents[type] = std::shared_ptr<Component>(comp);
         } else {
-            mComponents.insert(std::make_pair(type, comp));
+            mComponents.insert(std::make_pair(type, std::shared_ptr<Component>(comp));
         }
+    }
+
+    void Entity::SetDrawComponentModelAttrib() {
+        if (mComponents.at(E_COMPONENT::E_COMPONENT_DRAW)) 
+            mComponents.at(E_COMPONENT::E_COMPONENT_DRAW)->SetModelAttrib(mModel->get());
+    }
+
+    void Entity::SetAIComponentModelAttrib() {
+        if (mComponents.at(E_COMPONENT::E_COMPONENT_AI)) 
+            mComponents.at(E_COMPONENT::E_COMPONENT_AI)->SetModelAttrib(mModel->get());
     }
 
     int Entity::GetComponent(E_COMPONENT type) const {

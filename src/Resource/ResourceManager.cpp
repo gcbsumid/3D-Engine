@@ -42,9 +42,9 @@ namespace backlash {
         mTextures = std::shared_ptr<std::map<std::string, Texture*> >  (textures);
     }
 
-    void ResourceManager::SetMeshSharedPointer(std::vector<Mesh>* meshes) {
+    void ResourceManager::SetMeshSharedPointer(std::map<std::string, Mesh*>* meshes) {
         assert(meshes);
-        mMeshes = std::shared_ptr<std::vector<Mesh> > (meshes);
+        mMeshes = std::shared_ptr<std::map<std::string, Mesh*> > (meshes);
     }
 
     void ResourceManager::LoadAllFiles() {
@@ -88,6 +88,8 @@ namespace backlash {
 
     void ResourceManager::InitMesh(unsigned int i, const aiMesh* mesh) {
         assert(scene->mNumMaterials == mLocalTexture.size());
+        assert(mMeshes);
+
         Mesh* meshEntry = new Mesh(mMeshes.size());
         meshEntry->mMaterialName = mLocalTexture.at(mesh->mMaterialIndex);
 
@@ -116,13 +118,14 @@ namespace backlash {
             Indices.push_back(Face.mIndices[2]);            
         }
 
+        meshEntry.mName = mesh->mName.C_Str();
         meshEntry.Init(vertices, indices);
 
-        mGlobalMeshes.push_back(meshEntry);
-
+        mMeshes.push_back(meshEntry.mName, meshEntry);
     }
 
     void ResourceManager::InitMaterials(aiScene* scene, const std::string& filename) {
+        assert(mTextures);
         mLocalTexture.clear();
 
         std::string::size_type slashIndex = filename.find_last_of("/");
