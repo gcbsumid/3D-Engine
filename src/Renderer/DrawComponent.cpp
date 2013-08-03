@@ -17,6 +17,11 @@ void DrawComponent::Update() {
     }
 
     bool DrawComponent::Render(Program* shader) {
+        GLuint shaderLoc = shader->Object();
+        GLuint modelLoc = glGetUniformLocation(shader, "model");
+        assert(CHECKINVALID(modelLoc));
+
+        glUniformMatrix4fv(modelLoc, 1, transpose, glm::value_ptr(modelLoc->mTransform));
 
         glBindBuffer(GL_ARRAY_BUFFER, mMesh->mVertexBuffer);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);

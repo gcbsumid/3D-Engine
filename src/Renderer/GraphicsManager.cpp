@@ -45,30 +45,35 @@ namespace backlash {
     }
 
     void GraphicsManager::AddDrawComponent(DrawComponent* comp) {
-        assert(comp);
+        if (comp == nullptr)
+            throw std::runtime_error("Draw Component is a null pointer when you tried to add it to the Graphics Manager");
 
         mDrawComponents.push_back(std::weak_ptr<DrawComponent>(comp));
     }
 
     void GraphicsManager::AddCameraComponent(CameraComponent* comp) {
-        assert(comp);
-        assert(mCameraComponent == NULL);
+        if (comp == nullptr)
+            throw std::runtime_error("Camera Component is a null pointer when you tried to add it to the Graphics Manager");
         mCameraComponent = std::weak_ptr<CameraComponent>(comp);
     }
 
     void GraphicsManager::AddLightComponent(LightComponent* comp) {
-        assert(comp);
+        if (comp == nullptr)
+            throw std::runtime_error("Light Component is a null pointer when you tried to add it to the Graphics Manager");
 
         mLightComponents.push_back(std::weak_ptr<LightComponent> (comp));
     }
 
     void AttachShaderToDrawComponent(DrawComponent* comp, int id) {
-        assert(id < mShaders.size());
+        if (id >= mShaders.size() || id < 0)
+            throw std::runtime_error("Invalid Shader ID to attach to the draw component.");
         comp->SetShader(mShaders.at(id));
     }
 
     void AttachMeshToDrawComponent(DrawComponent* comp, std::string id) {
-        assert(mMeshes.count(id) > 0);
+        if (mMeshes.count(id) < 0)
+            throw std::runtime_error("Mesh does not exist in mMeshes to attach to the draw component.");
+
         comp->SetShader(mMeshes.at(id));
     }
 

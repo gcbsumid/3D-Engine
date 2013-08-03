@@ -10,7 +10,16 @@ namespace backlash {
 
         glm::vec3 mPosition;
         glm::quat mOrientation;
+
+        void UpdateTransform();
     };
+
+    void UpdateTransform() {
+        glm::mat4 orientation = glm::quaternion::toMat4(mAttrib->mOrientation);
+
+        mAttrib->mTransform *= orientation;
+        mAttrib->mTransform = glm::translate(mAttrib->mTransform, -Position());
+    }
 }
 
 #endif

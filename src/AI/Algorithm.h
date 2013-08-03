@@ -15,7 +15,7 @@ namespace backlash {
 
         virtual ~Algorithm(); // Probably create this, just in case.
 
-        virtual void Run(double) = 0; 
+        virtual void Action(double) = 0; 
 
     protected:
         std::shared_ptr<Algorithm> mChild;

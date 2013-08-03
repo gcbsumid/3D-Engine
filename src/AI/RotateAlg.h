@@ -13,7 +13,10 @@ namespace backlash {
 
         ~RotateAlg();
         
-        virtual void Run(double);
+        virtual void Action(double);
+
+    private:
+        glm::vec3 mDirection;
     };
 }
 
