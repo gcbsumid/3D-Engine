@@ -1,13 +1,15 @@
 #ifndef LIGHTCOMPONENT_H
 #define LIGHTCOMPONENT_H
 
+// GLM Library
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+// Backlash Library
 #include "../Game/Component.h"
 #include "../Game/ComponentFactory.h"
 #include "../Util/enum.h"
 #include "Program.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace backlash {
     class LightComponent : public Component {

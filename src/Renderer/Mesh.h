@@ -1,6 +1,12 @@
 #ifndef MESH_H
 #define MESH_H
 
+// GLM Library
+#include <glm/glm.hpp>
+
+// Standard Library
+#include <string>
+
 namespace backlash {
     struct Vertex {
         glm::vec3 mPosition;    // (x,y,z)

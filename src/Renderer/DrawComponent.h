@@ -1,17 +1,19 @@
 #ifndef DRAWCOMPONENT_H
 #define DRAWCOMPONENT_H
 
+// GLM Library
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+// Standard Library
+#include <memory>
+
 #include "../Game/Component.h"
 #include "../Game/ModelAttrib.h"
 #include "../Game/ComponentFactory.h"
 #include "../Util/enum.h"
 #include "Mesh.h"
 #include "Program.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <memory>
 
 namespace backlash {
     enum class E_COMPONENT;
@@ -43,7 +45,7 @@ namespace backlash {
 
     private:
         std::weak_ptr<Mesh> mMesh;
-        std::weak_ptr<Program> mShader;
+        Program* mShader;
 
         std::weak_ptr<ModelAttrib> mModel;
     } ;

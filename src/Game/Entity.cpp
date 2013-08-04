@@ -18,7 +18,7 @@ extern bool IsValidAlgorithm(backlash::E_ALGORITHM comp);
 
 namespace backlash {
     Entity::Entity() : mID(utility::GenerateEntityID()), mModel(nullptr) {
-        mModel = std::shared_ptr<ModelAttrib> (new ModelAttrib);
+        mModel = std::shared_ptr<ModelAttrib>(new ModelAttrib);
         mModel->mTransform = glm::mat4();
         mModel->mPosition = glm::vec3();
         mModel->mOrientation = glm::quat();

@@ -158,13 +158,17 @@ namespace backlash {
         human->SetDrawComponentModelAttrib();
         human->SetAIComponentModelAttrib();
 
+        // Generate the AI Algorithm
+        aiComp->GenerateAlgorithm(E_ALGORITHM::E_ALGORITHM_ROTATE);
+
         // Attach Shader and Mesh to the component
         mGraphics->AttachShaderToDrawComponent(drawComp.get(), 0); 
         mGraphics->AttachMeshToDrawComponent(drawComp.get(), "Human");
 
-        // Generate the AI Algorithm
-        aiComp->GenerateAlgorithm(E_ALGORITHM::E_ALGORITHM_ROTATE);
-
+        // Attach the Components to their respective managers
+        mGraphics->AddDrawComponent(drawComp);
+        mAI->AddAIComponent(aiComp);
+        
         mEntities.insert(std::make_pair(human->GetID(), human));
     }
 

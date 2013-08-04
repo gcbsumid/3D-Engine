@@ -1,5 +1,8 @@
-#include "LightComponent.h"
+// GL Library
 #include <GL/glew.h>
+
+// Backlash Library
+#include "LightComponent.h"
 
 #define CHECKINVALID(a) ((a==INVALID_UNIFORM_LOCATION) ? true : false ;)
 

@@ -1,5 +1,8 @@
-#include "Mesh.h"
+// GL Library
 #include <GL/glew.h>
+
+// Backlash Library
+#include "Mesh.h"
 
 namespace backlash {
         // Mesh stuff

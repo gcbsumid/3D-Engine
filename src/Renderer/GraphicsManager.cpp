@@ -1,9 +1,14 @@
+// GL Library
+#include <GL/glew.h>
+
+// Standard Library
+#include <cassert>
+#include <iostream>
+
+// Backlash Library
 #include "GraphicsManager.h"
 #include "Program.h"
 #include "util.h"
-#include <cassert>
-#include <iostream>
-#include <GL/glew.h>
 
 // Global static pointer used to ensure my singleton
 backlash::GraphicsManager* backlash::GraphicsManager::mInstance;
