@@ -6,11 +6,13 @@
 
 // Standard C++ libraries
 #include <memory>
+#include <stdexcept>
 
+// backlash libraries
 #include "Engine.h"
+
 using namespace std;
 
-// Structs
 
 /* Note: because the shaders and textures can be shared, you should probably 
  *       store them, later on, inside a std::map and use their ID as what is 
@@ -19,9 +21,12 @@ using namespace std;
 
 
 int main(int argc, char* argv[]) {
-    shared_ptr<backlash::Engine> gEngine = backlash::Engine::GetInstance();
+    try {
+        unique_ptr<backlash::Engine> gEngine{backlash::Engine::GetInstance()};
+    } catch (exception& err) {
+        cout << err.what() << endl;
+    }
 
-    gEngine->Init();
     gEngine->Run();
     
     return EXIT_SUCCESS;

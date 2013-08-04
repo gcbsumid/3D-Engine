@@ -1,12 +1,11 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include <GL/glew.h>
-
-// Standard C++ libraries
+// Standard Library
 #include <map>
 
-#include "enum.h"
+// Backlash Library
+#include "../Util/enum.h"
 #include "ModelAttrib.h"
 
 namespace backlash {
@@ -18,13 +17,13 @@ namespace backlash {
         void AddComponent(E_COMPONENT, Component* comp);
         int GetComponent(E_COMPONENT) const;
         int GetID() const;
-        std::shared_ptr<ModelAttrib> GetModelAttrib();
+        std::shared_ptr<ModelAttrib> GetModelAttrib() const;
 
         void SetDrawComponentModelAttrib();
         void SetAIComponentModelAttrib();
 
     private:
-        std::map<E_COMPONENT,std::shareD_ptr<Component> > mComponents;
+        std::map<E_COMPONENT,std::shared_ptr<Component> > mComponents;
         int mID;
 
         std::shared_ptr<ModelAttrib> mModel;

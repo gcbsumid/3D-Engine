@@ -8,10 +8,6 @@ namespace backlash {
 
     DrawComponent::~DrawComponent() {}
 
-    void DrawComponent::Init() {
-        // Do something?
-    }
-
 void DrawComponent::Update() {
         // Do something?
     }

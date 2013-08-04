@@ -9,10 +9,6 @@ namespace backlash {
 
     LightComponent::~LightComponent() {}
 
-    void LightComponent::Init() {
-        //. Do Something?
-    }
-
     void LightComponent::Update() {
         // Do something?
     }

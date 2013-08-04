@@ -1,5 +1,5 @@
 #include "Component.h"
-#include "util.h"
+#include "../Util/util.h"
 
 namespace backlash {
 	backlash::Component::Component(backlash::E_COMPONENT type) 

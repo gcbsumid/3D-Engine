@@ -1,19 +1,17 @@
-#include "Entity.h"
-#include "util.h"
-
 // Standard C++ Libraries
-#include <utility> // Do I need this?
 #include <stdexcept> // Do I need this?
 #include <sstream>
 #include <cassert>
 
-static bool IsValid(backlash::E_COMPONENT comp) {
-    return (comp >= backlash::E_COMPONENT::E_COMPONENT_DRAW && 
-            comp < backlash::E_COMPONENT::E_COMPONENT_MAX) ? true : false;
-}
+// Backlash Library
+#include "Entity.h"
+#include "../Util/util.h"
+
+extern bool IsValidComponent(backlash::E_COMPONENT comp);
+extern bool IsValidAlgorithm(backlash::E_ALGORITHM comp);
 
 namespace backlash {
-    Entity::Entity() : mID(utility::GenerateEntityID()) {
+    Entity::Entity() : mID(utility::GenerateEntityID()), mModel(nullptr) {
         mModel = std::shared_ptr<ModelAttrib> (new ModelAttrib);
         mModel->mTransform = glm::mat4();
         mModel->mPosition = glm::vec3();
@@ -23,14 +21,13 @@ namespace backlash {
     Entity::~Entity() {}
 
     void Entity::AddComponent(E_COMPONENT type, Component* comp) {
-        assert(IsValid(type));
+        assert(IsValidComponent(type));
         assert(comp);
 
-        if (mComponents.count(type)) {
+        if (mComponents.count(type))
             mComponents[type] = std::shared_ptr<Component>(comp);
-        } else {
+        else
             mComponents.insert(std::make_pair(type, std::shared_ptr<Component>(comp));
-        }
     }
 
     void Entity::SetDrawComponentModelAttrib() {
@@ -57,7 +54,7 @@ namespace backlash {
         return mID;
     }
 
-    std::shared_ptr<ModelAttrib> GetModelAttrib() {
+    std::shared_ptr<ModelAttrib> GetModelAttrib() const {
         return mModel;
     }
 }

@@ -35,7 +35,6 @@ namespace backlash {
         };
 
     public:
-        virtual void Init();
         virtual void Update();
         virtual bool Render(Program*); 
 

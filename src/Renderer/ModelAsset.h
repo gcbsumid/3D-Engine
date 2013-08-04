@@ -20,13 +20,6 @@ namespace backlash {
         // Mesh data
         std::weak_ptr<Mesh> mMesh;
         
-        // The following are parameters to glDrawArrays
-        // GLenum mDrawType;
-        // GLint mDrawStart;
-        // GLint mDrawCount;
-
-        // GLfloat mShininess; 
-        // glm::vec3 mSpecularColor;
         const GLuint mID;
     };
 }

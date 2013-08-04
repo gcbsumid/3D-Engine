@@ -1,7 +1,7 @@
 TODO List:
 
 What to do next: 
-- Making the AI Rotate algorithm.
+- Currently doing some cleanup. Finished cleaning up in the Game folder. Please continue onto other folders
 - Seriously, you have to get it compiling. then you have to get it running. 
 
 HIGHER PRIORITY

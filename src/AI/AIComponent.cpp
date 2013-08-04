@@ -10,10 +10,6 @@ namespace backlash {
             delete mAlgorithm;
     }
 
-    void AIComponent::Init() {
-        // Do Something here?
-    }
-
     void AIComponent::Update() {
         if (mAlgorithm) {
             mAlgorithm->Action();

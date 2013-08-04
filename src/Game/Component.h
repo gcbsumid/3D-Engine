@@ -1,10 +1,9 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
-#include <enum.h>
+// Backlash Library
+#include "../Util/enum.h"
 #include "../Renderer/Program.h"
-
-// Standard C++ libraries
 
 namespace backlash {
     enum class E_COMPONENT ;
@@ -14,7 +13,6 @@ namespace backlash {
         Component(E_COMPONENT);
         ~Component();
 
-        virtual void init() = 0;
         virtual void Update() = 0;
         virtual bool Render(Program*) = 0;
         
