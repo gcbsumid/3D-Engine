@@ -6,9 +6,6 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "Program.h"
-// #include "Texture.h"
-
 namespace utility {
     // utility functions
     std::string ResourcePath(std::string filename);
@@ -18,8 +15,6 @@ namespace utility {
     bool IsValidComponentID(int id);
     bool IsValidAssetID(int id);
     bool IsValidEntityID(int id);
-    unsigned long now();
-
 }
 
 #endif

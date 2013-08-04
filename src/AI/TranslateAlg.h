@@ -1,6 +1,9 @@
 #ifndef TRANSLATEALG_H
 #define TRANSLATEALG_H
 
+// GLM Library
+#include <glm/glm.hpp>
+
 // Standard Library
 #include <memory>
 

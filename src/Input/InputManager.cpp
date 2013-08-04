@@ -1,7 +1,4 @@
 #include "InputManager.h"
-#include "../Renderer/CameraComponent.h"
-#include "../Renderer/LightComponent.h"
-#include "../Renderer/Camera.h"
 #include "../Util/util.h"
 
 #include <GL/glfw.h>
@@ -10,17 +7,24 @@ static const float mouseSensitivity = 0.1f;
 static const float zoomSensitivity = 5.0f;
 
 // Global static pointer used to ensure my singleton
-std::shared_ptr<backlash::InputManager> backlash::InputManager::mInstance;
+backlash::InputManager* backlash::InputManager::mInstance{nullptr};
 
 namespace backlash {
-    InputManager::InputManager(EnginePtr parent) : 
-            mParent(parent),
-            mCameraComponentID(UINT_MAX), 
-            mLightComponentID(UINT_MAX) {}
+    InputManager::InputManager(Engine* parent) : 
+            mParent{parent},
+            mCameraComponent{nullptr}, 
+            mLightComponent{nullptr} {
+        // TODO: you need to learn how to multi-thread
 
-    std::shared_ptr<InputManager> InputManager::GetInstance(EnginePtr parent) {
-        if (mInstance.use_count() < 1) {
-            mInstance = std::shared_ptr<InputManager>(new InputManager(parent));
+        // glfwSetMouseWheelCallback(InputManager::HandleMouseWheelEvents);
+        // glfwSetMousePosCallback(InputManager::HandleMousePosEvents);
+        // glfwSetKeyCallback(InputManager::HandleKeyEvents);
+    }
+
+    InputManager* InputManager::GetInstance(Engine* parent) {
+        assert(parent);
+        if (!mInstance) {
+            mInstance = new InputManager{parent};
         }
         return mInstance;
     }
@@ -37,20 +41,8 @@ namespace backlash {
         mLightComponent = std::weak_ptr<LightComponent> (comp);
     }
 
-    // void InputManager::Init() {
-        // TODO: you need to learn how to multi-thread
-
-        // glfwSetMouseWheelCallback(InputManager::HandleMouseWheelEvents);
-        // glfwSetMousePosCallback(InputManager::HandleMousePosEvents);
-        // glfwSetKeyCallback(InputManager::HandleKeyEvents);
-    // }
-
     void InputManager::HandleInput(double elapsedTime) {
         assert(mCameraComponent.use_count());
-
-        // auto cameraComp = std::static_pointer_cast<CameraComponent>(mParent->GetComponent(mCameraComponentID));
-        // auto camera = cameraComp->GetCamera();
-        // auto lightComp = std::static_pointer_cast<LightComponent>(mParent->GetComponent(mLightComponentID));
 
         // move position based on wasd keys
         if (glfwGetKey('S')) {

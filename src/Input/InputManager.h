@@ -1,22 +1,21 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
+// GLM Library
 #include <glm/glm.hpp>
-#include <memory>
-#include <vector>
 
+// Standard Library 
+#include <memory>
+
+// Backlash Library
 #include "../Game/Engine.h"
-#include "../Game/Component.h"
+#include "../Renderer/CameraComponent.h"
+#include "../Renderer/mLightComponent.h"
 
 namespace backlash {
-    class Engine;
-
     class InputManager {
-        typedef std::shared_ptr<InputManager> InputSystemPtr;
-        typedef std::weak_ptr<Engine> EnginePtr;
-
     public:
-        static InputSystemPtr GetInstance(Engine*);
+        static InputManager* GetInstance(Engine*);
         ~InputManager() {}
 
         void AddCameraComponent(CameraComponent*);
@@ -29,20 +28,18 @@ namespace backlash {
         void HandleInput(double);
 
     private:
-        static InputSystemPtr mInstance;
+        static InputManager* mInstance;
 
-        const EnginePtr mParent;
+        const std::weak_ptr<Engine> mParent;
 
         std::weak_ptr<CameraComponent> mCameraComponent;
-        std::weak_ptr<LightComponent> mLightComponent; // temp
+        std::weak_ptr<LightComponent> mLightComponent; // eventually, this will become a vector of lights
 
-
-        // TODO: I can't do this yet. I don't know how to use threads. yet.
         // static void HandleKeyEvents(int key, int action);
         // static void HandleMousePosEvents(int xpos, int ypos);
         // static void HandleMouseWheelEvents(int pos);
 
-        InputManager(EnginePtr);
+        InputManager(Engine*);
 
         // Don't Implement copy constructors
         InputManager(const InputManager&); 

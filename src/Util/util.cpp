@@ -1,13 +1,11 @@
-#include <sys/time.h>
+// Standard Libraries
 #include <string>
 
-// for PATH_MAX
-#include <limits>
-// for dirname
-#include <libgen.h>
-// for readlink
-#include <unistd.h>
+#include <limits>       // for PATH_MAX
+#include <libgen.h>     // for dirname
+#include <unistd.h>     // for readlink
 
+// Utility Library
 #include "util.h"
 
 static int CURRENT_COMPONENT_ID = 0;
@@ -28,12 +26,6 @@ std::string utility::ResourcePath(std::string fileName){
         // dirname reports the parent directory of a file
         return std::string(dirname(exe_file)) + "/../assets/" + fileName;
     }
-}
-
-unsigned long utility::now() {
-    timeval tv;
-    gettimeofday(&tv, NULL);
-    return tv.tv_sec * 1000000 + tv.tv_usec;
 }
 
 int utility::GenerateComponentID() {

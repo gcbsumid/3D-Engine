@@ -4,7 +4,8 @@ backlash::AIManager* backlash::AIManager::mInstance{nullptr};
 
 namespace backlash {
     AIManager* AIManager::GetInstance(Engine* parent) {
-        if (mInstance.get() == 0) {
+        assert(parent);
+        if (!mInstance) {
             mInstance = new AIManager{parent};
         }
         return mInstance;

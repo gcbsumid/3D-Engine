@@ -81,7 +81,7 @@ namespace backlash {
         // Create the Texture and Mesh containers
         std::map<std::string, Texture*>* textures = new std::map<std::string, Texture*>;
         std::vector<Mesh>* meshes = new std::vector<Mesh>;
-        mGraphics->SetTextureSharedPointer(textures);
+        mGraphics->SetTextureSharedPointer(textures); // Note: Pass a destructor 
         mGraphics->SetMeshSharedPointer(meshes);
         mInput->SetTextureSharedPointer(textures);
         mInput->SetMeshSharedPointer(meshes);

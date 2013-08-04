@@ -1,6 +1,9 @@
 #ifndef ROTATEALG_H
 #define ROTATEALG_H
 
+// GLM Library
+#include <glm/glm.hpp>
+
 // Standard Library
 #include <memory>
 
