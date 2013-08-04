@@ -3,33 +3,37 @@
 backlash::AIManager* backlash::AIManager::mInstance{nullptr};
 
 namespace backlash {
-    AIManager* AIManager::GetInstance(Engine* parent) {
-        assert(parent);
+    AIManager* AIManager::GetInstance() {
         if (!mInstance) {
-            mInstance = new AIManager{parent};
+            mInstance = new AIManager;
         }
         return mInstance;
     }
 
-    AIManager::AIManager(Engine* parent) :
-        mParent{parent} {}
+    AIManager::AIManager() {}
     
     AIManager::~AIManager() {}
 
-    void AIManager::AddAIComponent(AIComponent* comp) {
-        assert(comp);
+    void AIManager::AddAIComponent(std::shared_ptr<AIComponent> comp) {
+        assert(comp.use_count());
         mComponents.push_back(std::weak_ptr<AIComponent>(comp)); 
     }
 
     void AIManager::UpdateAll() {
         for (auto& comp : mComponents) {
-            comp->Update(timeTick);
+            if (comp.use_count()) {
+                comp->Update(timeTick);
+            } else {
+                mComponents.erase(comp);
+            }
         }
     }
 
     void AIManager::Action(double timeTick) {
         for (auto& comp : mComponents) {
-            comp->Action(timeTick);
+            if (comp.use_count()) {
+                comp->Action(timeTick);
+            }
         }
     }
 }

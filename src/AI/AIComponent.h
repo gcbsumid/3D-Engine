@@ -38,7 +38,7 @@ namespace backlash {
         virtual void Update();
         virtual bool Render(Program*); 
 
-        void SetModelMatrix(std::weak_ptr<ModelAttrib> model);
+        void SetModelMatrix(std::shared_ptr<ModelAttrib> model);
         void GenerateAlgorithm(E_ALGORITHM);
         void ClearAlgorithms();
     private: 

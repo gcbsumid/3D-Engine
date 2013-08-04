@@ -7,7 +7,6 @@
 #include "../Util/enum.h"
 #include "Mesh.h"
 #include "Program.h"
-#include "ModelAsset.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -37,8 +36,8 @@ namespace backlash {
         virtual bool Render(Program*);
 
         void SetShader(Program* program);
-        void SetMesh(Mesh* mesh);
-        void SetModelAttrib(ModelAttrib* model);
+        void SetMesh(std::shared_ptr<Mesh> mesh);
+        void SetModelAttrib(std::shared_ptr<ModelAttrib> model);
         std::string GetMaterialName() const;
         Program* GetShader() const;
 

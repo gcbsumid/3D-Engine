@@ -18,17 +18,17 @@
 namespace backlash {
     class ResourceManager {
     public:
-        static ResourceManager* GetInstance(Engine* parent);
+        static ResourceManager* GetInstance();
 
         ~ResourceManager() {}
 
-        void SetTextureSharedPointer(std::map<std::string, Texture*>* textures);
-        void SetMeshSharedPointer(std::map<std::string, Mesh*>* meshes);
+        void SetTextureSharedPointer(std::shared_ptr<std::map<std::string, Texture*>>& textures);
+        void SetMeshSharedPointer(std::shared_ptr<std::map<std::string, Mesh*>>& meshes);
 
         void LoadAllFiles();
 
     private:
-        ResourceManager(Engine* parent);
+        ResourceManager();
 
         void Clear();
         void InitMaterials(Assimp::aiScene*, const std::string&);
@@ -40,11 +40,11 @@ namespace backlash {
         // This is shared with the Graphics manager
         std::shared_ptr<std::map<std::string, Texture*>> mTextures;
         std::shared_ptr<std::map<std::string, Mesh*>> mMeshes;
-
         std::vector<std::string> mLocalTexture;
         
         static ResourceManager* mInstance;
 
+        // Things not to implement
         ResourceManager(const ResourceManager&);
         void operator=(const ResourceManager&);
     };

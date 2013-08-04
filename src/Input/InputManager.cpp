@@ -10,10 +10,7 @@ static const float zoomSensitivity = 5.0f;
 backlash::InputManager* backlash::InputManager::mInstance{nullptr};
 
 namespace backlash {
-    InputManager::InputManager(Engine* parent) : 
-            mParent{parent},
-            mCameraComponent{nullptr}, 
-            mLightComponent{nullptr} {
+    InputManager::InputManager() {
         // TODO: you need to learn how to multi-thread
 
         // glfwSetMouseWheelCallback(InputManager::HandleMouseWheelEvents);
@@ -21,28 +18,28 @@ namespace backlash {
         // glfwSetKeyCallback(InputManager::HandleKeyEvents);
     }
 
-    InputManager* InputManager::GetInstance(Engine* parent) {
-        assert(parent);
+    InputManager* InputManager::GetInstance() {
         if (!mInstance) {
-            mInstance = new InputManager{parent};
+            mInstance = new InputManager;
         }
         return mInstance;
     }
 
-    void InputManager::AddCameraComponent(CameraComponent* comp) {
-        assert(comp);
+    void InputManager::AddCameraComponent(std::shared_ptr<CameraComponent> comp) {
+        assert(comp.use_count());
 
-        mCameraComponent = std::weak_ptr<CameraComponent> (comp);
+        mCameraComponent = comp;
     }
 
-    void InputManager::AddLightComponent(LightComponent* comp) {
-        assert(comp);
+    void InputManager::AddLightComponent(std::shared_ptr<LightComponent> comp) {
+        assert(comp.use_count());
 
-        mLightComponent = std::weak_ptr<LightComponent> (comp);
+        mLightComponent = comp;
     }
 
     void InputManager::HandleInput(double elapsedTime) {
         assert(mCameraComponent.use_count());
+        assert(mLightComponent.use_count());
 
         // move position based on wasd keys
         if (glfwGetKey('S')) {

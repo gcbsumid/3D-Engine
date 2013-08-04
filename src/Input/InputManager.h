@@ -8,29 +8,24 @@
 #include <memory>
 
 // Backlash Library
-#include "../Game/Engine.h"
 #include "../Renderer/CameraComponent.h"
 #include "../Renderer/mLightComponent.h"
 
 namespace backlash {
     class InputManager {
     public:
-        static InputManager* GetInstance(Engine*);
+        static InputManager* GetInstance();
         ~InputManager() {}
 
-        void AddCameraComponent(CameraComponent*);
+        void AddCameraComponent(std::shared_ptr<CameraComponent>);
 
         // Temporary
-        void AddLightComponent(LightComponent*);
-
-        // void Init(); // Don't need this right now.
+        void AddLightComponent(std::shared_ptr<LightComponent>);
 
         void HandleInput(double);
 
     private:
         static InputManager* mInstance;
-
-        const std::weak_ptr<Engine> mParent;
 
         std::weak_ptr<CameraComponent> mCameraComponent;
         std::weak_ptr<LightComponent> mLightComponent; // eventually, this will become a vector of lights
@@ -39,7 +34,7 @@ namespace backlash {
         // static void HandleMousePosEvents(int xpos, int ypos);
         // static void HandleMouseWheelEvents(int pos);
 
-        InputManager(Engine*);
+        InputManager();
 
         // Don't Implement copy constructors
         InputManager(const InputManager&); 

@@ -139,4 +139,8 @@ namespace backlash {
         OffsetPosition(displacement);
     }
 
+    void CameraComponent::SetModelAttrib(std::shared_ptr<ModelAttrib> model) {
+        assert(model.use_count());
+        mModel = model;
+    }
 }

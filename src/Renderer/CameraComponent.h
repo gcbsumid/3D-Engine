@@ -31,7 +31,7 @@ namespace backlash {
         virtual void Update();
         virtual bool Render(Program*);
 
-        void SetModelAttrib(std::weak_ptr<ModelAttrib>);
+        void SetModelAttrib(std::shared_ptr<ModelAttrib>);
 
         // Position of Camera
         const glm::vec3& Position() const;

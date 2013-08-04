@@ -17,7 +17,7 @@ namespace backlash {
         virtual void Action(double) = 0; 
 
     protected:
-        std::weak_ptr<AIComponent> mCompParent;
+        AIComponent* mCompParent;
     };
 }
 

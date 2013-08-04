@@ -6,6 +6,12 @@
 // Backlash Library
 #include "Entity.h"
 #include "../Util/util.h"
+#include "ComponentFactory.h"
+#include "Component.h"
+#include "LightComponent.h"
+#include "DrawComponent.h"
+#include "AIComponent.h"
+#include "CameraComponent.h"
 
 extern bool IsValidComponent(backlash::E_COMPONENT comp);
 extern bool IsValidAlgorithm(backlash::E_ALGORITHM comp);
@@ -20,14 +26,24 @@ namespace backlash {
 
     Entity::~Entity() {}
 
-    void Entity::AddComponent(E_COMPONENT type, Component* comp) {
+    void Entity::AddComponent(E_COMPONENT type) {
         assert(IsValidComponent(type));
         assert(comp);
 
-        if (mComponents.count(type))
+        Component* comp = ComponentFactory::CreateComponent(type);
+
+        if (mComponents.count(type)) {
+            std::cout << "I'm replacing a Component: " << as_integer(type) << std::endl;
             mComponents[type] = std::shared_ptr<Component>(comp);
-        else
+        } else {
             mComponents.insert(std::make_pair(type, std::shared_ptr<Component>(comp));
+        }
+
+        if (type == E_COMPONENT::E_COMPONENT::DRAW) {
+            SetDrawComponentModelAttrib();
+        } else if (type == E_COMPONENT::E_COMPONENT_AI) {
+            SetAIComponentModelAttrib();
+        }
     }
 
     void Entity::SetDrawComponentModelAttrib() {

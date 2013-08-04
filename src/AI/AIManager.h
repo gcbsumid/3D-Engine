@@ -6,7 +6,6 @@
 #include <memory>
 
 // Backlash Library
-#include "../Game/Engine.h"
 #include "AIComponent.h"
 
 
@@ -15,7 +14,7 @@ namespace backlash {
 
     class AIManager {
     public:
-        static AIManager* GetInstance(Engine*);
+        static AIManager* GetInstance();
         ~AIManager();
 
         // Prereq: Install the xml parser and create objects
@@ -23,7 +22,7 @@ namespace backlash {
         //       create the Algorithms to be attached to the individual 
         //       AI components by passing an object of some sort that contains
         //       the needed data from the xml file 
-        void AddAIComponent(AIComponent* comp);
+        void AddAIComponent(std::shared_ptr<AIComponent> comp);
 
         // TODO: Create states to which each object will be updated
         void UpdateAll();
@@ -31,10 +30,9 @@ namespace backlash {
         void Action(double);
 
     private:
-        AIManager(Engine* parent);
+        AIManager();
 
-        const std::weak_ptr<Engine> mParent;
-        std::vector<std::weak_ptr<AIComponent> > mComponents;
+        std::vector<std::weak_ptr<AIComponent>> mComponents;
 
         // Don't Implement the copy constructors
         AIManager(const AIManager&);

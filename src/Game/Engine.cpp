@@ -73,14 +73,30 @@ namespace backlash {
     }
 
     void Engine::CreateManagers() {
-        mGraphics = std::unique_ptr<GraphicsManager>{GraphicsManager::GetInstance(mInstance)};
-        mInput = std::unique_ptr<InputManager>{InputManager::GetInstance(mInstance)};
-        mResource = std::unique_ptr<ResourceManager>{ResourceManager::GetInstance(mInstance)};
-        mAI = std::unique_ptr<AIManager>{AIManager::GetInstance(mInstance)};
+        mGraphics = std::unique_ptr<GraphicsManager>{GraphicsManager::GetInstance()};
+        mInput = std::unique_ptr<InputManager>{InputManager::GetInstance()};
+        mResource = std::unique_ptr<ResourceManager>{ResourceManager::GetInstance()};
+        mAI = std::unique_ptr<AIManager>{AIManager::GetInstance()};
 
         // Create the Texture and Mesh containers
-        std::map<std::string, Texture*>* textures = new std::map<std::string, Texture*>;
-        std::vector<Mesh>* meshes = new std::vector<Mesh>;
+        std::shared_ptr<std::map<std::string, Texture*>> textures {
+            new std::map<std::string, Texture*>, 
+            [](std::map<std::string, Texture*>* textures_map){
+                for (auto& it : textures_map) {
+                    delete it->second;
+                }
+            }
+        };
+
+        std::shared_ptr<std::map<std::string, Mesh*>> meshes {
+            new std::map<std::string, Mesh*>,
+            [](std::map<std::string, Mesh*>) {
+                for (auto& it : meshes_map) {
+                    delete it->second;
+                }
+            }
+        };
+
         mGraphics->SetTextureSharedPointer(textures); // Note: Pass a destructor 
         mGraphics->SetMeshSharedPointer(meshes);
         mInput->SetTextureSharedPointer(textures);
@@ -100,14 +116,11 @@ namespace backlash {
     }
 
     void Engine::CreatePlayer() {
-        // Set up the camera
-        CameraComponent* cameraComp = ComponentFactory::CreateComponent(E_COMPONENT::E_COMPONENT_CAMERA);
-
         Entity* player = new Entity;
-        player->AddComponent(E_COMPONENT::E_COMPONENT_CAMERA, cameraComp);
-        player->SetDrawComponentModelAttrib();
+        player->AddComponent(E_COMPONENT::E_COMPONENT_CAMERA);
 
         // Add the camera component to the player entity and systems
+        std::shared_ptr<CameraComponent> comp = std::static_pointer_cast<CameraComponent>(player->GetComponent(E_COMPONENT::E_COMPONENT_CAMERA));
         mGraphics->AddCameraComponent(cameraComponent);
         mInput->AddCameraComponent(cameraComponent);
 
@@ -117,35 +130,40 @@ namespace backlash {
 
     void Engine::CreateLight() {
         Entity* light = new Entity;
-        LightComponent* lightComponent = ComponentFactory::CreateComponent(E_COMPONENT::E_COMPONENT_LIGHT);
-        light->AddComponent(E_COMPONENT::E_COMPONENT_LIGHT, lightComponent);
-        mGraphics->AddLightComponent(lightComponent);
-        mInput->AddLightComponent(lightComponent);
+        light->AddComponent(E_COMPONENT::E_COMPONENT_LIGHT);
+
+        std::shared_ptr<LightComponent> comp = std::static_pointer_cast<LightComponent>(player->GetComponent(E_COMPONENT::E_COMPONENT_LIGHT));
+        comp->SetPosition(glm::vec3(0,3,3));
+        comp->SetIntensity(glm::vec3(1,1,1));
+        comp->SetAttenuation(0.1f);
+        comp->SetAmbientCoefficient(0.005f);
+
+        // Attach the light to the systems
+        mGraphics->AddLightComponent(comp);
+        mInput->AddLightComponent(comp);
+
         mEntities.insert(std::make_pair(light->GetID(), light));
-        lightComponent->SetPosition(glm::vec3(0,3,3));
-        lightComponent->SetIntensity(glm::vec3(1,1,1));
-        lightComponent->SetAttenuation(0.1f);
-        lightComponent->SetAmbientCoefficient(0.005f);
+        
     }
 
     void Engine::CreateObjects() {
         Entity* human = new Entity;
-        DrawComponent* drawComponent = ComponentFactory::CreateComponent(E_COMPONENT::E_COMPONENT_DRAW);
-        AIComponent* aiComponent = ComponentFactory::CreateComponent(E_COMPONENT::E_COMPONENT_AI);
 
-        human->AddComponent(E_COMPONENT::E_COMPONENT_DRAW, drawComponent);
-        human->AddComponent(E_COMPONENT::E_COMPONENT_AI, aiComponent);
+        light->AddComponent(E_COMPONENT::E_COMPONENT_AI);
+        light->AddComponent(E_COMPONENT::E_COMPONENT_DRAW);
+
+        std::shared_ptr<DrawComponent> drawComp = std::static_pointer_cast<DrawComponent>(player->GetComponent(E_COMPONENT::E_COMPONENT_DRAW));
+        std::shared_ptr<AIComponent> aiComp = std::static_pointer_cast<AIComponent>(player->GetComponent(E_COMPONENT::E_COMPONENT_AI));
+
         human->SetDrawComponentModelAttrib();
         human->SetAIComponentModelAttrib();
 
-        // currently, I only have one shader program. It's ID is 0.
-        mGraphics->AttachShaderToDrawComponent(drawComponent, 0); 
-
-        // After loading human 
-        mGraphics->AttachMeshToDrawComponent(drawComponent, "Human");
+        // Attach Shader and Mesh to the component
+        mGraphics->AttachShaderToDrawComponent(drawComp.get(), 0); 
+        mGraphics->AttachMeshToDrawComponent(drawComp.get(), "Human");
 
         // Generate the AI Algorithm
-        aiComponent->GenerateAlgorithm(E_ALGORITHM::E_ALGORITHM_ROTATE);
+        aiComp->GenerateAlgorithm(E_ALGORITHM::E_ALGORITHM_ROTATE);
 
         mEntities.insert(std::make_pair(human->GetID(), human));
     }

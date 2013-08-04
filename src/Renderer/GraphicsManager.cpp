@@ -6,33 +6,17 @@
 #include <GL/glew.h>
 
 // Global static pointer used to ensure my singleton
-std::shared_ptr<backlash::GraphicsManager> backlash::GraphicsManager::mInstance;
-
-// Typedefs 
-
-typedef std::shared_ptr<backlash::DrawComponent> DRAWCOMP_PTR;
-typedef std::shared_ptr<backlash::CameraComponent> CAMERACOMP_PTR;
-typedef std::shared_ptr<backlash::LightComponent> LIGHTCOMP_PTR;
-
+backlash::GraphicsManager* backlash::GraphicsManager::mInstance;
 
 namespace backlash {
-    GraphicsManager::GraphicsManager_ptr GraphicsManager::GetInstance(
-        GraphicsManager::Engine_ptr parent) {
-        if (mInstance.get() == 0) {
-            mInstance = std::shared_ptr<GraphicsManager>(new GraphicsManager(parent));
+    GraphicsManager* GraphicsManager::GetInstance() {
+        if (!mInstance) {
+            mInstance = new GraphicsManager;
         }
         return mInstance;
     }
 
-    GraphicsManager::GraphicsManager(GraphicsManager::Engine_ptr parent) : 
-            mParent(parent), 
-            mCameraComponentID(UINT_MAX),
-            mDrawComponents(NULL),
-            mLightComponents(NULL),
-            mCameraComponent(NULL),
-            mTextures(NULL),
-            mMeshes(NULL),
-            mActiveShader(NULL) {}
+    GraphicsManager::GraphicsManager() {}
 
     void GraphicsManager::LoadShaders() {
         std::vector<Shader> shaders;
@@ -44,24 +28,24 @@ namespace backlash {
         mShaders.push_back(new Program(shaders));
     }
 
-    void GraphicsManager::AddDrawComponent(DrawComponent* comp) {
-        if (comp == nullptr)
+    void GraphicsManager::AddDrawComponent(std::shared_ptr<DrawComponent> comp) {
+        if (!comp)
             throw std::runtime_error("Draw Component is a null pointer when you tried to add it to the Graphics Manager");
 
         mDrawComponents.push_back(std::weak_ptr<DrawComponent>(comp));
     }
 
-    void GraphicsManager::AddCameraComponent(CameraComponent* comp) {
-        if (comp == nullptr)
-            throw std::runtime_error("Camera Component is a null pointer when you tried to add it to the Graphics Manager");
-        mCameraComponent = std::weak_ptr<CameraComponent>(comp);
-    }
-
-    void GraphicsManager::AddLightComponent(LightComponent* comp) {
-        if (comp == nullptr)
+    void GraphicsManager::AddLightComponent(std::shared_ptr<LightComponent> comp) {
+        if (!comp)
             throw std::runtime_error("Light Component is a null pointer when you tried to add it to the Graphics Manager");
 
-        mLightComponents.push_back(std::weak_ptr<LightComponent> (comp));
+        mLightComponents.push_back(std::weak_ptr<LightComponent>(comp));
+    }
+
+    void GraphicsManager::AddCameraComponent(std::shared_ptr<CameraComponent> comp) {
+        if (!comp)
+            throw std::runtime_error("Camera Component is a null pointer when you tried to add it to the Graphics Manager");
+        mCameraComponent = comp;
     }
 
     void AttachShaderToDrawComponent(DrawComponent* comp, int id) {
@@ -77,14 +61,16 @@ namespace backlash {
         comp->SetShader(mMeshes.at(id));
     }
 
-    void GraphicsManager::SetTextureSharedPointer(std::map<std::string, Texture*>* textures) {
-        assert(textures);
-        mTextures = std::shared_ptr<std::map<std::string, Texture*> >  (textures);
+    void GraphicsManager::SetTextureSharedPointer(
+        std::shared_ptr<std::map<std::string, Texture*>>& textures)
+    {
+        mTextures{texutres};
     }
 
-    void GraphicsManager::SetMeshSharedPointer(std::map<std::string, Mesh*>* meshes) {
-        assert(meshes);
-        mMeshes = std::shared_ptr<std::map<std::string, Mesh*> > (meshes);
+    void GraphicsManager::SetMeshSharedPointer(
+        std::shared_ptr<std::map<std::string, Mesh*>>& meshes) 
+    {
+        mMeshes{meshes};
     }
 
     void GraphicsManager::Render() const {
@@ -140,82 +126,4 @@ namespace backlash {
         // swap the display buffers (displays what was just drawn)
         glfwSwapBuffers();
     }
-    
-    /**********************************************************************************
-    void GraphicsManager::Render() const {
-
-
-        // clear everything
-        glClearColor(0, 0, 0, 1); // black
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // render all instances
-        auto lightID = mLightComponentIDs.at(0);
-        assert(utility::IsValidComponentID(mCameraComponentID));
-        assert(utility::IsValidComponentID(lightID));
-
-        auto lightComp = std::static_pointer_cast<LightComponent>(mParent->GetComponent(lightID));
-        std::shared_ptr<Program> current = NULL;
-        for (auto compID : mDrawComponentIDs) {
-            auto drawComponent = std::static_pointer_cast<DrawComponent>(mParent->GetComponent(compID));
-            auto asset = mParent->GetAsset(drawComponent->GetAssetID());
-            if (!asset->mShaders->IsInUse()) {
-                if (current && current->IsInUse()) {
-                    current->Stop();
-                }
-                current = asset->mShaders;
-                current->Use();
-            }
-            auto cameraComp = std::static_pointer_cast<CameraComponent>(mParent->GetComponent(mCameraComponentID));
-            RenderInstance(drawComponent, 
-                           asset, 
-                           lightComp,
-                           cameraComp);
-        }
-        current->Stop();
-
-        // swap the display buffers (displays what was just drawn)
-        glfwSwapBuffers();
-    }
-
-    void GraphicsManager::RenderInstance(DRAWCOMP_PTR renderComp, 
-                                        MODELASSET_PTR asset,
-                                        LIGHTCOMP_PTR lightComp,
-                                        CAMERACOMP_PTR cameraComp) const {
-        auto shaders = asset->mShaders;
-        auto camera = cameraComp->GetCamera();
-
-        // set shader uniforms
-        shaders->SetUniform("camera", camera->Matrix());
-        shaders->SetUniform("model", renderComp->GetTransform());
-        
-        shaders->SetUniform("material.tex", 0); // texture is bounded to GL_TEXTURE0
-        shaders->SetUniform("material.shininess", asset->mShininess);
-        shaders->SetUniform("material.specularColor", asset->mSpecularColor);
-        
-        shaders->SetUniform("light.position", lightComp->GetPosition());
-        shaders->SetUniform("light.intensities", lightComp->GetIntensity());
-        shaders->SetUniform("light.attenuation", lightComp->GetAttenuation());
-        shaders->SetUniform("light.ambientCoefficient", lightComp->GetAmbientCoefficient());
-        shaders->SetUniform("cameraPosition", camera->Position());
-
-        // bind the texture
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, asset->mTextures->Object());
-
-        // Note: Consider using glDrawArraysInstanced instead
-        //       of glDrawArrays. You can get better performance.
-        //
-
-        // bind VAO and draw 
-        glBindVertexArray(asset->mVAO);
-        glDrawArrays(asset->mDrawType, asset->mDrawStart, asset->mDrawCount);
-
-        // unbind everything
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glBindVertexArray(0);
-
-    }    
-
-    ***************************************************************************************/
 }

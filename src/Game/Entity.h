@@ -3,6 +3,7 @@
 
 // Standard Library
 #include <map>
+#include <memory>
 
 // Backlash Library
 #include "../Util/enum.h"
@@ -14,8 +15,8 @@ namespace backlash {
         Entity();
         ~Entity();
 
-        void AddComponent(E_COMPONENT, Component* comp);
-        int GetComponent(E_COMPONENT) const;
+        void AddComponent(E_COMPONENT);
+        std::shared_ptr<Component> GetComponent(E_COMPONENT) const;
         int GetID() const;
         std::shared_ptr<ModelAttrib> GetModelAttrib() const;
 

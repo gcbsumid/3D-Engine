@@ -32,17 +32,17 @@ void DrawComponent::Update() {
 
     void DrawComponent::SetShader(Program* program) {
         assert(program);
-        mShader = std::weak_ptr<Program>(program);
+        mShader = program;
     }
 
-    void DrawComponent::SetMesh(Mesh* mesh) {
-        assert(mesh);
-        mMesh = std::weak_ptr<Mesh>(mesh);
+    void DrawComponent::SetMesh(std::shared_ptr<Mesh> mesh) {
+        assert(mesh.use_count());
+        mMesh = mesh;
     }
 
-    void DrawComponent::SetModelAttrib(ModelAttrib* model) {
-        assert(model);
-        mModel = std::weak_ptr<ModelAttrib>(model);
+    void DrawComponent::SetModelAttrib(std::shared_ptr<ModelAttrib> model) {
+        assert(model.use_count());
+        mModel = model;
     }
 
     std::string DrawComponent::GetMaterialName() const {

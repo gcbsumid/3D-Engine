@@ -2,6 +2,11 @@
 #define ENUM_H
 
 namespace backlash {
+    template <typename Enumeration> 
+    auto as_integer(Enumeration const value) {
+        return static_cast<typename std::underlying_type<Enumeration>::type>(value);
+    }
+
     enum class E_COMPONENT {  
         E_COMPONENT_DRAW,
         E_COMPONENT_CAMERA,

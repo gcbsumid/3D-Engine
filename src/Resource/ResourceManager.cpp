@@ -33,26 +33,27 @@ static void color4_to_float4(const Assimp::aiColor4D *c, float f[4])
 }
 
 namespace backlash {
-    ResourceManager::ResourceManager* ResourceManager::GetInstance(Engine* parent) {
+    ResourceManager* ResourceManager::GetInstance() {
         if (mInstance.get() == 0) {
-            mInstance = new ResourceManager{parent};
+            mInstance = new ResourceManager;
         }
         return mInstance;
     }
 
-    ResourceManager::ResourceManager(Engine* parent) : 
-        mParent{parent} {}
+    ResourceManager::ResourceManager() {}
 
     // TODO: Pass a destructor to the shared pointer for when you need to delete the
     //       Texture and Mesh pointers
-    void ResourceManager::SetTextureSharedPointer(std::map<std::string, Texture*>* textures) {
-        assert(textures);
-        mTextures = std::shared_ptr<std::map<std::string, Texture*>>(textures);
+    void ResourceManager::SetTextureSharedPointer(
+        std::shared_ptr<std::map<std::string, Texture*>>& textures)
+    {
+        mTextures{texutres};
     }
 
-    void ResourceManager::SetMeshSharedPointer(std::map<std::string, Mesh*>* meshes) {
-        assert(meshes);
-        mMeshes = std::shared_ptr<std::map<std::string, Mesh*>> (meshes);
+    void ResourceManager::SetMeshSharedPointer(
+        std::shared_ptr<std::map<std::string, Mesh*>>& meshes) 
+    {
+        mMeshes{meshes};
     }
 
     void ResourceManager::LoadAllFiles() {
@@ -94,7 +95,7 @@ namespace backlash {
 
     void ResourceManager::InitMesh(Assimp::aiMesh* mesh) {
         assert(scene->mNumMaterials == mLocalTexture.size());
-        assert(mMeshes);
+        assert(mMeshes.use_count());
 
         Mesh* meshEntry = new Mesh(mMeshes.size());
         meshEntry->mMaterialName = mLocalTexture.at(mesh->mMaterialIndex);
@@ -131,7 +132,7 @@ namespace backlash {
     }
 
     void ResourceManager::InitMaterials(Assimp::aiScene* scene, const std::string& filename) {
-        assert(mTextures);
+        assert(mTextures.use_count());
         mLocalTexture.clear();
 
         std::string::size_type slashIndex = filename.find_last_of("/");
@@ -148,7 +149,6 @@ namespace backlash {
         for (unsigned int i = 0; i < scene->mNumMaterials; ++i) {
             const Assimp::aiMaterial* material = scene->mMaterials[i];
 
-            // std::make_pair(player->GetID(), )
             bool gotTexture = false;
             if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
                 Assimp::aiString path;

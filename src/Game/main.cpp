@@ -13,13 +13,6 @@
 
 using namespace std;
 
-
-/* Note: because the shaders and textures can be shared, you should probably 
- *       store them, later on, inside a std::map and use their ID as what is 
- *       contained inside the ModelAssetTemp.
- */
-
-
 int main(int argc, char* argv[]) {
     try {
         unique_ptr<backlash::Engine> gEngine{backlash::Engine::GetInstance()};
