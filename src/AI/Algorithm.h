@@ -1,25 +1,23 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
 
-#include "AIComponent.h"
-
-#include <string>
+// Standard Library
 #include <memory>
+
+// Backlash Library
+#include "AIComponent.h"
 
 namespace backlash {
     class Algorithm {
-        typedef std::weak_ptr<AIComponent> AICompPtr;
     public:
-        Algorithm(AICompPtr);
-        Algorithm(AICompPtr, std::shared_ptr<Algorithm>);
+        Algorithm(AIComponent*);
 
         virtual ~Algorithm(); // Probably create this, just in case.
 
         virtual void Action(double) = 0; 
 
     protected:
-        std::shared_ptr<Algorithm> mChild;
-        AICompPtr mCompParent;
+        std::weak_ptr<AIComponent> mCompParent;
     };
 }
 

@@ -1,33 +1,34 @@
 #include "AIManager.h"
-#include "../Util/util.h"
 
-std::shareD_ptr<backlash::AIManager> backlash::AIManager::mInstance;
+backlash::AIManager* backlash::AIManager::mInstance{nullptr};
 
 namespace backlash {
-    AIManager::AIManagerPtr AIManager::GetInstance(AIManager::EnginePtr parent) {
+    AIManager* AIManager::GetInstance(Engine* parent) {
         if (mInstance.get() == 0) {
-            mInstance = std::shared_ptr<AIManager>(new AIManager(parent));
+            mInstance = new AIManager{parent};
         }
         return mInstance;
     }
 
-    AIManager::AIManager(AIManager::EnginePtr parent) :
-        mParent(parent) {}
+    AIManager::AIManager(Engine* parent) :
+        mParent{parent} {}
     
     AIManager::~AIManager() {}
 
     void AIManager::AddAIComponent(AIComponent* comp) {
         assert(comp);
-        mComponents.push_back(std::weak_ptr<AIComponent> (comp)); 
+        mComponents.push_back(std::weak_ptr<AIComponent>(comp)); 
     }
 
     void AIManager::UpdateAll() {
-        // I haven't created states yet so this is empty.        
+        for (auto& comp : mComponents) {
+            comp->Update(timeTick);
+        }
     }
 
-    void AIManager::Run(double timeTick) {
-        for (auto comp : mComponents) {
-            comp->Run(timeTick);
+    void AIManager::Action(double timeTick) {
+        for (auto& comp : mComponents) {
+            comp->Action(timeTick);
         }
     }
 }

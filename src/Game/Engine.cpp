@@ -156,7 +156,7 @@ namespace backlash {
 
         // Deal with updating the status of each AI component and then running them
         mAI->UpdateAll();
-        mAI->Run(timeTick);
+        mAI->Action(timeTick);
     }
     
     void Engine::Run() {

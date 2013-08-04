@@ -1,21 +1,21 @@
 #ifndef AIMANAGER_H
 #define AIMANAGER_H
 
+// Standard Library
+#include <vector> // Probably for the Algorithms to update.
+#include <memory>
+
+// Backlash Library
 #include "../Game/Engine.h"
 #include "AIComponent.h"
 
-#include <vector> // Probably for the Algorithms to update.
-#include <memory>
 
 namespace backlash {
     class Engine;
 
     class AIManager {
-        typedef std::shared_ptr<AIManager> AIManagerPtr; 
-        typedef std::weak_ptr<Engine> EnginePtr;
-
     public:
-        static AIManagerPtr GetInstance(EnginePtr);
+        static AIManager* GetInstance(Engine*);
         ~AIManager();
 
         // Prereq: Install the xml parser and create objects
@@ -25,18 +25,15 @@ namespace backlash {
         //       the needed data from the xml file 
         void AddAIComponent(AIComponent* comp);
 
-        // This actually updates the algorithms to run depending on the state 
-        // of each object
         // TODO: Create states to which each object will be updated
         void UpdateAll();
 
-        // This runs all actions in all the AI Components. This may need to pass an elapsed time
-        void Run(double)
+        void Action(double);
 
     private:
-        AIManager(EnginePtr parent);
+        AIManager(Engine* parent);
 
-        const Engine_ptr mParent;
+        const std::weak_ptr<Engine> mParent;
         std::vector<std::weak_ptr<AIComponent> > mComponents;
 
         // Don't Implement the copy constructors

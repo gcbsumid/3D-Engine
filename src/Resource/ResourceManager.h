@@ -21,7 +21,7 @@ namespace backlash {
         typedef std::shared_ptr<ResourceManager> ResourceManagerPtr;
         typedef std::weak_ptr<Engine> EnginePtr;
     public:
-        static ResourceManagerPtr GetInstance(EnginePtr parent);
+        static ResourceManagerPtr GetInstance(Engine* parent);
 
         ~ResourceManager() {}
 

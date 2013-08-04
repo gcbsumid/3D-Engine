@@ -16,7 +16,7 @@ namespace backlash {
         typedef std::weak_ptr<Engine> EnginePtr;
 
     public:
-        static InputSystemPtr GetInstance(EnginePtr);
+        static InputSystemPtr GetInstance(Engine*);
         ~InputManager() {}
 
         void AddCameraComponent(CameraComponent*);

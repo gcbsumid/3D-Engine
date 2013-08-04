@@ -1,17 +1,17 @@
 #ifndef AICOMPONENT_H
 #define AICOMPONENT_H
 
-#include <GL/glew.h>
+// Standard Library
+#include <memory>
+#include <map>
 
+// Backlash Library
 #include "Algorithm.h"
 #include "../Game/Component.h"
 #include "../Game/ModelAttrib.h"
 #include "../Game/ComponentFactory.h"
 #include "../Util/enum.h"
 #include "../Renderer/Program.h"
-
-#include <vector> 
-#include <memory>
 
  // TODO: will pass in the status to determine which algorithm will be used.
 
@@ -40,10 +40,10 @@ namespace backlash {
 
         void SetModelMatrix(std::weak_ptr<ModelAttrib> model);
         void GenerateAlgorithm(E_ALGORITHM);
-        void ClearAlgorithm();
+        void ClearAlgorithms();
     private: 
-        Algorithm* mAlgorithm; 
-        std::weak_ptr<ModelAttrib> mModel bv; 
+        std::map<E_ALGORITHM,std::unique_ptr<Algorithm>> mAlgorithms; 
+        std::weak_ptr<ModelAttrib> mModel; 
     };
 }
 

@@ -14,7 +14,7 @@ namespace backlash {
         void UpdateTransform();
     };
 
-    void UpdateTransform() {
+    void ModelAttrib::UpdateTransform() {
         mAttrib->mTransform = glm::mat4();
         glm::mat4 orientation = glm::quaternion::toMat4(mAttrib->mOrientation);
 

@@ -22,7 +22,7 @@ namespace backlash {
         typedef std::shared_ptr<GraphicsManager> GraphicsManagerPtr;
         typedef std::weak_ptr<Engine> EnginePtr;
     public:
-        static GraphicsManagerPtr GetInstance(EnginePtr parent);
+        static GraphicsManagerPtr GetInstance(Engine* parent);
 
         ~GraphicsManager() {}
 

@@ -1,5 +1,5 @@
-#ifndef ROTATEALG_H
-#define ROTATEALG_H
+#ifndef TRANSLATEALG_H
+#define TRANSLATEALG_H
 
 // Standard Library
 #include <memory>
@@ -9,15 +9,16 @@
 #include "AIComponent.h"
 
 namespace backlash {
-    class RotateAlg : public Algorithm {
+    class TranslateAlg : public Algorithm {
     public:
-        RotateAlg(AIComponent* comp);
+        TranslateAlg(AIComponent* comp);
 
-        ~RotateAlg();
+        ~TranslateAlg();
         
         virtual void Action(double);
 
     private:
+        double mTimer;
         glm::vec3 mDirection;
     };
 }
