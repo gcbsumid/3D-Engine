@@ -1,7 +1,7 @@
 #include "Algorithm.h"
 
 namespace backlash {
-    Algorithm::Algorithm(AIComponent* comp) : 
+    Algorithm::Algorithm(AIComponent *comp) : 
         mCompParent{comp} 
         {}
 

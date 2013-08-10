@@ -22,7 +22,7 @@ namespace backlash {
     // Global static pointer used to ensure my singleton
     Engine* Engine::mInstance{nullptr};
 
-    std::shared_ptr<Engine> Engine::GetInstance() {
+    Engine* Engine::GetInstance() {
         if (mInstance == nullptr)
             mInstance = new Engine;
 
@@ -117,10 +117,10 @@ namespace backlash {
 
     void Engine::CreatePlayer() {
         Entity* player = new Entity;
-        player->AddComponent(E_COMPONENT::E_COMPONENT_CAMERA);
+        player->AddComponent(E_COMPONENT_CAMERA);
 
         // Add the camera component to the player entity and systems
-        std::shared_ptr<CameraComponent> comp = std::static_pointer_cast<CameraComponent>(player->GetComponent(E_COMPONENT::E_COMPONENT_CAMERA));
+        std::shared_ptr<CameraComponent> comp = std::static_pointer_cast<CameraComponent>(player->GetComponent(E_COMPONENT_CAMERA));
         mGraphics->AddCameraComponent(cameraComponent);
         mInput->AddCameraComponent(cameraComponent);
 
@@ -130,9 +130,9 @@ namespace backlash {
 
     void Engine::CreateLight() {
         Entity* light = new Entity;
-        light->AddComponent(E_COMPONENT::E_COMPONENT_LIGHT);
+        light->AddComponent(E_COMPONENT_LIGHT);
 
-        std::shared_ptr<LightComponent> comp = std::static_pointer_cast<LightComponent>(player->GetComponent(E_COMPONENT::E_COMPONENT_LIGHT));
+        std::shared_ptr<LightComponent> comp = std::static_pointer_cast<LightComponent>(player->GetComponent(E_COMPONENT_LIGHT));
         comp->SetPosition(glm::vec3(0,3,3));
         comp->SetIntensity(glm::vec3(1,1,1));
         comp->SetAttenuation(0.1f);
@@ -149,11 +149,11 @@ namespace backlash {
     void Engine::CreateObjects() {
         Entity* human = new Entity;
 
-        light->AddComponent(E_COMPONENT::E_COMPONENT_AI);
-        light->AddComponent(E_COMPONENT::E_COMPONENT_DRAW);
+        light->AddComponent(E_COMPONENT_AI);
+        light->AddComponent(E_COMPONENT_DRAW);
 
-        std::shared_ptr<DrawComponent> drawComp = std::static_pointer_cast<DrawComponent>(player->GetComponent(E_COMPONENT::E_COMPONENT_DRAW));
-        std::shared_ptr<AIComponent> aiComp = std::static_pointer_cast<AIComponent>(player->GetComponent(E_COMPONENT::E_COMPONENT_AI));
+        std::shared_ptr<DrawComponent> drawComp = std::static_pointer_cast<DrawComponent>(player->GetComponent(E_COMPONENT_DRAW));
+        std::shared_ptr<AIComponent> aiComp = std::static_pointer_cast<AIComponent>(player->GetComponent(E_COMPONENT_AI));
 
         human->SetDrawComponentModelAttrib();
         human->SetAIComponentModelAttrib();

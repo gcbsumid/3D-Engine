@@ -16,13 +16,13 @@
 #include "Program.h"
 
 namespace backlash {
-    enum class E_COMPONENT;
+    enum E_COMPONENT;
 
     class DrawComponent : public Component {
     friend class ComponentFactoryInitializer;
     friend class Factory;
 
-    Drawcomponent();
+    DrawComponent();
     ~DrawComponent();
 
     class Factory : public ComponentFactory {

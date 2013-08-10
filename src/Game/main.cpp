@@ -7,6 +7,7 @@
 // Standard C++ libraries
 #include <memory>
 #include <stdexcept>
+#include <iostream>
 
 // backlash libraries
 #include "Engine.h"
@@ -14,13 +15,15 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    unique_ptr<backlash::Engine> engine(nullptr);
     try {
-        unique_ptr<backlash::Engine> gEngine{backlash::Engine::GetInstance()};
+        engine = unique_ptr<backlash::Engine> (backlash::Engine::GetInstance());
     } catch (exception& err) {
         cout << err.what() << endl;
     }
 
-    gEngine->Run();
+    if (engine) 
+        engine->Run();
     
     return EXIT_SUCCESS;
 }

@@ -9,7 +9,7 @@
 
 // Backlash Library
 #include "../Renderer/CameraComponent.h"
-#include "../Renderer/mLightComponent.h"
+#include "../Renderer/LightComponent.h"
 
 namespace backlash {
     class InputManager {

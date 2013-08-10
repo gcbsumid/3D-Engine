@@ -31,11 +31,11 @@ namespace backlash {
         ResourceManager();
 
         void Clear();
-        void InitMaterials(Assimp::aiScene*, const std::string&);
-        void InitMesh(Assimp::aiMesh*);
-        void SetMaterialData(Assimp::aiMaterial*, Texture*);
-        void LoadAssetFromFile(const string file); 
-        void ProcessScene(Assimp::aiScene*);
+        void InitMaterials(aiScene*, const std::string&);
+        void InitMesh(aiMesh*);
+        void SetMaterialData(aiMaterial*, Texture*);
+        void LoadAssetFromFile(const std::string file); 
+        void ProcessScene(aiScene*);
 
         // This is shared with the Graphics manager
         std::shared_ptr<std::map<std::string, Texture*>> mTextures;

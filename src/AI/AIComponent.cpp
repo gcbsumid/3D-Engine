@@ -5,7 +5,7 @@
 
 namespace backlash {
     AIComponent::AIComponent() :
-        Component(E_COMPONENT::E_COMPONENT_AI) 
+        Component(E_COMPONENT_AI) 
         {}
 
     AIComponent::~AIComponent() {

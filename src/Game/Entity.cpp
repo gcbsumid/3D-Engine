@@ -39,21 +39,21 @@ namespace backlash {
             mComponents.insert(std::make_pair(type, std::shared_ptr<Component>(comp));
         }
 
-        if (type == E_COMPONENT::E_COMPONENT::DRAW) {
+        if (type == E_COMPONENT_DRAW) {
             SetDrawComponentModelAttrib();
-        } else if (type == E_COMPONENT::E_COMPONENT_AI) {
+        } else if (type == E_COMPONENT_AI) {
             SetAIComponentModelAttrib();
         }
     }
 
     void Entity::SetDrawComponentModelAttrib() {
-        if (mComponents.at(E_COMPONENT::E_COMPONENT_DRAW)) 
-            mComponents.at(E_COMPONENT::E_COMPONENT_DRAW)->SetModelAttrib(mModel->get());
+        if (mComponents.at(E_COMPONENT_DRAW)) 
+            mComponents.at(E_COMPONENT_DRAW)->SetModelAttrib(mModel->get());
     }
 
     void Entity::SetAIComponentModelAttrib() {
-        if (mComponents.at(E_COMPONENT::E_COMPONENT_AI)) 
-            mComponents.at(E_COMPONENT::E_COMPONENT_AI)->SetModelAttrib(mModel->get());
+        if (mComponents.at(E_COMPONENT_AI)) 
+            mComponents.at(E_COMPONENT_AI)->SetModelAttrib(mModel->get());
     }
 
     int Entity::GetComponent(E_COMPONENT type) const {

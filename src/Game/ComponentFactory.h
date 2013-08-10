@@ -18,7 +18,7 @@ namespace backlash {
         static Component* CreateComponent(E_COMPONENT);
     private:
         virtual Component* Create() = 0;
-        static std::map<E_ComponentS, std::unique_ptr<ComponentFactory> > ComponentInit;
+        static std::map<E_COMPONENT, std::unique_ptr<ComponentFactory>> ComponentInit;
     };
 
     class ComponentFactoryInitializer {

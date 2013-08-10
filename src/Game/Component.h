@@ -6,7 +6,7 @@
 #include "../Renderer/Program.h"
 
 namespace backlash {
-    enum class E_COMPONENT ;
+    enum E_COMPONENT ;
 
     class Component {
     public:

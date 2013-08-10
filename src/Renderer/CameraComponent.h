@@ -16,7 +16,7 @@ namespace backlash {
     friend class ComponentFactoryInitializer;
     friend class Factory;
 
-    CameraComponent(glm::vec2);
+    CameraComponent();
     ~CameraComponent();
 
     class Factory: public ComponentFactory {

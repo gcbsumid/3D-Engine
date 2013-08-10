@@ -8,7 +8,7 @@ const float     DEFAULT_NEAR_PLANE = 0.5f;
 const float     DEFAULT_FAR_PLANE = 100.0f;
 
 namespace backlash {
-    CameraComponentCameraComponent() : Component(E_COMPONENT::E_COMPONENT_CAMERA) {
+    CameraComponent::CameraComponent() : Component(E_COMPONENT_CAMERA) {
         SetPosition(DEFAULT_POSITION);
         SetViewportAspectRatio(SCREEN_SIZE.x/SCREEN_SIZE.y);
         SetNearAndFarPlanes(DEFAULT_NEAR_PLANE, DEFAULT_FAR_PLANE);

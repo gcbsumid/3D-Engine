@@ -15,11 +15,11 @@ namespace backlash {
     };
 
     void ModelAttrib::UpdateTransform() {
-        mAttrib->mTransform = glm::mat4();
-        glm::mat4 orientation = glm::quaternion::toMat4(mAttrib->mOrientation);
+        mTransform = glm::mat4();
+        glm::mat4 orientation = glm::mat4_cast(mOrientation);
 
-        mAttrib->mTransform *= orientation;
-        mAttrib->mTransform = glm::translate(mAttrib->mTransform, -Position());
+        mTransform *= orientation;
+        mTransform = glm::translate(mTransform, -mPosition);
     }
 }
 

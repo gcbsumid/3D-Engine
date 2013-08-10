@@ -8,9 +8,11 @@
 #include "AIComponent.h"
 
 namespace backlash {
+    class AIComponent;
+
     class Algorithm {
     public:
-        Algorithm(AIComponent*);
+        Algorithm(AIComponent *);
 
         virtual ~Algorithm(); // Probably create this, just in case.
 
@@ -18,6 +20,9 @@ namespace backlash {
 
     protected:
         AIComponent* mCompParent;
+
+    private:
+        Algorithm() {}
     };
 }
 

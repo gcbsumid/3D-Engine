@@ -4,7 +4,7 @@
 
 namespace backlash {
     DrawComponent::DrawComponent() : 
-        Component(E_COMPONENT::E_COMPONENT_DRAW) {}
+        Component(E_COMPONENT_DRAW) {}
 
     DrawComponent::~DrawComponent() {}
 

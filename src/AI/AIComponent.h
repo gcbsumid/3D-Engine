@@ -16,7 +16,7 @@
  // TODO: will pass in the status to determine which algorithm will be used.
 
 namespace backlash {
-    enum class E_ALGORITHM;
+    enum E_ALGORITHM;
 
     class AIComponent : public Component {
         friend class Algorithm;

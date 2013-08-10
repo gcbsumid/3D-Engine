@@ -17,7 +17,7 @@ namespace backlash {
         // The texture is loaded upside down because backlash::Bitmap pixel
         // data is ordered from the top row down, but OpenGl expects 
         // the data to be from the bottom row up.
-        Texture(const Bitmap& bitmap, const string name, GLint minMagFiler = GL_LINEAR,
+        Texture(const Bitmap& bitmap, const std::string name, GLint minMagFiler = GL_LINEAR,
             GLint wrapMode = GL_CLAMP_TO_EDGE);
 
 
