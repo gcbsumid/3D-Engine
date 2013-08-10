@@ -15,6 +15,13 @@ ifndef config
 endif
 
 TARGETDIR = bin
+GAMEDIR = src/Game
+AIDIR = src/AI
+INPUTDIR = src/Input
+PHYSICSDIR = src/Physics
+RENDERERDIR = src/Renderer
+RESOURCEDIR = src/Resource
+UTILDIR = src/Util
 
 ifeq ($(config),debug)
 	OBJDIR 		= obj/debug
@@ -42,20 +49,26 @@ endif
 
 OBJECTS := \
 	$(OBJDIR)/main.o \
+	$(OBJDIR)/Component.o \
+	$(OBJDIR)/ComponentFactory.o \
+	$(OBJDIR)/Engine.o \
+	$(OBJDIR)/Entity.o \
+	$(OBJDIR)/AIManager.o \
+	$(OBJDIR)/AIComponent.o \
+	$(OBJDIR)/Algorithm.o \
+	$(OBJDIR)/RotateAlg.o \
+	$(OBJDIR)/TranslateAlg.o \
+	$(OBJDIR)/InputManager.o \
+	$(OBJDIR)/GraphicsManager.o \
+	$(OBJDIR)/CameraComponent.o \
+	$(OBJDIR)/DrawComponent.o \
+	$(OBJDIR)/LightComponent.o \
+	$(OBJDIR)/Bitmap.o \
+	$(OBJDIR)/Mesh.o \
 	$(OBJDIR)/Program.o \
 	$(OBJDIR)/Shader.o \
 	$(OBJDIR)/Texture.o \
-	$(OBJDIR)/Bitmap.o \
-	$(OBJDIR)/Camera.o \
-	$(OBJDIR)/Entity.o \
-	$(OBJDIR)/Component.o \
-	$(OBJDIR)/DrawComponent.o \
-	$(OBJDIR)/CameraComponent.o \
-	$(OBJDIR)/LightComponent.o \
-	$(OBJDIR)/GraphicsManager.o \
-	$(OBJDIR)/InputManager.o \
-	$(OBJDIR)/Asset.o \
-	$(OBJDIR)/Engine.o \
+	$(OBJDIR)/ResourceManager.o \
 	$(OBJDIR)/util.o \
 
 .PHONY: clean
@@ -81,62 +94,53 @@ clean:
 run: ${TARGET}
 	./${TARGET}
 
-# Source Folders
-AI_FOLDER 		= src/AI
-GAME_FOLDER 	= src/Game 
-INPUT_FOLDER 	= src/Input 
-PHYSICS_FOLDER 	= src/Physics 
-RENDERER_FOLDER = src/Renderer 
-RESOURCE_FOLDER = src/Resource
-UTIL_FOLDER		= src/Util
-
 # ----------------------- Compile AI Folder --------------------------------- #
 
-$(OBJDIR)/AIManager.o: $(AI_FOLDER)/AIManager.cpp 
+$(OBJDIR)/AIManager.o: $(AIDIR)/AIManager.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/AIComponent.o: $(AI_FOLDER)/AIComponent.cpp 
+$(OBJDIR)/AIComponent.o: $(AIDIR)/AIComponent.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/Algorithm.o: $(AI_FOLDER)/Algorithm.cpp 
+$(OBJDIR)/Algorithm.o: $(AIDIR)/Algorithm.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/AlgorithmFactory.o: $(AI_FOLDER)/AlgorithmFactory.cpp 
+$(OBJDIR)/RotateAlg.o: $(AIDIR)/RotateAlg.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/RotateAlg.o: $(AI_FOLDER)/RotateAlg.cpp 
+$(OBJDIR)/TranslateAlg.o: $(AIDIR)/TranslateAlg.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 # ----------------------- Compile Game Folder ------------------------------- #
 
-$(OBJDIR)/main.o: $(GAME_FOLDER)/main.cpp
+$(OBJDIR)/main.o: $(GAMEDIR)/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/Engine.o: $(GAME_FOLDER)/Engine.cpp 
+$(OBJDIR)/Engine.o: $(GAMEDIR)/Engine.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/Entity.o: $(GAME_FOLDER)/Entity.cpp  
+$(OBJDIR)/Entity.o: $(GAMEDIR)/Entity.cpp  
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/Component.o: $(GAME_FOLDER)/Component.cpp 
+$(OBJDIR)/Component.o: $(GAMEDIR)/Component.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/ComponentFactory.o: $(GAME_FOLDER)/ComponentFactory.cpp 
+$(OBJDIR)/ComponentFactory.o: $(GAMEDIR)/ComponentFactory.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 # ----------------------- Compile Input Folder ------------------------------ #
 
-$(OBJDIR)/InputManager.o: $(INPUT_FOLDER)/InputManager.cpp 
+$(OBJDIR)/InputManager.o: $(INPUTDIR)/InputManager.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
@@ -144,55 +148,51 @@ $(OBJDIR)/InputManager.o: $(INPUT_FOLDER)/InputManager.cpp
 
 # ----------------------- Compile Renderer Folder --------------------------- #
 
-$(OBJDIR)/DrawComponent.o: $(RENDERER_FOLDER)/DrawComponent.cpp 
+$(OBJDIR)/DrawComponent.o: $(RENDERERDIR)/DrawComponent.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/CameraComponent.o: $(RENDERER_FOLDER)/CameraComponent.cpp 
+$(OBJDIR)/CameraComponent.o: $(RENDERERDIR)/CameraComponent.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/LightComponent.o: $(RENDERER_FOLDER)/LightComponent.cpp 
+$(OBJDIR)/LightComponent.o: $(RENDERERDIR)/LightComponent.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/GraphicsManager.o: $(RENDERER_FOLDER)/GraphicsManager.cpp 
+$(OBJDIR)/GraphicsManager.o: $(RENDERERDIR)/GraphicsManager.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/Asset.o: $(RENDERER_FOLDER)/ModelAsset.cpp  
+$(OBJDIR)/Mesh.o: $(RENDERERDIR)/Mesh.cpp  
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/Program.o: $(RENDERER_FOLDER)/Program.cpp
+$(OBJDIR)/Program.o: $(RENDERERDIR)/Program.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/Shader.o: $(RENDERER_FOLDER)/Shader.cpp
+$(OBJDIR)/Shader.o: $(RENDERERDIR)/Shader.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/Texture.o: $(RENDERER_FOLDER)/Texture.cpp
+$(OBJDIR)/Texture.o: $(RENDERERDIR)/Texture.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
-$(OBJDIR)/Bitmap.o: $(RENDERER_FOLDER)/Bitmap.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-
-$(OBJDIR)/Camera.o: $(RENDERER_FOLDER)/Camera.cpp
+$(OBJDIR)/Bitmap.o: $(RENDERERDIR)/Bitmap.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 # ----------------------- Compile Resource Folder --------------------------- #
 
-$(OBJDIR)/ResourceManager.o: $(RESOURCE_FOLDER)/ResourceManager.cpp 
+$(OBJDIR)/ResourceManager.o: $(RESOURCEDIR)/ResourceManager.cpp 
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 # ----------------------- Compile Util Folder ------------------------------- #
 
-$(OBJDIR)/util.o: $(UTIL_FOLDER)/util.cpp
+$(OBJDIR)/util.o: $(UTILDIR)/util.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 

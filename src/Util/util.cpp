@@ -1,7 +1,7 @@
 // Standard Libraries
 #include <string>
 
-#include <limits>       // for PATH_MAX
+#include <linux/limits.h>       // for PATH_MAX
 #include <libgen.h>     // for dirname
 #include <unistd.h>     // for readlink
 
