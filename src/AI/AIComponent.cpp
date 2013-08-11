@@ -1,3 +1,6 @@
+// Standard Library
+#include <stdexcept>
+
 // Backlash Library
 #include "AIComponent.h"
 #include "RotateAlg.h"
@@ -31,13 +34,16 @@ namespace backlash {
         mModel = model;
     }
 
-    void AIComponent::GenereateAlgorithm(E_ALGORITHM algo) {
+    void AIComponent::GenerateAlgorithm(E_ALGORITHM algo) {
+        if (mAlgorithms[algo]) {
+            mAlgorithms[algo].reset();
+        }
         switch (algo) {
             case E_ALGORITHM::E_ALGORITHM_ROTATE: 
-                mAlgorithms[algo] = new RotateAlg(this);
+                mAlgorithms[algo] = std::unique_ptr<Algorithm>(new RotateAlg(this));
                 break;
             case E_ALGORITHM::E_ALGORITHM_TRANSLATE:
-                mAlgorithms[algo] = new TranslateAlg(this);
+                mAlgorithms[algo] = std::unique_ptr<Algorithm>(new TranslateAlg(this));
                 break;
             default: 
                 throw std::runtime_error("Invalid Algorithm Generated.");
@@ -47,7 +53,7 @@ namespace backlash {
 
     void AIComponent::ClearAlgorithms() {
         for (auto& algo : mAlgorithms) {
-            algo.second->reset();
+            algo.second.reset();
         }
     }
 };

@@ -32,7 +32,7 @@ ifeq ($(config),debug)
 	INCLUDES   += -Ithirdparty/stb_image -I/opt/local/include
 	COMPILER	= -std=c++11
 	CPPFLAGS   += -MMD -MP $(DEFINES) -g -Wall $(INCLUDES) $(COMPILER)
-	CXXFLAGS 	= $(CPPFLAGS) -fcolor-diagnostics
+	CXXFLAGS 	= $(CPPFLAGS) -fcolor-diagnostics -ferror-limit=5
 	LDFLAGS 	= 
 	LIBS       += -lGL -lglfw -lGLEW -lassimp
 endif
@@ -44,7 +44,7 @@ ifeq ($(config),release)
 	INCLUDES   += -Ithirdparty/stb_image -I/opt/local/include
 	COMPILER	= -std=c++11
 	CPPFLAGS   += -MMD -MP $(DEFINES) -02 -Wall $(COMPILER)
-	CXXFLAGS 	= $(CPPFLAGS) -fcolor-diagnostics
+	CXXFLAGS 	= $(CPPFLAGS) -fcolor-diagnostics -ferror-limit=5
 	LDFLAGS 	= -s
 	LIBS       += -lGL -lglfw -lGLEW -lassimp
 endif

@@ -3,8 +3,7 @@
 
 // Backlash Library
 #include "LightComponent.h"
-
-#define CHECKINVALID(a) ((a==INVALID_UNIFORM_LOCATION) ? true : false ;)
+#include "../Util/defines.h"
 
 namespace backlash {
     LightComponent::LightComponent() : 

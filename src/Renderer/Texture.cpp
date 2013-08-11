@@ -1,5 +1,9 @@
-#include "Texture.h"
+// Standard Library 
 #include <stdexcept>
+
+// Backlash Library 
+#include "Texture.h"
+#include "../Util/defines.h"
 
 static GLenum TextureFormatForBitmapFormat(backlash::Bitmap::E_FORMAT format, bool srgb) {
     switch (format) {
@@ -105,7 +109,7 @@ namespace backlash {
         return mShininess;
     }
 
-    bool Texture::BindTexture(Program* shader) const {
+    void Texture::BindTexture(Program* shader) {
         GLuint shaderLoc = shader->Object();
         GLuint tex = glGetUniformLocation(shaderLoc, "material.tex");
         GLuint shininess = glGetUniformLocation(shaderLoc, "material.shininess");
@@ -121,10 +125,9 @@ namespace backlash {
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mObject);
-        return true;
     }
 
-    bool Texture::UnbindTexture() {
+    void Texture::UnbindTexture() {
         glBindTexture(GL_TEXTURE_2D, 0);
         glBindVertexArray(0);
     }

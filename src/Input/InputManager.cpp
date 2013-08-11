@@ -1,10 +1,8 @@
 #include "InputManager.h"
 #include "../Util/util.h"
+#include "../Util/defines.h"
 
 #include <GL/glfw.h>
-
-static const float mouseSensitivity = 0.1f;
-static const float zoomSensitivity = 5.0f;
 
 // Global static pointer used to ensure my singleton
 backlash::InputManager* backlash::InputManager::mInstance{nullptr};
@@ -41,55 +39,65 @@ namespace backlash {
         assert(mCameraComponent.use_count());
         assert(mLightComponent.use_count());
 
+        auto cameraComp = mCameraComponent.lock();
+        auto lightComp = mLightComponent.lock();
+
+        if (!cameraComp) {
+            std::runtime_error("Invalid camera component.");
+        }
+
+        if (!lightComp) {
+            std::runtime_error("Invalid light component.");
+        }
         // move position based on wasd keys
         if (glfwGetKey('S')) {
-            mCameraComponent->MoveCamera(elapsedTime, -mCameraComponent->Forward());
+            cameraComp->MoveCamera(elapsedTime, -cameraComp->Forward());
         } else if (glfwGetKey('W')) {
-            mCameraComponent->MoveCamera(elapsedTime, mCameraComponent->Forward());
+            cameraComp->MoveCamera(elapsedTime, cameraComp->Forward());
         }
 
         if (glfwGetKey('A')){
-            mCameraComponent->MoveCamera(elapsedTime, -mCameraComponent->Right());
+            cameraComp->MoveCamera(elapsedTime, -cameraComp->Right());
         } else if (glfwGetKey('D')){
-            mCameraComponent->MoveCamera(elapsedTime, mCameraComponent->Right());
+            cameraComp->MoveCamera(elapsedTime, cameraComp->Right());
         }
 
         if (glfwGetKey('X')){
-            mCameraComponent->MoveCamera(elapsedTime, -mCameraComponent->Up());
+            cameraComp->MoveCamera(elapsedTime, -cameraComp->Up());
         } else if (glfwGetKey('Z')){
-            mCameraComponent->MoveCamera(elapsedTime, mCameraComponent->Up());
+            cameraComp->MoveCamera(elapsedTime, cameraComp->Up());
         }
 
         if (glfwGetKey('1')) {
-            mLightComponent->SetPosition(mCameraComponent->Position());
+            lightComp->SetPosition(cameraComp->Position());
         }
 
         if (glfwGetKey('2')) {
             // Set Colour to red
-            mLightComponent->SetIntensity(glm::vec3(1,0,0)); 
+            lightComp->SetIntensity(glm::vec3(1,0,0)); 
         } else if (glfwGetKey('3')) {
             // Set Colour to green
-            mLightComponent->SetIntensity(glm::vec3(0,1,1));         
+            lightComp->SetIntensity(glm::vec3(0,1,1));         
         } else if (glfwGetKey('4')) {
             // Set Colour to white
-            mLightComponent->SetIntensity(glm::vec3(1,1,1));         
+            lightComp->SetIntensity(glm::vec3(1,1,1));         
         }
 
 
         // View rotation based on mouse movements
         int mouseX = 0, mouseY = 0;
         glfwGetMousePos(&mouseX, &mouseY);
-        mCameraComponent->OffsetOrientation(mouseSensitivity * mouseY, mouseSensitivity * mouseX);
+        cameraComp->OffsetOrientation(utility::MOUSE_SENSITIVITY * mouseY, utility::MOUSE_SENSITIVITY * mouseX);
         glfwSetMousePos(0,0);
 
-        float fieldOfView = mCameraComponent->FieldOfView() + zoomSensitivity * (float)glfwGetMouseWheel();
+        float fieldOfView = cameraComp->FieldOfView() + utility::ZOOM_SENSITIVITY * (float)glfwGetMouseWheel();
         if (fieldOfView < 5.0f) {
             fieldOfView = 5.0f;
         }
         if (fieldOfView > 130.0f) {
             fieldOfView = 130.0f;
         }
-        mCameraComponent->SetFieldOfView(fieldOfView);
+        cameraComp->SetFieldOfView(fieldOfView);
         glfwSetMouseWheel(0);
 
     }

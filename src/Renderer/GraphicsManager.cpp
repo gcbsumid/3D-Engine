@@ -1,14 +1,16 @@
 // GL Library
 #include <GL/glew.h>
+#include <GL/glfw.h>
 
 // Standard Library
 #include <cassert>
 #include <iostream>
+#include <stdexcept>
 
 // Backlash Library
+#include "../Util/util.h"
 #include "GraphicsManager.h"
 #include "Program.h"
-#include "util.h"
 
 // Global static pointer used to ensure my singleton
 backlash::GraphicsManager* backlash::GraphicsManager::mInstance;
@@ -21,7 +23,7 @@ namespace backlash {
         return mInstance;
     }
 
-    GraphicsManager::GraphicsManager() {}
+    GraphicsManager::GraphicsManager() : mActiveShader(nullptr) {}
 
     void GraphicsManager::LoadShaders() {
         std::vector<Shader> shaders;
@@ -53,32 +55,33 @@ namespace backlash {
         mCameraComponent = comp;
     }
 
-    void AttachShaderToDrawComponent(DrawComponent* comp, int id) {
+    void GraphicsManager::AttachShaderToDrawComponent(DrawComponent* comp, int id) {
         if (id >= mShaders.size() || id < 0)
             throw std::runtime_error("Invalid Shader ID to attach to the draw component.");
         comp->SetShader(mShaders.at(id));
     }
 
-    void AttachMeshToDrawComponent(DrawComponent* comp, std::string id) {
-        if (mMeshes.count(id) < 0)
+    void GraphicsManager::AttachMeshToDrawComponent(DrawComponent* comp, std::string id) {
+        if (mMeshes->count(id) <= 0)
             throw std::runtime_error("Mesh does not exist in mMeshes to attach to the draw component.");
 
-        comp->SetShader(mMeshes.at(id));
+        std::shared_ptr<Mesh> mesh(mMeshes->at(id));
+        comp->SetMesh(mesh);
     }
 
     void GraphicsManager::SetTextureSharedPointer(
         std::shared_ptr<std::map<std::string, Texture*>>& textures)
     {
-        mTextures{texutres};
+        mTextures = textures;
     }
 
     void GraphicsManager::SetMeshSharedPointer(
         std::shared_ptr<std::map<std::string, Mesh*>>& meshes) 
     {
-        mMeshes{meshes};
+        mMeshes = meshes;
     }
 
-    void GraphicsManager::Render() const {
+    void GraphicsManager::Render() {
         // Clearing everything
         glClearColor(0,0,0,1); // black.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -87,15 +90,18 @@ namespace backlash {
         glEnableVertexAttribArray(1);
         glEnableVertexAttribArray(2);
 
-        mActiveShader = NULL;
+        mActiveShader = nullptr;
 
-        for (auto it = mDrawComponents.begin(); it != mDrawComponents.end(); ++it) 
-            auto& drawComp = *it;
-            if (drawComp->expired()) {
-                it = mDrawComponents.erase(drawComp);
+        for (auto it = mDrawComponents.begin(); it != mDrawComponents.end(); ++it) {
+            if ((*it).expired()) {
+                it = mDrawComponents.erase(it);
                 it--;
                 continue;
             }
+
+            auto drawComp = (*it).lock();
+            if (!drawComp)
+                std::runtime_error("Draw Component couldn't be locked when trying to render it.");
 
             Program* curShader = drawComp->GetShader();
             if (mActiveShader != curShader) {
@@ -107,19 +113,27 @@ namespace backlash {
                 mActiveShader->Use();
 
                 // Render the Camera Component
-                mCameraComponent->Render(mActiveShader);
+                auto cameraComp = mCameraComponent.lock();
+                if (!cameraComp)
+                    std::runtime_error("Camera Component couldn't be locked when trying to render it.");
+                cameraComp->Render(mActiveShader);
 
                 // Render Light Components
-                for (auto lightComp : mLightComponents) {
-                    lightComp->Render(mActiveShader);
+                for (auto it : mLightComponents) {
+                    if (auto lightComp = (it).lock()) {
+                        lightComp->Render(mActiveShader);
+                    } else {
+                        std::runtime_error("Light Component couldn't be locked when trying to render it.");
+                    }
+
                 }
             }
             std::string materialName = drawComp->GetMaterialName();
-            mTextures.at(materialName)->BindTexture(mActiveShader);
+            mTextures->at(materialName)->BindTexture(mActiveShader);
 
             drawComp->Render(mActiveShader);
 
-            mTextures.at(materialName)->UnbindTexture();
+            mTextures->at(materialName)->UnbindTexture();
         }
 
         glDisableVertexAttribArray(0);

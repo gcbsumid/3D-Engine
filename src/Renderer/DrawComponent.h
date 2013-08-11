@@ -7,6 +7,7 @@
 
 // Standard Library
 #include <memory>
+#include <string>
 
 #include "../Game/Component.h"
 #include "../Game/ModelAttrib.h"

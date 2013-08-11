@@ -12,29 +12,24 @@
 // Backlash Library
 #include "ResourceManager.h"
 #include "../Util/util.h"
-#include "../Game/Bitmap.h"
+#include "../Renderer/Bitmap.h"
 
 
 // Global static pointer used to ensure my singleton
 backlash::ResourceManager* backlash::ResourceManager::mInstance;
 
-const string files[] = {
+const std::string files[] = {
     "human.blend"
 };
 
-static int curTextureID = 0;
-
-static void color4_to_float4(const Assimp::aiColor4D *c, float f[4])
+static void color4_to_float4(const aiColor4D *c, glm::vec4& f)
 {
-    f[0] = c->r;
-    f[1] = c->g;
-    f[2] = c->b;
-    f[3] = c->a;
+    f = glm::vec4(c->r, c->g, c->b, c->a);
 }
 
 namespace backlash {
     ResourceManager* ResourceManager::GetInstance() {
-        if (mInstance.get() == 0) {
+        if (!mInstance) {
             mInstance = new ResourceManager;
         }
         return mInstance;
@@ -47,13 +42,13 @@ namespace backlash {
     void ResourceManager::SetTextureSharedPointer(
         std::shared_ptr<std::map<std::string, Texture*>>& textures)
     {
-        mTextures{texutres};
+        mTextures = textures;
     }
 
     void ResourceManager::SetMeshSharedPointer(
         std::shared_ptr<std::map<std::string, Mesh*>>& meshes) 
     {
-        mMeshes{meshes};
+        mMeshes = meshes;
     }
 
     void ResourceManager::LoadAllFiles() {
@@ -70,10 +65,10 @@ namespace backlash {
     void ResourceManager::LoadAssetFromFile(const std::string& file) {
         Assimp::Importer importer;
 
-        Assimp::aiScene* scene = importer.ReadFile(file.c_str(), 
-            Assimp::aiProcess_GenSmoothNormals | 
-            Assimp::aiProcess_Triangulate | 
-            Assimp::aiProcess_JoinIdenticalVertices);
+        const aiScene* scene = importer.ReadFile(file.c_str(), 
+            aiProcess_GenSmoothNormals | 
+            aiProcess_Triangulate | 
+            aiProcess_JoinIdenticalVertices);
 
         if (scene) {
             InitMaterials(scene, file);
@@ -82,33 +77,33 @@ namespace backlash {
             throw std::runtime_error(importer.GetErrorString());
         }
 
-        importer.FreeScene(scene); // hopefully this works
+        importer.FreeScene(); // hopefully this works
     }
 
-    void ResourceManager::ProcessScene(Assimp::aiScene* scene) {
+    void ResourceManager::ProcessScene(const aiScene* scene) {
         // Init each mesh in the scene one by one?
         for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
-            const Assimp::aiMesh* mesh = scene->mMeshes[i];
+            const aiMesh* mesh = scene->mMeshes[i];
             InitMesh(mesh);
         }
     }
 
-    void ResourceManager::InitMesh(Assimp::aiMesh* mesh) {
-        assert(scene->mNumMaterials == mLocalTexture.size());
+    void ResourceManager::InitMesh(const aiMesh* mesh) {
+        // assert(scene->mNumMaterials == mLocalTexture.size());
         assert(mMeshes.use_count());
 
-        Mesh* meshEntry = new Mesh(mMeshes.size());
+        Mesh* meshEntry = new Mesh(mMeshes->size());
         meshEntry->mMaterialName = mLocalTexture.at(mesh->mMaterialIndex);
 
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
 
-        const Assimp::aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
+        const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
         for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-            const Assimp::aiVector3D* pos = &(mesh->mVertices[i]);
-            const Assimp::aiVector3D* normal = &(mesh->mNormals[i]);
-            const Assimp::aiVector3D* texCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i] : &Zero3D;
+            const aiVector3D* pos = &(mesh->mVertices[i]);
+            const aiVector3D* normal = &(mesh->mNormals[i]);
+            const aiVector3D* texCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &Zero3D;
 
             Vertex v(glm::vec3(pos->x, pos->y, pos->z),
                      glm::vec2(texCoord->x, texCoord->y),
@@ -118,20 +113,20 @@ namespace backlash {
         }        
 
         for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
-            const Assimp::aiFace& face = mesh->mFaces[i];
+            const aiFace& face = mesh->mFaces[i];
             assert(face.mNumIndices == 3); // After being triangulated
-            indices.push_back(Face.mIndices[0]);
-            indices.push_back(Face.mIndices[1]);
-            indices.push_back(Face.mIndices[2]);            
+            indices.push_back(face.mIndices[0]);
+            indices.push_back(face.mIndices[1]);
+            indices.push_back(face.mIndices[2]);            
         }
 
-        meshEntry.mName = mesh->mName.C_Str();
-        meshEntry.Init(vertices, indices);
+        meshEntry->mName = mesh->mName.C_Str();
+        meshEntry->Init(vertices, indices);
 
-        mMeshes.push_back(meshEntry.mName, meshEntry);
+        mMeshes->insert(std::make_pair(meshEntry->mName, meshEntry));
     }
 
-    void ResourceManager::InitMaterials(Assimp::aiScene* scene, const std::string& filename) {
+    void ResourceManager::InitMaterials(const aiScene* scene, const std::string& filename) {
         assert(mTextures.use_count());
         mLocalTexture.clear();
 
@@ -147,11 +142,11 @@ namespace backlash {
         }
 
         for (unsigned int i = 0; i < scene->mNumMaterials; ++i) {
-            const Assimp::aiMaterial* material = scene->mMaterials[i];
+            const aiMaterial* material = scene->mMaterials[i];
 
             bool gotTexture = false;
             if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
-                Assimp::aiString path;
+                aiString path;
                 std::string name;
 
                 if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
@@ -160,13 +155,13 @@ namespace backlash {
 
                     mLocalTexture.push_back(name);
                     
-                    if(mTextures.count(name) == 0) {
+                    if(mTextures->count(name) == 0) {
                         std::string fullPath = dir + "/" + name;
                         Bitmap bmp = Bitmap::BitmapFromFile(fullPath);
                         bmp.FlipVertically();
 
                         Texture* texture = new Texture(bmp, name);
-                        mTextures.push_back(std::make_pair(name, texture));
+                        mTextures->insert(std::make_pair(name, texture));
                         SetMaterialData(material, texture);
                     }
                 }
@@ -175,52 +170,52 @@ namespace backlash {
             if (!gotTexture) {
                 std::string name = "white.png";
                 mLocalTexture.push_back(name);
-                if (mTextures.count(name) == 0) {
+                if (mTextures->count(name) == 0) {
                     Bitmap bmp = Bitmap::BitmapFromFile(utility::ResourcePath(name));
                     bmp.FlipVertically();
 
                     Texture* texture = new Texture(bmp, name);
-                    mTextures.push_back(std::make_pair(name, texture));
+                    mTextures->insert(std::make_pair(name, texture));
                     SetMaterialData(material, texture);
                 }
             }
         }
     }
 
-    void ResourceManager::SetMaterialData(Assimp::aiMaterial* material, Texture* texture) {
+    void ResourceManager::SetMaterialData(const aiMaterial* material, Texture* texture) {
         glm::vec4 diffuse = glm::vec4(0.8f,0.8f,0.8f,1.0f);
         glm::vec4 ambient = glm::vec4(0.2f,0.2f,0.2f,1.0f);
         glm::vec4 specular = glm::vec4(0.0f,0.0f,0.0f,1.0f);
         // glm::vec4 emission = glm::vec4(0.0f,0.0f,0.0f,1.0f);
 
-        Assimp::aiColor4D aiDiffuse; 
-        Assimp::aiColor4D aiAmbient;
-        Assimp::aiColor4D aiSpecular;
-        // Assimp::aiColor4D aiEmission;
+        aiColor4D aiDiffuse; 
+        aiColor4D aiAmbient;
+        aiColor4D aiSpecular;
+        // aiColor4D aiEmission;
 
-        if (Assimp::aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &aiDiffuse)) {
+        if (aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &aiDiffuse)) {
             color4_to_float4(&aiDiffuse, diffuse);
         }
-        texture.SetDiffuse(diffuse);
+        texture->SetDiffuse(diffuse);
 
-        if (Assimp::aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &aiAmbient)) {
+        if (aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &aiAmbient)) {
             color4_to_float4(&aiAmbient, ambient);
         }
-        texture.SetAmbient(ambient);
+        texture->SetAmbient(ambient);
 
-        if (Assimp::aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &aiSpecular)) {
+        if (aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &aiSpecular)) {
             color4_to_float4(&aiSpecular, specular);
         }
-        texture.SetSpecular(specular);
+        texture->SetSpecular(specular);
 
-        // if (Assimp::aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &aiEmission)) {
+        // if (aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &aiEmission)) {
         //     color4_to_float4(&aiEmission, emission);
         // }
-        // texture.SetEmission(emission);
+        // texture->SetEmission(emission);
 
-        float shininess 0.0;
+        float shininess = 0.0;
         unsigned int max;
-        Assimp::aiGetMaterialFloatArray(mtl, AI_MATKEY_SHININESS, &shininess, &max);
-        texture.SetShininess(shininess);        
+        aiGetMaterialFloatArray(material, AI_MATKEY_SHININESS, &shininess, &max);
+        texture->SetShininess(shininess);        
     }
 }

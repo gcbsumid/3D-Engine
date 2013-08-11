@@ -1,7 +1,9 @@
+// Standard Library 
+#include <cassert>
+
+// Backlash Library 
 #include "CameraComponent.h"
 #include "../Util/defines.h"
-
-#include <GL/glew.h>
 
 namespace backlash {
     CameraComponent::CameraComponent() : Component(E_COMPONENT_CAMERA) {
@@ -15,11 +17,13 @@ namespace backlash {
     void CameraComponent::Update() {
         // we get the orientation and then we multiply it by the negative
         // position because we want to move the world in the oposite direction.
+        assert(mAttrib.use_count());
         glm::mat4 camera = glm::perspective(mFieldOfView, mViewportAspectRatio, mNearPlane, mFarPlane);
         camera *= Orientation();
         camera = glm::translate(camera, -Position());
 
-        mAttrib->mTransform = camera;
+        auto modelAttrib = mAttrib.lock();
+        modelAttrib->mTransform = camera;
     }
 
     bool CameraComponent::Render(Program* shader) {
@@ -32,22 +36,29 @@ namespace backlash {
             return false;
         }
 
-        glUniformMatrix4fv(cameraMatrix, 1, GL_TRUE, (const GLfloat*)Matrix());
+        glUniformMatrix4fv(cameraMatrix, 1, GL_FALSE, glm::value_ptr(Matrix()));
 
         glm::vec3 pos(Position());
         glUniform3f(cameraPosition, pos.x, pos.y, pos.z);
+        return true;
     }
 
     const glm::vec3& CameraComponent::Position() const {
-        return mAttrib->mPosition;
+        assert(mAttrib.use_count());
+        auto attrib = mAttrib.lock();
+        return attrib->mPosition;
     }
 
     void CameraComponent::SetPosition(const glm::vec3& position) {
-        mAttrib->mPosition = position;
+        assert(mAttrib.use_count());
+        auto attrib = mAttrib.lock();
+        attrib->mPosition = position;
     }
 
     void CameraComponent::OffsetPosition(const glm::vec3& offset) {
-        mAttrib->mPosition += offset;
+        assert(mAttrib.use_count());
+        auto attrib = mAttrib.lock();
+        attrib->mPosition += offset;
         Update();
     }
 
@@ -78,15 +89,19 @@ namespace backlash {
     }
 
     glm::mat4 CameraComponent::Orientation() const {
+        assert(mAttrib.use_count());
+        auto attrib = mAttrib.lock();
         // glm::mat4 orientation = glm::mat4_cast(mAttrib->mOrientation);
-        glm::mat4 orientation = glm::quaternion::toMat4(mAttrib->mOrientation);
+        glm::mat4 orientation = glm::mat4_cast(attrib->mOrientation);
         return orientation;
     }
 
     // glm must be in degrees This is in degrees
     void CameraComponent::OffsetOrientation(float upAngle, float rightAngle) {
+        assert(mAttrib.use_count());
+        auto attrib = mAttrib.lock();
         glm::quat offset(glm::vec3(upAngle, rightAngle, 0.0f));
-        mAttrib->mOrientation *= offset;
+        attrib->mOrientation = attrib->mOrientation * offset;
         Update();
     }
 
@@ -125,11 +140,13 @@ namespace backlash {
     }
 
     glm::mat4 CameraComponent::Matrix() const {
-        return mAttrib->mTransform;
+        assert(mAttrib.use_count());
+        auto attrib = mAttrib.lock();
+        return attrib->mTransform;
     }
 
     void CameraComponent::MoveCamera(float elapsedTime, glm::vec3 direction) {
-        float distance = MOVE_SPEED * elapsedTime;
+        float distance = utility::MOVE_SPEED * elapsedTime;
 
         glm::vec3 displacement = distance * direction;
         OffsetPosition(displacement);
@@ -137,6 +154,6 @@ namespace backlash {
 
     void CameraComponent::SetModelAttrib(std::shared_ptr<ModelAttrib> model) {
         assert(model.use_count());
-        mModel = model;
+        mAttrib = model;
     }
 }

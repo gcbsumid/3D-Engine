@@ -6,6 +6,10 @@
 
 // Standard Library
 #include <string>
+#include <vector>
+
+// Backlash Library
+#include "../Util/defines.h"
 
 namespace backlash {
     struct Vertex {
@@ -25,8 +29,7 @@ namespace backlash {
         Mesh(int);
         ~Mesh();
 
-        // Probably don't need this right now
-        void Init(const std::vector<Vertex>* vertices, const std::vector<unsigned int>& indices);
+        void Init(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
         
         int mID;
         std::string mName;

@@ -17,9 +17,14 @@
 
 namespace backlash {
     enum E_ALGORITHM;
+    class Algorithm;
 
     class AIComponent : public Component {
-        friend class Algorithm;
+        // Algorithms
+        friend class RotateAlg;
+        friend class TranslateAlg;
+
+        // Component Factory
         friend class ComponentFactoryInitializer;
         friend class Factory;
 
@@ -39,7 +44,7 @@ namespace backlash {
         virtual bool Render(Program*); 
         void Action(double);
 
-        void SetModelMatrix(std::shared_ptr<ModelAttrib> model);
+        void SetModelAttrib(std::shared_ptr<ModelAttrib> model);
         void GenerateAlgorithm(E_ALGORITHM);
         void ClearAlgorithms();
     private: 

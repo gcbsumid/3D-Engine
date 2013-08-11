@@ -10,7 +10,7 @@ namespace backlash {
         mVertexBuffer = INVALID_OGL_VALUE;
         mIndexBuffer = INVALID_OGL_VALUE;
         mNumIndices = 0;
-        mMaterialIndex = 0;
+        mMaterialName = "";
         mName = "";
     }
 

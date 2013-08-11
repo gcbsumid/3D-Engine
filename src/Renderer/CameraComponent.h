@@ -2,8 +2,9 @@
 #define CAMERACOMPONENT_H
 
 #include "../Game/Component.h"
-#include "../Util/enum.h"
+#include "../Game/ComponentFactory.h"
 #include "../Game/ModelAttrib.h"
+#include "../Util/enum.h"
 #include "Program.h"
 
 #include <GL/glew.h>

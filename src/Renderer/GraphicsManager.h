@@ -7,7 +7,6 @@
 #include <memory>
 
 // Backlash Library
-#include "../Game/Engine.h"
 #include "../Game/Component.h"
 #include "DrawComponent.h"
 #include "CameraComponent.h"
@@ -17,15 +16,13 @@
 #include "Texture.h"
 
 namespace backlash {
-    class Engine;
-
     class GraphicsManager {
     public:
         static GraphicsManager* GetInstance();
 
         ~GraphicsManager() {}
 
-        void Render() const ;
+        void Render() ;
 
         void LoadShaders();
 
@@ -36,21 +33,21 @@ namespace backlash {
         void SetTextureSharedPointer(std::shared_ptr<std::map<std::string, Texture*>>& textures);
         void SetMeshSharedPointer(std::shared_ptr<std::map<std::string, Mesh*>>& meshes);
 
-        static void AttachShaderToDrawComponent(DrawComponent*, int);
-        static void AttachMeshToDrawComponent(DrawComponent*, std::string);
+        void AttachShaderToDrawComponent(DrawComponent*, int);
+        void AttachMeshToDrawComponent(DrawComponent*, std::string);
 
     private:
         GraphicsManager();      
 
         static GraphicsManager* mInstance;
 
-        std::vector<std::weak_ptr<DrawComponent> > mDrawComponents;
-        std::vector<std::weak_ptr<LightComponent> > mLightComponents;
+        std::vector<std::weak_ptr<DrawComponent>> mDrawComponents;
+        std::vector<std::weak_ptr<LightComponent>> mLightComponents;
         std::weak_ptr<CameraComponent> mCameraComponent;
 
         // this is shared with the resource manager
-        std::shared_ptr<std::map<std::string, Texture*> > mTextures;
-        std::shared_ptr<std::map<std::string, Mesh*> > mMeshes;
+        std::shared_ptr<std::map<std::string, Texture*>> mTextures;
+        std::shared_ptr<std::map<std::string, Mesh*>> mMeshes;
 
         Program* mActiveShader;
         std::vector<Program*> mShaders;

@@ -1,3 +1,8 @@
+// Standard Library
+#include <stdexcept>
+#include <sstream>
+
+// Backlash Library
 #include "TranslateAlg.h"
 #include "Algorithm.h"
 #include "AIComponent.h"
@@ -17,9 +22,17 @@ namespace backlash  {
             mDirection *= -1;  
         }
 
-        glm::vec3 offset(mDirection * timeTick);
-        mPosition += offset;
-
-        mCompParent->mAttrib->UpdateTransform();
+        glm::vec3 offset(mDirection.x * timeTick,
+                         mDirection.y * timeTick,
+                         mDirection.z * timeTick);
+        
+        if (auto comp = mCompParent->mModel.lock()) {
+            comp->mPosition += offset;
+            comp->UpdateTransform();
+        } else {
+            std::stringstream msg; 
+            msg << "mComponentParent (Component ID: " << mCompParent->GetID() << ") of an Algorithm could not be locked for translation." << std::endl;
+            std::runtime_error(msg.str());
+        }
     }  
 }
