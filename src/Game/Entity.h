@@ -7,9 +7,12 @@
 
 // Backlash Library
 #include "../Util/enum.h"
+#include "Component.h"
 #include "ModelAttrib.h"
 
 namespace backlash {
+    class Component;
+
     class Entity {
     public:
         Entity();

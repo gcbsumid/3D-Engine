@@ -17,9 +17,9 @@ namespace backlash {
         // I will end up traversing that state diagram.
     }
 
-    void AIComponent::Action() {
+    void AIComponent::Action(double timeTick) {
         for (auto& algo : mAlgorithms) {
-            algo.second->Action();
+            algo.second->Action(timeTick);
         }        
     }
 

@@ -34,6 +34,8 @@ namespace backlash {
 
         std::vector<std::weak_ptr<AIComponent>> mComponents;
 
+        static AIManager* mInstance;
+
         // Don't Implement the copy constructors
         AIManager(const AIManager&);
         void operator=(const AIManager&);

@@ -8,10 +8,10 @@
 #include "../Util/util.h"
 #include "ComponentFactory.h"
 #include "Component.h"
-#include "LightComponent.h"
-#include "DrawComponent.h"
-#include "AIComponent.h"
-#include "CameraComponent.h"
+#include "../Renderer/LightComponent.h"
+#include "../Renderer/DrawComponent.h"
+#include "../Renderer/CameraComponent.h"
+#include "../AI/AIComponent.h"
 
 extern bool IsValidComponent(backlash::E_COMPONENT comp);
 extern bool IsValidAlgorithm(backlash::E_ALGORITHM comp);
@@ -28,15 +28,14 @@ namespace backlash {
 
     void Entity::AddComponent(E_COMPONENT type) {
         assert(IsValidComponent(type));
-        assert(comp);
 
         Component* comp = ComponentFactory::CreateComponent(type);
 
         if (mComponents.count(type)) {
-            std::cout << "I'm replacing a Component: " << as_integer(type) << std::endl;
+            std::cout << "I'm replacing a Component: " << type << std::endl;
             mComponents[type] = std::shared_ptr<Component>(comp);
         } else {
-            mComponents.insert(std::make_pair(type, std::shared_ptr<Component>(comp));
+            mComponents.insert(std::make_pair(type, std::shared_ptr<Component>(comp)));
         }
 
         if (type == E_COMPONENT_DRAW) {
@@ -47,16 +46,20 @@ namespace backlash {
     }
 
     void Entity::SetDrawComponentModelAttrib() {
-        if (mComponents.at(E_COMPONENT_DRAW)) 
-            mComponents.at(E_COMPONENT_DRAW)->SetModelAttrib(mModel->get());
+        if (mComponents.at(E_COMPONENT_DRAW)) {
+            std::shared_ptr<DrawComponent> comp = std::static_pointer_cast<DrawComponent>(mComponents.at(E_COMPONENT_DRAW));
+            comp->SetModelAttrib(mModel);
+        }
     }
 
     void Entity::SetAIComponentModelAttrib() {
-        if (mComponents.at(E_COMPONENT_AI)) 
-            mComponents.at(E_COMPONENT_AI)->SetModelAttrib(mModel->get());
+        if (mComponents.at(E_COMPONENT_AI)) {
+            std::shared_ptr<DrawComponent> comp = std::static_pointer_cast<DrawComponent>(mComponents.at(E_COMPONENT_AI));            
+            comp->SetModelAttrib(mModel);
+        }
     }
 
-    int Entity::GetComponent(E_COMPONENT type) const {
+    std::shared_ptr<Component> Entity::GetComponent(E_COMPONENT type) const {
         if (mComponents.count(type) == 0) {
             std::stringstream msg;
             msg << "The component " << (unsigned int)type << " doesn't exist in this entity." << std::endl;
@@ -70,7 +73,7 @@ namespace backlash {
         return mID;
     }
 
-    std::shared_ptr<ModelAttrib> GetModelAttrib() const {
+    std::shared_ptr<ModelAttrib> Entity::GetModelAttrib() const {
         return mModel;
     }
 }

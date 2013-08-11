@@ -37,6 +37,7 @@ namespace backlash {
     public:
         virtual void Update();
         virtual bool Render(Program*); 
+        void Action(double);
 
         void SetModelMatrix(std::shared_ptr<ModelAttrib> model);
         void GenerateAlgorithm(E_ALGORITHM);

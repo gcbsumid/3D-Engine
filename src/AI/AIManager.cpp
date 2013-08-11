@@ -20,18 +20,18 @@ namespace backlash {
     }
 
     void AIManager::UpdateAll() {
-        for (auto& comp : mComponents) {
-            if (comp.use_count()) {
-                comp->Update(timeTick);
+        for (auto it = mComponents.begin(); it != mComponents.end(); ++it) {
+            if (auto comp = it->lock()) {
+                comp->Update();
             } else {
-                mComponents.erase(comp);
+                mComponents.erase(it);
             }
         }
     }
 
     void AIManager::Action(double timeTick) {
-        for (auto& comp : mComponents) {
-            if (comp.use_count()) {
+        for (auto& it : mComponents) {
+            if (auto comp = it.lock()) {
                 comp->Action(timeTick);
             }
         }
