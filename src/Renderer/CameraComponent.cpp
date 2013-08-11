@@ -1,17 +1,13 @@
 #include "CameraComponent.h"
+#include "../Util/defines.h"
 
 #include <GL/glew.h>
 
-const glm::vec2 SCREEN_SIZE(800, 600);
-const glm::vec3 DEFAULT_POSITION(0,0,4);
-const float     DEFAULT_NEAR_PLANE = 0.5f;
-const float     DEFAULT_FAR_PLANE = 100.0f;
-
 namespace backlash {
     CameraComponent::CameraComponent() : Component(E_COMPONENT_CAMERA) {
-        SetPosition(DEFAULT_POSITION);
-        SetViewportAspectRatio(SCREEN_SIZE.x/SCREEN_SIZE.y);
-        SetNearAndFarPlanes(DEFAULT_NEAR_PLANE, DEFAULT_FAR_PLANE);
+        SetPosition(utility::DEFAULT_POSITION);
+        SetViewportAspectRatio(utility::SCREEN_SIZE.x/utility::SCREEN_SIZE.y);
+        SetNearAndFarPlanes(utility::DEFAULT_NEAR_PLANE, utility::DEFAULT_FAR_PLANE);
     }
         
     CameraComponent::~CameraComponent() {} 

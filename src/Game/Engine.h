@@ -20,12 +20,12 @@ namespace backlash {
     public:
         static Engine* GetInstance();
 
-        ~Engine() {}
+        ~Engine();
 
         void Run();             // The game loop
 
         // Figure out a way how to do this better
-        std::unique_ptr<Entity> GetEntity(int) const;
+        Entity* GetEntity(int) const;
 
     private:
         Engine();

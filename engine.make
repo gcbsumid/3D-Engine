@@ -23,6 +23,8 @@ RENDERERDIR = src/Renderer
 RESOURCEDIR = src/Resource
 UTILDIR = src/Util
 
+# Note: -fcolor-diagnostics, for some reason, is defaulted to false in Clang 3.4
+
 ifeq ($(config),debug)
 	OBJDIR 		= obj/debug
 	TARGET 		= $(TARGETDIR)/program_debug.debug
@@ -30,7 +32,7 @@ ifeq ($(config),debug)
 	INCLUDES   += -Ithirdparty/stb_image -I/opt/local/include
 	COMPILER	= -std=c++11
 	CPPFLAGS   += -MMD -MP $(DEFINES) -g -Wall $(INCLUDES) $(COMPILER)
-	CXXFLAGS 	= $(CPPFLAGS)
+	CXXFLAGS 	= $(CPPFLAGS) -fcolor-diagnostics
 	LDFLAGS 	= 
 	LIBS       += -lGL -lglfw -lGLEW -lassimp
 endif
@@ -42,7 +44,7 @@ ifeq ($(config),release)
 	INCLUDES   += -Ithirdparty/stb_image -I/opt/local/include
 	COMPILER	= -std=c++11
 	CPPFLAGS   += -MMD -MP $(DEFINES) -02 -Wall $(COMPILER)
-	CXXFLAGS 	= $(CPPFLAGS)
+	CXXFLAGS 	= $(CPPFLAGS) -fcolor-diagnostics
 	LDFLAGS 	= -s
 	LIBS       += -lGL -lglfw -lGLEW -lassimp
 endif

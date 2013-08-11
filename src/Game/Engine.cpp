@@ -15,6 +15,7 @@
 #include "../Renderer/LightComponent.h"
 #include "../Util/util.h"
 #include "../Util/enum.h"
+#include "../Util/defines.h"
 #include "Engine.h"
 #include "ComponentFactory.h"
 
@@ -43,7 +44,7 @@ namespace backlash {
         glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
         glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 3);
         glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
-        if (!glfwOpenWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, 8, 8, 8, 8, 16, 0, GLFW_WINDOW))
+        if (!glfwOpenWindow(utility::SCREEN_SIZE.x, utility::SCREEN_SIZE.y, 8, 8, 8, 8, 16, 0, GLFW_WINDOW))
             throw std::runtime_error("glfwOpenWindow failed. Hardware can't handle OpenGL 3.3");
 
         // initialise GLEW
@@ -72,6 +73,12 @@ namespace backlash {
         LoadObjects();
     }
 
+    Engine::~Engine() {
+        for (auto& it : mEntities) {
+            delete it.second;
+        }
+    }
+
     void Engine::CreateManagers() {
         mGraphics = std::unique_ptr<GraphicsManager>{GraphicsManager::GetInstance()};
         mInput = std::unique_ptr<InputManager>{InputManager::GetInstance()};
@@ -82,27 +89,27 @@ namespace backlash {
         std::shared_ptr<std::map<std::string, Texture*>> textures {
             new std::map<std::string, Texture*>, 
             [](std::map<std::string, Texture*>* textures_map){
-                for (auto& it : textures_map) {
-                    delete it->second;
+                for (auto& it : *textures_map) {
+                    delete it.second;
                 }
             }
         };
 
         std::shared_ptr<std::map<std::string, Mesh*>> meshes {
             new std::map<std::string, Mesh*>,
-            [](std::map<std::string, Mesh*>) {
-                for (auto& it : meshes_map) {
-                    delete it->second;
+            [](std::map<std::string, Mesh*>* meshes_map) {
+                for (auto& it : *meshes_map) {
+                    delete it.second;
                 }
             }
         };
 
         mGraphics->SetTextureSharedPointer(textures); // Note: Pass a destructor 
         mGraphics->SetMeshSharedPointer(meshes);
-        mInput->SetTextureSharedPointer(textures);
-        mInput->SetMeshSharedPointer(meshes);
+        mResource->SetTextureSharedPointer(textures);
+        mResource->SetMeshSharedPointer(meshes);
 
-        mResourceManager->LoadAllFiles();
+        mResource->LoadAllFiles();
     }
 
     void Engine::LoadObjects() {
@@ -121,8 +128,8 @@ namespace backlash {
 
         // Add the camera component to the player entity and systems
         std::shared_ptr<CameraComponent> comp = std::static_pointer_cast<CameraComponent>(player->GetComponent(E_COMPONENT_CAMERA));
-        mGraphics->AddCameraComponent(cameraComponent);
-        mInput->AddCameraComponent(cameraComponent);
+        mGraphics->AddCameraComponent(comp);
+        mInput->AddCameraComponent(comp);
 
         // Add player entity to Entity List 
         mEntities.insert(std::make_pair(player->GetID(), player));
@@ -132,7 +139,7 @@ namespace backlash {
         Entity* light = new Entity;
         light->AddComponent(E_COMPONENT_LIGHT);
 
-        std::shared_ptr<LightComponent> comp = std::static_pointer_cast<LightComponent>(player->GetComponent(E_COMPONENT_LIGHT));
+        std::shared_ptr<LightComponent> comp = std::static_pointer_cast<LightComponent>(light->GetComponent(E_COMPONENT_LIGHT));
         comp->SetPosition(glm::vec3(0,3,3));
         comp->SetIntensity(glm::vec3(1,1,1));
         comp->SetAttenuation(0.1f);
@@ -149,11 +156,11 @@ namespace backlash {
     void Engine::CreateObjects() {
         Entity* human = new Entity;
 
-        light->AddComponent(E_COMPONENT_AI);
-        light->AddComponent(E_COMPONENT_DRAW);
+        human->AddComponent(E_COMPONENT_AI);
+        human->AddComponent(E_COMPONENT_DRAW);
 
-        std::shared_ptr<DrawComponent> drawComp = std::static_pointer_cast<DrawComponent>(player->GetComponent(E_COMPONENT_DRAW));
-        std::shared_ptr<AIComponent> aiComp = std::static_pointer_cast<AIComponent>(player->GetComponent(E_COMPONENT_AI));
+        std::shared_ptr<DrawComponent> drawComp = std::static_pointer_cast<DrawComponent>(human->GetComponent(E_COMPONENT_DRAW));
+        std::shared_ptr<AIComponent> aiComp = std::static_pointer_cast<AIComponent>(human->GetComponent(E_COMPONENT_AI));
 
         human->SetDrawComponentModelAttrib();
         human->SetAIComponentModelAttrib();
@@ -174,7 +181,7 @@ namespace backlash {
 
     void Engine::Update(double timeTick) {
         // Deal with the input
-        mInput->HandleInput(elapsedTime);
+        mInput->HandleInput(timeTick);
 
         // Deal with updating the status of each AI component and then running them
         mAI->UpdateAll();
@@ -182,13 +189,13 @@ namespace backlash {
     }
     
     void Engine::Run() {
-        double lastFrame= std::chrono::high_resolution_clock::now();
+        auto lastFrame= std::chrono::high_resolution_clock::now();
 
         while(glfwGetWindowParam(GLFW_OPENED)) {
-            double currentTime = std::chrono::high_resolution_clock::now();
+            auto currentTime = std::chrono::high_resolution_clock::now();
 
             // Update animations (note: if anything, cast this to double)
-            Update(std::chrono::duration_cast<seconds>(currentTime - lastFrame).count()); 
+            Update(std::chrono::duration_cast<std::chrono::seconds>(currentTime - lastFrame).count()); 
 
             mGraphics->Render();
 
@@ -202,7 +209,7 @@ namespace backlash {
         glfwTerminate();
     }
 
-    std::shared_ptr<Entity> Engine::GetEntity(GLuint id) const {
+    Entity* Engine::GetEntity(int id) const {
         assert(utility::IsValidEntityID(id));
 
         return mEntities.at(id);
