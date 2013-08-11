@@ -6,15 +6,13 @@
 // Backlash Library
 #include "Entity.h"
 #include "../Util/util.h"
+#include "../Util/enum.h"
 #include "ComponentFactory.h"
 #include "Component.h"
 #include "../Renderer/LightComponent.h"
 #include "../Renderer/DrawComponent.h"
 #include "../Renderer/CameraComponent.h"
 #include "../AI/AIComponent.h"
-
-extern bool IsValidComponent(backlash::E_COMPONENT comp);
-extern bool IsValidAlgorithm(backlash::E_ALGORITHM comp);
 
 namespace backlash {
     Entity::Entity() : mID(utility::GenerateEntityID()), mModel(nullptr) {

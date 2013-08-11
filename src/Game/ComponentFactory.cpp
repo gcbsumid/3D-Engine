@@ -6,11 +6,9 @@
 #include "../Renderer/LightComponent.h"
 
 namespace backlash {
-    std::map<E_COMPONENT, std::unique_ptr<ComponentFactory> > ComponentInit;
-
     ComponentFactory::~ComponentFactory() {}
 
-    Component* ComponentFactory::CreateComponent(E_COMPONENT compType) {
+    Component* ComponentFactory::CreateComponent(const E_COMPONENT compType) {
         if (ComponentInit.find(compType) != ComponentInit.end()) {
             return ComponentInit.at(compType)->Create();
         } else {
@@ -18,7 +16,7 @@ namespace backlash {
         }
     } 
 
-    ComponentFactoryInitializer ComponentFactoryInitializer::initializer;
+    std::map<E_COMPONENT, std::unique_ptr<ComponentFactory>> ComponentFactory::ComponentInit;
 
     ComponentFactoryInitializer::ComponentFactoryInitializer() {
         ComponentFactory::ComponentInit[E_COMPONENT_DRAW] = 
@@ -30,4 +28,6 @@ namespace backlash {
         ComponentFactory::ComponentInit[E_COMPONENT_LIGHT] = 
             std::unique_ptr<LightComponent::Factory> (new LightComponent::Factory);
     }
+
+    ComponentFactoryInitializer ComponentFactoryInitializer::initializer;
 }

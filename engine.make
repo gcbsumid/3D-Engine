@@ -53,6 +53,7 @@ OBJECTS := \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/Component.o \
 	$(OBJDIR)/ComponentFactory.o \
+	$(OBJDIR)/ModelAttrib.o \
 	$(OBJDIR)/Engine.o \
 	$(OBJDIR)/Entity.o \
 	$(OBJDIR)/AIManager.o \
@@ -72,6 +73,7 @@ OBJECTS := \
 	$(OBJDIR)/Texture.o \
 	$(OBJDIR)/ResourceManager.o \
 	$(OBJDIR)/util.o \
+	$(OBJDIR)/enum.o \
 
 .PHONY: clean
 
@@ -140,6 +142,10 @@ $(OBJDIR)/ComponentFactory.o: $(GAMEDIR)/ComponentFactory.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
+$(OBJDIR)/ModelAttrib.o: $(GAMEDIR)/ModelAttrib.cpp 
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 # ----------------------- Compile Input Folder ------------------------------ #
 
 $(OBJDIR)/InputManager.o: $(INPUTDIR)/InputManager.cpp 
@@ -195,6 +201,10 @@ $(OBJDIR)/ResourceManager.o: $(RESOURCEDIR)/ResourceManager.cpp
 # ----------------------- Compile Util Folder ------------------------------- #
 
 $(OBJDIR)/util.o: $(UTILDIR)/util.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/enum.o: $(UTILDIR)/enum.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
