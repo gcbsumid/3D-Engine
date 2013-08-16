@@ -85,6 +85,8 @@ namespace backlash {
         mResource = std::unique_ptr<ResourceManager>{ResourceManager::GetInstance()};
         mAI = std::unique_ptr<AIManager>{AIManager::GetInstance()};
 
+        mGraphics->LoadShaders();
+
         // Create the Texture and Mesh containers
         std::shared_ptr<std::map<std::string, Texture*>> textures {
             new std::map<std::string, Texture*>, 
@@ -95,7 +97,7 @@ namespace backlash {
             }
         };
 
-        std::shared_ptr<std::map<std::string, Mesh*>> meshes {
+        std::shared_ptr<std::map<int, Mesh*>> meshes {
             new std::map<std::string, Mesh*>,
             [](std::map<std::string, Mesh*>* meshes_map) {
                 for (auto& it : *meshes_map) {
@@ -170,7 +172,7 @@ namespace backlash {
 
         // Attach Shader and Mesh to the component
         mGraphics->AttachShaderToDrawComponent(drawComp.get(), 0); 
-        mGraphics->AttachMeshToDrawComponent(drawComp.get(), "Human");
+        mGraphics->AttachMeshToDrawComponent(drawComp.get(), 0);
 
         // Attach the Components to their respective managers
         mGraphics->AddDrawComponent(drawComp);

@@ -12,6 +12,8 @@
 #include "AIComponent.h"
 
 namespace backlash {
+    class AIComponent;
+    
     class RotateAlg : public Algorithm {
     public:
         RotateAlg(AIComponent* comp);

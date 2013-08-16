@@ -11,7 +11,7 @@ namespace backlash {
         mIndexBuffer = INVALID_OGL_VALUE;
         mNumIndices = 0;
         mMaterialName = "";
-        mName = "";
+        // mName = "";
     }
 
     Mesh::~Mesh() {

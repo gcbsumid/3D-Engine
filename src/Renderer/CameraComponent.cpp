@@ -7,7 +7,6 @@
 
 namespace backlash {
     CameraComponent::CameraComponent() : Component(E_COMPONENT_CAMERA) {
-        SetPosition(utility::DEFAULT_POSITION);
         SetViewportAspectRatio(utility::SCREEN_SIZE.x/utility::SCREEN_SIZE.y);
         SetNearAndFarPlanes(utility::DEFAULT_NEAR_PLANE, utility::DEFAULT_FAR_PLANE);
     }
@@ -85,7 +84,6 @@ namespace backlash {
         assert(farPlane > nearPlane);
         mNearPlane = nearPlane;
         mFarPlane = farPlane;
-        Update();
     }
 
     glm::mat4 CameraComponent::Orientation() const {
@@ -112,7 +110,6 @@ namespace backlash {
     void CameraComponent::SetViewportAspectRatio(const float viewportAspectRatio) {
         assert(viewportAspectRatio > 0.0f);
         mViewportAspectRatio = viewportAspectRatio;
-        Update();
     }
 
     glm::vec3 CameraComponent::Forward() const {
@@ -155,5 +152,6 @@ namespace backlash {
     void CameraComponent::SetModelAttrib(std::shared_ptr<ModelAttrib> model) {
         assert(model.use_count());
         mAttrib = model;
+        SetPosition(utility::DEFAULT_POSITION); 
     }
 }

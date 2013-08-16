@@ -61,8 +61,9 @@ namespace backlash {
         comp->SetShader(mShaders.at(id));
     }
 
-    void GraphicsManager::AttachMeshToDrawComponent(DrawComponent* comp, std::string id) {
+    void GraphicsManager::AttachMeshToDrawComponent(DrawComponent* comp, int id) {
         if (mMeshes->count(id) <= 0)
+            std::cerr << "Supposed Mesh ID: " << id << std::endl;
             throw std::runtime_error("Mesh does not exist in mMeshes to attach to the draw component.");
 
         std::shared_ptr<Mesh> mesh(mMeshes->at(id));
@@ -76,7 +77,7 @@ namespace backlash {
     }
 
     void GraphicsManager::SetMeshSharedPointer(
-        std::shared_ptr<std::map<std::string, Mesh*>>& meshes) 
+        std::shared_ptr<std::map<int, Mesh*>>& meshes) 
     {
         mMeshes = meshes;
     }

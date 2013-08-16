@@ -19,7 +19,7 @@
 backlash::ResourceManager* backlash::ResourceManager::mInstance;
 
 const std::string files[] = {
-    "human.blend"
+    "phoenix_ugv.md2"
 };
 
 static void color4_to_float4(const aiColor4D *c, glm::vec4& f)
@@ -46,14 +46,14 @@ namespace backlash {
     }
 
     void ResourceManager::SetMeshSharedPointer(
-        std::shared_ptr<std::map<std::string, Mesh*>>& meshes) 
+        std::shared_ptr<std::map<int, Mesh*>>& meshes) 
     {
         mMeshes = meshes;
     }
 
     void ResourceManager::LoadAllFiles() {
         for (int i = 0; i < 1; ++i) {
-            LoadAssetFromFile(files[i]);
+            LoadAssetFromFile(utility::ResourcePath(files[i]));
         }
     }
 
@@ -71,7 +71,9 @@ namespace backlash {
             aiProcess_JoinIdenticalVertices);
 
         if (scene) {
+            std::cout << "Number of Materials: " << scene->mNumMaterials << std::endl;            
             InitMaterials(scene, file);
+            std::cout << "Number of Meshes: " << scene->mNumMeshes << std::endl;            
             ProcessScene(scene);
         } else {
             throw std::runtime_error(importer.GetErrorString());
@@ -120,10 +122,12 @@ namespace backlash {
             indices.push_back(face.mIndices[2]);            
         }
 
-        meshEntry->mName = mesh->mName.C_Str();
+        // meshEntry->mName = mesh->mName.C_Str();
         meshEntry->Init(vertices, indices);
 
-        mMeshes->insert(std::make_pair(meshEntry->mName, meshEntry));
+        // std::cout << "Adding Mesh: " << mesh->mName << std::endl;
+        // mMeshes->insert(std::make_pair(meshEntry->mName, meshEntry));
+        mMeshes->insert(std::make_pair(meshEntry->mID, meshEntry));
     }
 
     void ResourceManager::InitMaterials(const aiScene* scene, const std::string& filename) {
@@ -157,9 +161,11 @@ namespace backlash {
                     
                     if(mTextures->count(name) == 0) {
                         std::string fullPath = dir + "/" + name;
+                        std::cout << "Opening file: " << fullPath << std::endl;
                         Bitmap bmp = Bitmap::BitmapFromFile(fullPath);
                         bmp.FlipVertically();
 
+                        std::cout << "Adding Texture: " << name << std::endl;
                         Texture* texture = new Texture(bmp, name);
                         mTextures->insert(std::make_pair(name, texture));
                         SetMaterialData(material, texture);
@@ -174,6 +180,7 @@ namespace backlash {
                     Bitmap bmp = Bitmap::BitmapFromFile(utility::ResourcePath(name));
                     bmp.FlipVertically();
 
+                    std::cout << "Adding Texture: " << name << std::endl;
                     Texture* texture = new Texture(bmp, name);
                     mTextures->insert(std::make_pair(name, texture));
                     SetMaterialData(material, texture);

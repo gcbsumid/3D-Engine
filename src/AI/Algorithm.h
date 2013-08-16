@@ -21,8 +21,8 @@ namespace backlash {
     protected:
         AIComponent* mCompParent;
 
-    private:
-        Algorithm() {}
+    // private:
+    //     Algorithm() {}
     };
 }
 

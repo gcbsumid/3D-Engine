@@ -4,6 +4,7 @@
 #include <linux/limits.h>       // for PATH_MAX
 #include <libgen.h>     // for dirname
 #include <unistd.h>     // for readlink
+#include <iostream>
 
 // Utility Library
 #include "util.h"
@@ -24,7 +25,9 @@ std::string utility::ResourcePath(std::string fileName){
     } else {
         exe_file[size] = '\0';
         // dirname reports the parent directory of a file
-        return std::string(dirname(exe_file)) + "/../assets/" + fileName;
+        std::string fullPath = std::string(dirname(exe_file)) + "/../assets/" + fileName;
+        std::cout << "Opening file: " << fullPath << std::endl;
+        return fullPath;
     }
 }
 

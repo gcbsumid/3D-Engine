@@ -2,7 +2,7 @@
 
 namespace backlash {
     Algorithm::Algorithm(AIComponent *comp) : 
-        mCompParent{comp} 
+        mCompParent(comp) 
         {}
 
     Algorithm::~Algorithm() {}

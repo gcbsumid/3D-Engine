@@ -32,7 +32,7 @@ namespace backlash {
         void Init(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
         
         int mID;
-        std::string mName;
+        // std::string mName;
         GLuint mVertexBuffer;
         GLuint mIndexBuffer;
 

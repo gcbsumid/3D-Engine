@@ -3,7 +3,7 @@
 
 // Standard Library
 #include <memory>
-#include <map>
+#include <vector>
 
 // Backlash Library
 #include "Algorithm.h"
@@ -48,7 +48,8 @@ namespace backlash {
         void GenerateAlgorithm(E_ALGORITHM);
         void ClearAlgorithms();
     private: 
-        std::map<E_ALGORITHM,std::unique_ptr<Algorithm>> mAlgorithms; 
+        // std::map<int, Algorithm*> mLocalAlgos;
+        std::vector<std::unique_ptr<Algorithm>> mAlgorithms; 
         std::weak_ptr<ModelAttrib> mModel; 
     };
 }
