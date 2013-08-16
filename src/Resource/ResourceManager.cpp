@@ -95,6 +95,7 @@ namespace backlash {
         assert(mMeshes.use_count());
 
         Mesh* meshEntry = new Mesh(mMeshes->size());
+        std::cout << "Adding Mesh with ID: " << meshEntry->mID << std::endl;
         meshEntry->mMaterialName = mLocalTexture.at(mesh->mMaterialIndex);
 
         std::vector<Vertex> vertices;

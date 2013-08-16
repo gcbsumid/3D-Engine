@@ -62,9 +62,10 @@ namespace backlash {
     }
 
     void GraphicsManager::AttachMeshToDrawComponent(DrawComponent* comp, int id) {
-        if (mMeshes->count(id) <= 0)
+        if (mMeshes->count(id) <= 0) {
             std::cerr << "Supposed Mesh ID: " << id << std::endl;
             throw std::runtime_error("Mesh does not exist in mMeshes to attach to the draw component.");
+        }
 
         std::shared_ptr<Mesh> mesh(mMeshes->at(id));
         comp->SetMesh(mesh);

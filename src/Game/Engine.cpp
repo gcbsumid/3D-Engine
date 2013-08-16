@@ -98,8 +98,8 @@ namespace backlash {
         };
 
         std::shared_ptr<std::map<int, Mesh*>> meshes {
-            new std::map<std::string, Mesh*>,
-            [](std::map<std::string, Mesh*>* meshes_map) {
+            new std::map<int, Mesh*>,
+            [](std::map<int, Mesh*>* meshes_map) {
                 for (auto& it : *meshes_map) {
                     delete it.second;
                 }
