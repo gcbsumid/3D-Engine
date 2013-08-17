@@ -57,6 +57,13 @@ namespace backlash {
         }
     }
 
+    void Entity::SetCameraComponentModelAttrib() {
+        if (mComponents.at(E_COMPONENT_CAMERA)) {
+            std::shared_ptr<CameraComponent> comp = std::static_pointer_cast<CameraComponent>(mComponents.at(E_COMPONENT_CAMERA));            
+            comp->SetModelAttrib(mModel);
+        }
+    }
+
     std::shared_ptr<Component> Entity::GetComponent(E_COMPONENT type) const {
         if (mComponents.count(type) == 0) {
             std::stringstream msg;

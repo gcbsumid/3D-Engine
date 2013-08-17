@@ -128,8 +128,11 @@ namespace backlash {
         Entity* player = new Entity;
         player->AddComponent(E_COMPONENT_CAMERA);
 
+        player->SetCameraComponentModelAttrib();
+
         // Add the camera component to the player entity and systems
         std::shared_ptr<CameraComponent> comp = std::static_pointer_cast<CameraComponent>(player->GetComponent(E_COMPONENT_CAMERA));
+
         mGraphics->AddCameraComponent(comp);
         mInput->AddCameraComponent(comp);
 

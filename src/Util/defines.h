@@ -7,7 +7,7 @@
 #define INVALID_UNIFORM_LOCATION 0xFFFFFFFF
 #define INVALID_OGL_VALUE 0xFFFFFFFF
 
-#define CHECKINVALID(a) ((a==INVALID_UNIFORM_LOCATION) ? true : false)
+#define CHECKINVALID(a) (a==INVALID_UNIFORM_LOCATION) ? false : true
 
 namespace utility {
 

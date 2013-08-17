@@ -25,6 +25,7 @@ namespace backlash {
 
         void SetDrawComponentModelAttrib();
         void SetAIComponentModelAttrib();
+        void SetCameraComponentModelAttrib();
 
     private:
         std::map<E_COMPONENT,std::shared_ptr<Component> > mComponents;

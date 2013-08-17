@@ -1,6 +1,9 @@
 // GL Library
 #include <GL/glew.h>
 
+// Standard Library 
+#include <cassert>
+
 // Backlash Library
 #include "LightComponent.h"
 #include "../Util/defines.h"
