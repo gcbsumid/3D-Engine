@@ -102,6 +102,9 @@ GLint backlash::Program::Uniform(const GLchar* uniformName) const {
     }
 
     GLint uniform = glGetUniformLocation(mObject, uniformName);
+    
+    // std::cout << "uniform: " << uniform << std::endl;
+
     if (uniform == -1) {
         std::stringstream msg;
         msg << "Program uniform not found: " << uniformName << std::endl;

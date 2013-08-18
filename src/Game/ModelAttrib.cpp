@@ -3,9 +3,9 @@
 namespace backlash {
     void ModelAttrib::UpdateTransform() {
         mTransform = glm::mat4();
-        glm::mat4 orientation = glm::mat4_cast(mOrientation);
+        // glm::mat4 orientation = glm::mat4_cast(mOrientation);
 
-        mTransform *= orientation;
-        mTransform = glm::translate(mTransform, -mPosition);
+        mTransform *= mOrientation;
+        mTransform *= glm::translate(glm::mat4(), mPosition);
     }
 }

@@ -46,7 +46,7 @@ namespace backlash {
     }
 
     void ResourceManager::SetMeshSharedPointer(
-        std::shared_ptr<std::map<int, Mesh*>>& meshes) 
+        std::shared_ptr<std::map<int, std::shared_ptr<Mesh>>>& meshes) 
     {
         mMeshes = meshes;
     }
@@ -94,7 +94,7 @@ namespace backlash {
         // assert(scene->mNumMaterials == mLocalTexture.size());
         assert(mMeshes.use_count());
 
-        Mesh* meshEntry = new Mesh(mMeshes->size());
+        std::shared_ptr<Mesh> meshEntry(new Mesh(mMeshes->size()));
         std::cout << "Adding Mesh with ID: " << meshEntry->mID << std::endl;
         meshEntry->mMaterialName = mLocalTexture.at(mesh->mMaterialIndex);
 
@@ -103,11 +103,18 @@ namespace backlash {
 
         const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
 
+        std::cout << "Size of glm::vec3 = " << sizeof(glm::vec3) << std::endl;
+        std::cout << "Number of Vertices: " << mesh->mNumVertices << std::endl;
+
         for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
             const aiVector3D* pos = &(mesh->mVertices[i]);
             const aiVector3D* normal = &(mesh->mNormals[i]);
             const aiVector3D* texCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &Zero3D;
 
+            std::cout << "Vertex id: " << i << std::endl;
+            std::cout << "\tPosition: (" << pos->x << "," << pos->y << "," << pos->z << ")" << std::endl;
+            std::cout << "\tTexture Coordinates: (" << texCoord->x << "," << texCoord->y << ")" << std::endl;
+            std::cout << "\tNormal: (" << normal->x << "," << normal->y << "," << normal->z << ")" << std::endl;
             Vertex v(glm::vec3(pos->x, pos->y, pos->z),
                      glm::vec2(texCoord->x, texCoord->y),
                      glm::vec3(normal->x, normal->y, normal->z));
@@ -123,6 +130,8 @@ namespace backlash {
             indices.push_back(face.mIndices[2]);            
         }
 
+        std::cout << "Actual number of Vertices: " << vertices.size() << std::endl;
+        std::cout << "Actual number of Indices: " << indices.size() << std::endl;
         // meshEntry->mName = mesh->mName.C_Str();
         meshEntry->Init(vertices, indices);
 

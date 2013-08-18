@@ -1,8 +1,12 @@
+#include <GL/glew.h>
+#include <GL/glfw.h>
+
+#include <iostream>
+
 #include "InputManager.h"
 #include "../Util/util.h"
 #include "../Util/defines.h"
 
-#include <GL/glfw.h>
 
 // Global static pointer used to ensure my singleton
 backlash::InputManager* backlash::InputManager::mInstance{nullptr};
@@ -51,35 +55,47 @@ namespace backlash {
         }
         // move position based on wasd keys
         if (glfwGetKey('S')) {
+            // std::cout << "Moving backwards!" << std::endl;
             cameraComp->MoveCamera(elapsedTime, -cameraComp->Forward());
         } else if (glfwGetKey('W')) {
+            // std::cout << "Moving forward!" << std::endl;
             cameraComp->MoveCamera(elapsedTime, cameraComp->Forward());
         }
 
         if (glfwGetKey('A')){
+            // std::cout << "Strafing left!" << std::endl;
             cameraComp->MoveCamera(elapsedTime, -cameraComp->Right());
         } else if (glfwGetKey('D')){
+            // std::cout << "Strafing right!" << std::endl;
             cameraComp->MoveCamera(elapsedTime, cameraComp->Right());
         }
 
         if (glfwGetKey('X')){
+            // std::cout << "Moving down!" << std::endl;
             cameraComp->MoveCamera(elapsedTime, -cameraComp->Up());
         } else if (glfwGetKey('Z')){
+            // std::cout << "Moving up!" << std::endl;
             cameraComp->MoveCamera(elapsedTime, cameraComp->Up());
         }
 
         if (glfwGetKey('1')) {
-            lightComp->SetPosition(cameraComp->Position());
+            // std::cout << "Setting the camera position to: ";
+            glm::vec3 pos = cameraComp->Position();
+            lightComp->SetPosition(pos);
+            // std::cout << "(" << pos.x << "," << pos.y << "," << pos.z << ")" << std::endl;
         }
 
         if (glfwGetKey('2')) {
             // Set Colour to red
+            // std::cout << "Setting the light color to: red" << std::endl;
             lightComp->SetIntensity(glm::vec3(1,0,0)); 
         } else if (glfwGetKey('3')) {
             // Set Colour to green
+            // std::cout << "Setting the light color to: green" << std::endl;
             lightComp->SetIntensity(glm::vec3(0,1,1));         
         } else if (glfwGetKey('4')) {
             // Set Colour to white
+            // std::cout << "Setting the light color to white" << std::endl;
             lightComp->SetIntensity(glm::vec3(1,1,1));         
         }
 
@@ -87,18 +103,22 @@ namespace backlash {
         // View rotation based on mouse movements
         int mouseX = 0, mouseY = 0;
         glfwGetMousePos(&mouseX, &mouseY);
-        cameraComp->OffsetOrientation(utility::MOUSE_SENSITIVITY * mouseY, utility::MOUSE_SENSITIVITY * mouseX);
-        glfwSetMousePos(0,0);
+        if (mouseX || mouseY) {
+            cameraComp->OffsetOrientation(utility::MOUSE_SENSITIVITY * mouseY, utility::MOUSE_SENSITIVITY * mouseX);
+            glfwSetMousePos(0,0);
+        }
 
-        float fieldOfView = cameraComp->FieldOfView() + utility::ZOOM_SENSITIVITY * (float)glfwGetMouseWheel();
-        if (fieldOfView < 5.0f) {
-            fieldOfView = 5.0f;
+        if (glfwGetMouseWheel()) {
+            float fieldOfView = cameraComp->FieldOfView() + utility::ZOOM_SENSITIVITY * (float)glfwGetMouseWheel();
+            if (fieldOfView < 5.0f) {
+                fieldOfView = 5.0f;
+            }
+            if (fieldOfView > 130.0f) {
+                fieldOfView = 130.0f;
+            }
+            cameraComp->SetFieldOfView(fieldOfView);
+            glfwSetMouseWheel(0);
         }
-        if (fieldOfView > 130.0f) {
-            fieldOfView = 130.0f;
-        }
-        cameraComp->SetFieldOfView(fieldOfView);
-        glfwSetMouseWheel(0);
 
     }
 

@@ -1,7 +1,10 @@
-#version 150
+#version 330
 
-uniform mat4 model;
-uniform vec3 cameraPosition;
+in vec2 fragTexCoord; // This is the texture coordinates
+in vec3 fragNormal;
+in vec3 fragVert; 
+
+out vec4 finalColor;   // This is the output color for pixels
 
 uniform struct Light {
     vec3 position;
@@ -16,11 +19,8 @@ uniform struct Material {
     vec3 specularColor;
 } material;
 
-in vec2 fragTexCoord; // This is the texture coordinates
-in vec3 fragNormal;
-in vec3 fragVert; 
-
-out vec4 finalColor;   // This is the output color for pixels
+uniform mat4 model;
+uniform vec3 cameraPosition;
 
 // The purpose of this fragment shader is to calculate the 
 // color of each pixel that is drawn
@@ -56,4 +56,5 @@ void main() {
 
     vec3 gamma = vec3(1.0/2.2);
     finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);
+    // finalColor = vec4(1.0, 1.0, 1.0, 1.0);
 }

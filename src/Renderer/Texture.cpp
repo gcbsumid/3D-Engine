@@ -1,5 +1,6 @@
 // Standard Library 
 #include <stdexcept>
+#include <iostream>
 
 // Backlash Library 
 #include "Texture.h"
@@ -110,14 +111,13 @@ namespace backlash {
     }
 
     void Texture::BindTexture(Program* shader) {
-        GLuint shaderLoc = shader->Object();
-        GLuint tex = glGetUniformLocation(shaderLoc, "material.tex");
-        GLuint shininess = glGetUniformLocation(shaderLoc, "material.shininess");
-        GLuint specularColor = glGetUniformLocation(shaderLoc, "material.specularColor");
+        GLint tex = shader->Uniform("material.tex");
+        GLint shininess = shader->Uniform("material.shininess");
+        GLint specularColor = shader->Uniform("material.specularColor");
 
-        assert(CHECKINVALID(tex));
-        assert(CHECKINVALID(shininess));
-        assert(CHECKINVALID(specularColor));
+        std::cout << "tex: " << tex << std::endl;
+        std::cout << "shininess: " << shininess << std::endl;
+        std::cout << "specularColor: " << specularColor << std::endl;
 
         glUniform1f(tex, 0);
         glUniform1f(shininess, mShininess);
@@ -129,6 +129,5 @@ namespace backlash {
 
     void Texture::UnbindTexture() {
         glBindTexture(GL_TEXTURE_2D, 0);
-        glBindVertexArray(0);
     }
 }

@@ -67,7 +67,7 @@ namespace backlash {
         glm::vec3 Up() const;
 
         // the combined camear transformation matrix
-        glm::mat4 Matrix() const;
+        glm::mat4 Matrix();
 
     private:
         std::weak_ptr<ModelAttrib> mAttrib;      

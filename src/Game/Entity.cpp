@@ -19,7 +19,7 @@ namespace backlash {
         mModel = std::shared_ptr<ModelAttrib>(new ModelAttrib);
         mModel->mTransform = glm::mat4();
         mModel->mPosition = glm::vec3();
-        mModel->mOrientation = glm::quat();
+        mModel->mOrientation = glm::mat4();
     }
 
     Entity::~Entity() {}

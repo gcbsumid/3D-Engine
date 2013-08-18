@@ -67,6 +67,9 @@ namespace backlash {
             throw std::runtime_error("OpenGL 3.3 Api is not available.");
 
         glEnable(GL_DEPTH_TEST);
+        // glFrontFace(GL_CW);
+        // glCullFace(GL_CULL_FACE);
+        // glEnable(GL_CULL_FACE);
         glDepthFunc(GL_LESS);
 
         CreateManagers();
@@ -97,11 +100,11 @@ namespace backlash {
             }
         };
 
-        std::shared_ptr<std::map<int, Mesh*>> meshes {
-            new std::map<int, Mesh*>,
-            [](std::map<int, Mesh*>* meshes_map) {
+        std::shared_ptr<std::map<int, std::shared_ptr<Mesh>>> meshes {
+            new std::map<int, std::shared_ptr<Mesh>>,
+            [](std::map<int, std::shared_ptr<Mesh>>* meshes_map) {
                 for (auto& it : *meshes_map) {
-                    delete it.second;
+                    it.second.reset();
                 }
             }
         };
@@ -145,9 +148,9 @@ namespace backlash {
         light->AddComponent(E_COMPONENT_LIGHT);
 
         std::shared_ptr<LightComponent> comp = std::static_pointer_cast<LightComponent>(light->GetComponent(E_COMPONENT_LIGHT));
-        comp->SetPosition(glm::vec3(0,3,3));
+        comp->SetPosition(glm::vec3(-4,0,4));
         comp->SetIntensity(glm::vec3(1,1,1));
-        comp->SetAttenuation(0.1f);
+        comp->SetAttenuation(0.2f);
         comp->SetAmbientCoefficient(0.005f);
 
         // Attach the light to the systems
@@ -159,29 +162,31 @@ namespace backlash {
     }
 
     void Engine::CreateObjects() {
-        Entity* human = new Entity;
+        mGraphics->LoadCube();
 
-        human->AddComponent(E_COMPONENT_AI);
-        human->AddComponent(E_COMPONENT_DRAW);
+        // Entity* human = new Entity;
 
-        std::shared_ptr<DrawComponent> drawComp = std::static_pointer_cast<DrawComponent>(human->GetComponent(E_COMPONENT_DRAW));
-        std::shared_ptr<AIComponent> aiComp = std::static_pointer_cast<AIComponent>(human->GetComponent(E_COMPONENT_AI));
+        // human->AddComponent(E_COMPONENT_AI);
+        // human->AddComponent(E_COMPONENT_DRAW);
 
-        human->SetDrawComponentModelAttrib();
-        human->SetAIComponentModelAttrib();
+        // std::shared_ptr<DrawComponent> drawComp = std::static_pointer_cast<DrawComponent>(human->GetComponent(E_COMPONENT_DRAW));
+        // std::shared_ptr<AIComponent> aiComp = std::static_pointer_cast<AIComponent>(human->GetComponent(E_COMPONENT_AI));
 
-        // Generate the AI Algorithm
-        aiComp->GenerateAlgorithm(E_ALGORITHM::E_ALGORITHM_ROTATE);
+        // human->SetDrawComponentModelAttrib();
+        // human->SetAIComponentModelAttrib();
 
-        // Attach Shader and Mesh to the component
-        mGraphics->AttachShaderToDrawComponent(drawComp.get(), 0); 
-        mGraphics->AttachMeshToDrawComponent(drawComp.get(), 0);
+        // // Generate the AI Algorithm
+        // aiComp->GenerateAlgorithm(E_ALGORITHM::E_ALGORITHM_ROTATE);
 
-        // Attach the Components to their respective managers
-        mGraphics->AddDrawComponent(drawComp);
-        mAI->AddAIComponent(aiComp);
+        // // Attach Shader and Mesh to the component
+        // mGraphics->AttachShaderToDrawComponent(drawComp.get(), 0); 
+        // mGraphics->AttachMeshToDrawComponent(drawComp.get(), 0);
+
+        // // Attach the Components to their respective managers
+        // mGraphics->AddDrawComponent(drawComp);
+        // mAI->AddAIComponent(aiComp);
         
-        mEntities.insert(std::make_pair(human->GetID(), human));
+        // mEntities.insert(std::make_pair(human->GetID(), human));
     }
 
     void Engine::Update(double timeTick) {
@@ -200,14 +205,14 @@ namespace backlash {
             auto currentTime = std::chrono::high_resolution_clock::now();
 
             // Update animations (note: if anything, cast this to double)
-            Update(std::chrono::duration_cast<std::chrono::seconds>(currentTime - lastFrame).count()); 
+            Update(std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastFrame).count() / 1000.0); 
 
             mGraphics->Render();
 
-            lastFrame = currentTime;
-
             if (glfwGetKey(GLFW_KEY_ESC)) 
                 glfwCloseWindow();
+
+            lastFrame = currentTime;   
         }
 
         // clean up and exits 

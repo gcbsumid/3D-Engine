@@ -3,6 +3,7 @@
 
 // Standard Library 
 #include <cassert>
+#include <iostream>
 
 // Backlash Library
 #include "LightComponent.h"
@@ -19,16 +20,20 @@ namespace backlash {
     }
 
     bool LightComponent::Render(Program* shader) {
-        GLuint shaderLoc = shader->Object();
-        GLuint position = glGetUniformLocation(shaderLoc,"light.position");
-        GLuint intensities = glGetUniformLocation(shaderLoc,"light.intensities");
-        GLuint attenuation = glGetUniformLocation(shaderLoc,"light.attenuation");
-        GLuint ambientCoefficient= glGetUniformLocation(shaderLoc,"light.ambientCoefficient");
+        GLint position = shader->Uniform("light.position");
+        GLint intensities = shader->Uniform("light.intensities");
+        GLint attenuation = shader->Uniform("light.attenuation");
+        GLint ambientCoefficient= shader->Uniform("light.ambientCoefficient");
 
-        assert(CHECKINVALID(position));
-        assert(CHECKINVALID(intensities));
-        assert(CHECKINVALID(attenuation));
-        assert(CHECKINVALID(ambientCoefficient));
+        // std::cout << "position: " << position << std::endl;
+        // std::cout << "intensities: " << intensities << std::endl;
+        // std::cout << "attenuation: " << attenuation << std::endl;
+        // std::cout << "ambientCoefficient: " << ambientCoefficient << std::endl;
+
+        std::cout << "Light Position: " << "(" << mPosition.x << "," << mPosition.y << "," << mPosition.z << ")" << std::endl;
+        std::cout << "Light Intensity: " << "(" << mIntensity.x << "," << mIntensity.y << "," << mIntensity.z << ")" << std::endl;
+        std::cout << "Light Attenuation: " << mAttenuation << std::endl;
+        std::cout << "Light Ambient Coefficient: " << mAmbientCoefficient << std::endl;
 
         glUniform3f(position, mPosition.x, mPosition.y, mPosition.z);
         glUniform3f(intensities, mIntensity.x, mIntensity.y, mIntensity.z);

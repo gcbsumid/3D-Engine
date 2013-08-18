@@ -1,3 +1,6 @@
+// GLM Library
+#include <glm/glm.hpp>
+
 // Standard Library 
 #include <stdexcept>
 #include <sstream>
@@ -16,14 +19,16 @@ namespace backlash  {
     RotateAlg::~RotateAlg() {}
 
     void RotateAlg::Action(double timeTick) {
-        glm::quat offset(1.0, 
-                         mDirection.x * timeTick, 
-                         mDirection.y * timeTick,
-                         mDirection.z * timeTick);
-        if (auto comp = mCompParent->mModel.lock()) {
-            comp->mOrientation = comp->mOrientation * offset;
+        // glm::quat offset(1.0, 
+        //                  mDirection.x * timeTick, 
+        //                  mDirection.y * timeTick,
+        //                  mDirection.z * timeTick);
+        if (auto model = mCompParent->mModel.lock()) {
+            // model->mOrientation = model->mOrientation * offset;
+            glm::mat4 orientation;
+            model->mOrientation = glm::rotate(orientation, 360.0f * (float)timeTick, mDirection);
 
-            comp->UpdateTransform();
+            model->UpdateTransform();
         } else {
             std::stringstream msg; 
             msg << "mComponentParent (Component ID: " << mCompParent->GetID() << ") of an Algorithm could not be locked for rotation" << std::endl;

@@ -1,11 +1,11 @@
-#version 150
+#version 330
 
-uniform mat4 camera;
+layout (location = 0) in vec3 vert;
+layout (location = 1) in vec2 vertTexCoord;
+layout (location = 2) in vec3 vertNormal;
+
 uniform mat4 model;
-
-in vec3 vert;
-in vec2 vertTexCoord;
-in vec3 vertNormal;
+uniform mat4 camera;
 
 out vec3 fragVert;
 out vec2 fragTexCoord;

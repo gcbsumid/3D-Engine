@@ -10,7 +10,10 @@ namespace backlash {
         glm::mat4 mTransform;
 
         glm::vec3 mPosition;
-        glm::quat mOrientation;
+        // glm::quat mOrientation;
+
+        // Reverting previous orientation style
+        glm::mat4 mOrientation;
 
         void UpdateTransform();
     };

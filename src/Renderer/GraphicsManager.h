@@ -31,10 +31,13 @@ namespace backlash {
         void AddLightComponent(std::shared_ptr<LightComponent>);
 
         void SetTextureSharedPointer(std::shared_ptr<std::map<std::string, Texture*>>& textures);
-        void SetMeshSharedPointer(std::shared_ptr<std::map<int, Mesh*>>& meshes);
+        void SetMeshSharedPointer(std::shared_ptr<std::map<int, std::shared_ptr<Mesh>>>& meshes);
 
         void AttachShaderToDrawComponent(DrawComponent*, int);
         void AttachMeshToDrawComponent(DrawComponent*, int);
+
+        // TEMP
+        void LoadCube();
 
     private:
         GraphicsManager();      
@@ -47,7 +50,7 @@ namespace backlash {
 
         // this is shared with the resource manager
         std::shared_ptr<std::map<std::string, Texture*>> mTextures;
-        std::shared_ptr<std::map<int, Mesh*>> mMeshes;
+        std::shared_ptr<std::map<int, std::shared_ptr<Mesh>>> mMeshes;
 
         Program* mActiveShader;
         std::vector<Program*> mShaders;
@@ -55,6 +58,15 @@ namespace backlash {
         // Don't Implement copy constructor
         GraphicsManager(const GraphicsManager&);
         void operator=(const GraphicsManager&);
+
+        // TEMP
+        GLuint gVAO;
+        GLuint gVBO;
+        GLenum drawType;
+        GLint drawStart;
+        GLint drawCount;
+        Texture* crateTexture;
+        glm::mat4 transform;
     };
 }
 

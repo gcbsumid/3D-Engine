@@ -22,7 +22,7 @@ namespace backlash {
         ~ResourceManager() {}
 
         void SetTextureSharedPointer(std::shared_ptr<std::map<std::string, Texture*>>& textures);
-        void SetMeshSharedPointer(std::shared_ptr<std::map<int, Mesh*>>& meshes);
+        void SetMeshSharedPointer(std::shared_ptr<std::map<int, std::shared_ptr<Mesh>>>& meshes);
 
         void LoadAllFiles();
 
@@ -38,7 +38,7 @@ namespace backlash {
 
         // This is shared with the Graphics manager
         std::shared_ptr<std::map<std::string, Texture*>> mTextures;
-        std::shared_ptr<std::map<int, Mesh*>> mMeshes;
+        std::shared_ptr<std::map<int, std::shared_ptr<Mesh>>> mMeshes;
         std::vector<std::string> mLocalTexture;
         
         static ResourceManager* mInstance;
