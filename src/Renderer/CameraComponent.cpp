@@ -42,7 +42,7 @@ namespace backlash {
 
     bool CameraComponent::Render(Program* shader) {
         GLint cameraMatrix = shader->Uniform("camera");
-        GLint cameraPosition = shader->Uniform("cameraPosition");
+        // GLint cameraPosition = shader->Uniform("cameraPosition");
 
         // std::cout << "cameraMatrix: " << cameraMatrix << std::endl;
         // std::cout << "cameraPosition: " << cameraPosition << std::endl;
@@ -51,18 +51,18 @@ namespace backlash {
         //     return false;
         // }
         glm::mat4 matrix = Matrix();
-        std::cout << "Camera Transform: " << std::endl;
-        std::cout << "\t{ " << matrix[0][0] << " ,\t" << matrix[0][1] << " ,\t" << matrix[0][2] << " ,\t" <<matrix[0][3] << "}" << std::endl;
-        std::cout << "\t{ " << matrix[1][0] << " ,\t" << matrix[1][1] << " ,\t" << matrix[1][2] << " ,\t" <<matrix[1][3] << "}" << std::endl;
-        std::cout << "\t{ " << matrix[2][0] << " ,\t" << matrix[2][1] << " ,\t" << matrix[2][2] << " ,\t" <<matrix[2][3] << "}" << std::endl;
-        std::cout << "\t{ " << matrix[3][0] << " ,\t" << matrix[3][1] << " ,\t" << matrix[3][2] << " ,\t" <<matrix[3][3] << "}" << std::endl;
+        // std::cout << "Camera Transform: " << std::endl;
+        // std::cout << "\t{ " << matrix[0][0] << " ,\t" << matrix[0][1] << " ,\t" << matrix[0][2] << " ,\t" <<matrix[0][3] << "}" << std::endl;
+        // std::cout << "\t{ " << matrix[1][0] << " ,\t" << matrix[1][1] << " ,\t" << matrix[1][2] << " ,\t" <<matrix[1][3] << "}" << std::endl;
+        // std::cout << "\t{ " << matrix[2][0] << " ,\t" << matrix[2][1] << " ,\t" << matrix[2][2] << " ,\t" <<matrix[2][3] << "}" << std::endl;
+        // std::cout << "\t{ " << matrix[3][0] << " ,\t" << matrix[3][1] << " ,\t" << matrix[3][2] << " ,\t" <<matrix[3][3] << "}" << std::endl;
 
 
         glUniformMatrix4fv(cameraMatrix, 1, GL_FALSE, glm::value_ptr(Matrix()));
 
-        glm::vec3 pos(Position());
-        std::cout << "Camera Position: (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
-        glUniform3f(cameraPosition, pos.x, pos.y, pos.z);
+        // glm::vec3 pos(Position());
+        // std::cout << "Camera Position: (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
+        // glUniform3f(cameraPosition, pos.x, pos.y, pos.z);
         return true;
     }
 
@@ -141,8 +141,8 @@ namespace backlash {
         else if (mVerticalAngle < -85.0f)
             mVerticalAngle = -85.0f;
 
-        std::cout << "Vertical Angle: " << mVerticalAngle << std::endl;
-        std::cout << "Horizontal Angle: " << mHorizontalAngle << std::endl;
+        // std::cout << "Vertical Angle: " << mVerticalAngle << std::endl;
+        // std::cout << "Horizontal Angle: " << mHorizontalAngle << std::endl;
 
         glm::mat4 orientation;
         orientation = glm::rotate(orientation, mVerticalAngle, glm::vec3(1,0,0));

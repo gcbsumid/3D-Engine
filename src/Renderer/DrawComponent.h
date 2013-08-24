@@ -43,6 +43,7 @@ namespace backlash {
         void SetModelAttrib(std::shared_ptr<ModelAttrib> model);
         std::string GetMaterialName() const;
         Program* GetShader() const;
+        std::shared_ptr<ModelAttrib> GetModelAttrib();
 
     private:
         std::weak_ptr<Mesh> mMesh;

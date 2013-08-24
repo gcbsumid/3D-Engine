@@ -21,7 +21,11 @@ namespace backlash {
     Texture::Texture(const Bitmap& bitmap, const std::string name, GLint minMagFiler, GLint wrapMode) :
         mName(name),
         mOriginalWidth((GLfloat)bitmap.Width()),
-        mOriginalHeight((GLfloat)bitmap.Height())
+        mOriginalHeight((GLfloat)bitmap.Height()),
+        mDiffuse(1.0f, 1.0f, 1.0f, 1.0f),
+        mAmbient(1.0f, 1.0f, 1.0f, 1.0f),
+        mSpecular(1.0f, 1.0f, 1.0f, 1.0f),
+        mShininess(80.0f)
     {
         // generating a texture name
         glGenTextures(1, &mObject);

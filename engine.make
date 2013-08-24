@@ -68,6 +68,7 @@ OBJECTS := \
 	$(OBJDIR)/LightComponent.o \
 	$(OBJDIR)/Bitmap.o \
 	$(OBJDIR)/Mesh.o \
+	$(OBJDIR)/AABB.o \
 	$(OBJDIR)/Program.o \
 	$(OBJDIR)/Shader.o \
 	$(OBJDIR)/Texture.o \
@@ -191,6 +192,11 @@ $(OBJDIR)/Texture.o: $(RENDERERDIR)/Texture.cpp
 $(OBJDIR)/Bitmap.o: $(RENDERERDIR)/Bitmap.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/AABB.o: $(RENDERERDIR)/AABB.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 
 # ----------------------- Compile Resource Folder --------------------------- #
 

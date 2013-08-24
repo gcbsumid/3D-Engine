@@ -27,19 +27,35 @@ namespace backlash {
         }
     }
 
-    void Mesh::Init(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices) {
+    void Mesh::Init(const std::vector<Vertex>& vertices, 
+                    const std::vector<unsigned int>& indices,
+                    const AABB& box) {
         mNumIndices = indices.size();
+        mBoundingBox = box;
 
         glGenBuffers(1, &mVertexBuffer);
+        glGenVertexArrays(1, &mVertexArrayObject);
+
+        glBindVertexArray(mVertexArrayObject);
+
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
         std::cout << "Size of Vector of Vertices: " << sizeof(Vertex) << " * " << vertices.size() << " = " << sizeof(Vertex) * vertices.size() << std::endl;
-        glGenBuffers(1, &mIndexBuffer) ;
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mNumIndices, &indices[0], GL_STATIC_DRAW);
-        std::cout << "Size of Vector of Indices: " << sizeof(unsigned int) << " * " << mNumIndices << " = " << sizeof(unsigned int) * mNumIndices << std::endl;
 
+        int i = 0;
+        for (auto vert : vertices) {
+            std::cout << "Putting Vertex " << i++ << ": (" << vert.x << ", " << vert.y << ", " << vert.z << ")" << std::endl;
+        }
+        // glGenBuffers(1, &mIndexBuffer) ;
+        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+        // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mNumIndices, &indices[0], GL_STATIC_DRAW);
+        // std::cout << "Size of Vector of Indices: " << sizeof(unsigned int) << " * " << mNumIndices << " = " << sizeof(unsigned int) * mNumIndices << std::endl;
+
+        glEnableVertexAttribArray(0);  // <--- THIS MOTHER FUCKER FIXED IT
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), 0);
+
+        glBindVertexArray(0);
         std::cout << "Initialized Vertex Buffer: " << mVertexBuffer << std::endl;
         std::cout << "Initialized Index Buffer: " << mIndexBuffer << std::endl;
     }

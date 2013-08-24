@@ -18,8 +18,9 @@ namespace backlash {
     Entity::Entity() : mID(utility::GenerateEntityID()), mModel(nullptr) {
         mModel = std::shared_ptr<ModelAttrib>(new ModelAttrib);
         mModel->mTransform = glm::mat4();
-        mModel->mPosition = glm::vec3();
+        mModel->mPosition = glm::vec3(0.0f, 0.0f, 0.0f);
         mModel->mOrientation = glm::mat4();
+        mModel->mScale = glm::vec3(0.1f, 0.1f, 0.1f);
     }
 
     Entity::~Entity() {}
@@ -52,7 +53,7 @@ namespace backlash {
 
     void Entity::SetAIComponentModelAttrib() {
         if (mComponents.at(E_COMPONENT_AI)) {
-            std::shared_ptr<DrawComponent> comp = std::static_pointer_cast<DrawComponent>(mComponents.at(E_COMPONENT_AI));            
+            std::shared_ptr<AIComponent> comp = std::static_pointer_cast<AIComponent>(mComponents.at(E_COMPONENT_AI));            
             comp->SetModelAttrib(mModel);
         }
     }
@@ -81,4 +82,22 @@ namespace backlash {
     std::shared_ptr<ModelAttrib> Entity::GetModelAttrib() const {
         return mModel;
     }
+
+    void Entity::SetPosition(glm::vec3 position) {
+        std::cout << "Light Position is now: (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
+
+        mModel->mPosition = position;
+        mModel->UpdateTransform();
+    }
+
+    void Entity::SetScale(glm::vec3 scale) {
+        mModel->mPosition = scale;
+        mModel->UpdateTransform();
+    }
+
+    void Entity::DisplayPosition() {
+        glm::vec3 pos = mModel->mPosition;
+        std::cout << "Position: (" << pos.x << "," << pos.y << "," << pos.z << ")" << std::endl;
+    }
+
 }

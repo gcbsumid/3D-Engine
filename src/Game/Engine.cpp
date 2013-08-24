@@ -164,29 +164,29 @@ namespace backlash {
     void Engine::CreateObjects() {
         mGraphics->LoadCube();
 
-        // Entity* human = new Entity;
+        Entity* human = new Entity;
 
-        // human->AddComponent(E_COMPONENT_AI);
-        // human->AddComponent(E_COMPONENT_DRAW);
+        human->AddComponent(E_COMPONENT_AI);
+        human->AddComponent(E_COMPONENT_DRAW);
 
-        // std::shared_ptr<DrawComponent> drawComp = std::static_pointer_cast<DrawComponent>(human->GetComponent(E_COMPONENT_DRAW));
-        // std::shared_ptr<AIComponent> aiComp = std::static_pointer_cast<AIComponent>(human->GetComponent(E_COMPONENT_AI));
+        std::shared_ptr<DrawComponent> drawComp = std::static_pointer_cast<DrawComponent>(human->GetComponent(E_COMPONENT_DRAW));
+        std::shared_ptr<AIComponent> aiComp = std::static_pointer_cast<AIComponent>(human->GetComponent(E_COMPONENT_AI));
 
-        // human->SetDrawComponentModelAttrib();
-        // human->SetAIComponentModelAttrib();
+        human->SetDrawComponentModelAttrib();
+        human->SetAIComponentModelAttrib();
 
-        // // Generate the AI Algorithm
-        // aiComp->GenerateAlgorithm(E_ALGORITHM::E_ALGORITHM_ROTATE);
+        // Generate the AI Algorithm
+        aiComp->GenerateAlgorithm(E_ALGORITHM::E_ALGORITHM_ROTATE);
 
-        // // Attach Shader and Mesh to the component
-        // mGraphics->AttachShaderToDrawComponent(drawComp.get(), 0); 
-        // mGraphics->AttachMeshToDrawComponent(drawComp.get(), 0);
+        // Attach Shader and Mesh to the component
+        mGraphics->AttachShaderToDrawComponent(drawComp.get(), 0); 
+        mGraphics->AttachMeshToDrawComponent(drawComp.get(), 0);
 
-        // // Attach the Components to their respective managers
-        // mGraphics->AddDrawComponent(drawComp);
-        // mAI->AddAIComponent(aiComp);
+        // Attach the Components to their respective managers
+        mGraphics->AddDrawComponent(drawComp);
+        mAI->AddAIComponent(aiComp);
         
-        // mEntities.insert(std::make_pair(human->GetID(), human));
+        mEntities.insert(std::make_pair(human->GetID(), human));
     }
 
     void Engine::Update(double timeTick) {

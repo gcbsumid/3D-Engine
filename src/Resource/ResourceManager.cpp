@@ -13,13 +13,14 @@
 #include "ResourceManager.h"
 #include "../Util/util.h"
 #include "../Renderer/Bitmap.h"
+#include "../Renderer/AABB.h"
 
 
 // Global static pointer used to ensure my singleton
 backlash::ResourceManager* backlash::ResourceManager::mInstance;
 
 const std::string files[] = {
-    "phoenix_ugv.md2"
+    "mug.blend"
 };
 
 static void color4_to_float4(const aiColor4D *c, glm::vec4& f)
@@ -67,8 +68,7 @@ namespace backlash {
 
         const aiScene* scene = importer.ReadFile(file.c_str(), 
             aiProcess_GenSmoothNormals | 
-            aiProcess_Triangulate | 
-            aiProcess_JoinIdenticalVertices);
+            aiProcess_Triangulate | aiProcess_FlipUVs);
 
         if (scene) {
             std::cout << "Number of Materials: " << scene->mNumMaterials << std::endl;            
@@ -106,18 +106,25 @@ namespace backlash {
         std::cout << "Size of glm::vec3 = " << sizeof(glm::vec3) << std::endl;
         std::cout << "Number of Vertices: " << mesh->mNumVertices << std::endl;
 
+        AABB box;
+
         for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
             const aiVector3D* pos = &(mesh->mVertices[i]);
-            const aiVector3D* normal = &(mesh->mNormals[i]);
-            const aiVector3D* texCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &Zero3D;
+            // const aiVector3D* normal = &(mesh->mNormals[i]);
+            // const aiVector3D* texCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &Zero3D;
 
             std::cout << "Vertex id: " << i << std::endl;
             std::cout << "\tPosition: (" << pos->x << "," << pos->y << "," << pos->z << ")" << std::endl;
-            std::cout << "\tTexture Coordinates: (" << texCoord->x << "," << texCoord->y << ")" << std::endl;
-            std::cout << "\tNormal: (" << normal->x << "," << normal->y << "," << normal->z << ")" << std::endl;
-            Vertex v(glm::vec3(pos->x, pos->y, pos->z),
-                     glm::vec2(texCoord->x, texCoord->y),
-                     glm::vec3(normal->x, normal->y, normal->z));
+            // std::cout << "\tTexture Coordinates: (" << texCoord->x << "," << texCoord->y << ")" << std::endl;
+            // std::cout << "\tNormal: (" << normal->x << "," << normal->y << "," << normal->z << ")" << std::endl;
+            glm::vec3 glmPos = glm::vec3(pos->x, pos->y, pos->z);
+            Vertex v(glmPos); //,
+            // Vertex v(glm::vec3(pos->x, pos->y, pos->z)
+                     // glm::vec2(texCoord->x, texCoord->y),
+                     // glm::vec3(normal->x, normal->y, normal->z));
+            if (!box.IsPointInside(glmPos)) {
+                box.Update(glmPos);
+            }
 
             vertices.push_back(v);
         }        
@@ -133,7 +140,7 @@ namespace backlash {
         std::cout << "Actual number of Vertices: " << vertices.size() << std::endl;
         std::cout << "Actual number of Indices: " << indices.size() << std::endl;
         // meshEntry->mName = mesh->mName.C_Str();
-        meshEntry->Init(vertices, indices);
+        meshEntry->Init(vertices, indices, box);
 
         // std::cout << "Adding Mesh: " << mesh->mName << std::endl;
         // mMeshes->insert(std::make_pair(meshEntry->mName, meshEntry));

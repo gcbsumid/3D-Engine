@@ -10,18 +10,22 @@
 
 // Backlash Library
 #include "../Util/defines.h"
+#include "AABB.h"
 
 namespace backlash {
     struct Vertex {
-        glm::vec3 mPosition;    // (x,y,z)
-        glm::vec2 mTexCoord;    // (u,v)
-        glm::vec3 mNormal;      // (x,y,z)
+        float x, y, z;    // (x,y,z)
+        // glm::vec2 mTexCoord;    // (u,v)
+        // glm::vec3 mNormal;      // (x,y,z)
 
         Vertex() {};
-        Vertex(const glm::vec3& pos, const glm::vec2& tex, const glm::vec3 normal) {
-            mPosition = pos;
-            mTexCoord = tex;
-            mNormal = normal;
+        Vertex(const glm::vec3& pos) { //, const glm::vec2& tex, const glm::vec3 normal) {
+            x = pos.x;
+            y = pos.y;
+            z = pos.z;
+            // mPosition = pos;
+            // mTexCoord = tex;
+            // mNormal = normal;
         }
     };
 
@@ -29,12 +33,17 @@ namespace backlash {
         Mesh(int);
         ~Mesh();
 
-        void Init(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
+        void Init(const std::vector<Vertex>& vertices, 
+                  const std::vector<unsigned int>& indices,
+                  const AABB& box);
         
         int mID;
         // std::string mName;
         GLuint mVertexBuffer;
+        GLuint mVertexArrayObject;
         GLuint mIndexBuffer;
+
+        AABB mBoundingBox;
 
         unsigned int mNumIndices; 
         std::string mMaterialName;        

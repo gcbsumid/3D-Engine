@@ -26,7 +26,10 @@ namespace backlash {
         void SetDrawComponentModelAttrib();
         void SetAIComponentModelAttrib();
         void SetCameraComponentModelAttrib();
-
+        
+        void SetScale(glm::vec3 scale);
+        void SetPosition(glm::vec3 position);
+        void DisplayPosition();
     private:
         std::map<E_COMPONENT,std::shared_ptr<Component> > mComponents;
         int mID;
