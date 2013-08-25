@@ -41,6 +41,11 @@ Why the shit am I so freakin lazy.
 July 30, 2013: I'm chipping away at the code. Slowly but surely getting shit 
 done. Chipping away. Slowly. 
 
+August 25, 2013: I've finally managed to find and fix the issue with not being
+able to render anything on the screen. I'm now wondering what my next goal should
+be. I think I'll create multiple light sources first, and then add stuff via xml. 
+Oh, and try to test translation.
+
 ========================
 Things to Remember:
 ========================

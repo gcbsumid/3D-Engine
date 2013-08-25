@@ -1,14 +1,16 @@
 TODO List:
 
 What to do next: 
-- Currently doing some cleanup. Finished cleaning up in the Game folder. Please continue onto other folders
-- Seriously, you have to get it compiling. then you have to get it running. 
+- Do a little bit more clean up
+- Make Add multiple light sources
+- Test the translate algorithm
+- Implement xml stuff
 
 HIGHER PRIORITY
-- Turn the Algorithms into a decorator type (so that you can do two updates at the same time?)
 - Install libxml++ (its already in the temp folder btw)
 
 LOWER PRIORITY
+- Turn the Algorithms into a decorator type (so that you can do two updates at the same time?)
 - Make Entities either static or dynamic (Update optimization)
 - make a room
 - Create new shaders
