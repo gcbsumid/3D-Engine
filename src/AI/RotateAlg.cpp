@@ -26,7 +26,7 @@ namespace backlash  {
         if (auto model = mCompParent->mModel.lock()) {
             // model->mOrientation = model->mOrientation * offset;
             glm::mat4 orientation;
-            model->mOrientation = glm::rotate(orientation, 360.0f * (float)timeTick, mDirection);
+            // model->mOrientation = glm::rotate(orientation, 360.0f * (float)timeTick, mDirection);
 
             model->UpdateTransform();
         } else {

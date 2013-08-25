@@ -14,18 +14,19 @@
 
 namespace backlash {
     struct Vertex {
-        float x, y, z;    // (x,y,z)
-        // glm::vec2 mTexCoord;    // (u,v)
-        // glm::vec3 mNormal;      // (x,y,z)
+        // float x, y, z;    // (x,y,z)
+        glm::vec3 mPosition;
+        glm::vec2 mTexCoord;    // (u,v)
+        glm::vec3 mNormal;      // (x,y,z)
 
         Vertex() {};
-        Vertex(const glm::vec3& pos) { //, const glm::vec2& tex, const glm::vec3 normal) {
-            x = pos.x;
-            y = pos.y;
-            z = pos.z;
-            // mPosition = pos;
-            // mTexCoord = tex;
-            // mNormal = normal;
+        Vertex(const glm::vec3& pos, const glm::vec2& tex, const glm::vec3 normal) {
+            // x = pos.x;
+            // y = pos.y;
+            // z = pos.z;
+            mPosition = pos;
+            mTexCoord = tex;
+            mNormal = normal;
         }
     };
 
@@ -40,7 +41,7 @@ namespace backlash {
         int mID;
         // std::string mName;
         GLuint mVertexBuffer;
-        GLuint mVertexArrayObject;
+        GLuint mVertexArray;
         GLuint mIndexBuffer;
 
         AABB mBoundingBox;

@@ -37,18 +37,18 @@ namespace backlash {
 
         std::cout << "Cup VBO: " << mesh->mVertexBuffer << std::endl;
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)sizeof(glm::vec3));
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));
         glBindBuffer(GL_ARRAY_BUFFER, mesh->mVertexBuffer);
         
-        glBindVertexArray(mesh->mVertexArrayObject);
+        glBindVertexArray(mesh->mVertexArray);
 
-        std::cout << "Cup VAO: " << mesh->mVertexArrayObject << std::endl;
-        // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)sizeof(glm::vec3));
-        // glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));
+        std::cout << "Cup VAO: " << mesh->mVertexArray << std::endl;
 
         std::cout << "Index Buffer: " << mesh->mIndexBuffer << std::endl;
-        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->mIndexBuffer);
-        glDrawArrays(GL_TRIANGLES, 0, mesh->mNumIndices);
-        // glDrawElements(GL_TRIANGLES, mesh->mNumIndices, GL_UNSIGNED_INT, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->mIndexBuffer);
+        // glDrawArrays(GL_TRIANGLES, 0, mesh->mNumIndices);
+        glDrawElements(GL_TRIANGLES, mesh->mNumIndices, GL_UNSIGNED_INT, 0);
 
         return true;
     }

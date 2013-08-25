@@ -34,9 +34,9 @@ namespace backlash {
         mBoundingBox = box;
 
         glGenBuffers(1, &mVertexBuffer);
-        glGenVertexArrays(1, &mVertexArrayObject);
+        glGenVertexArrays(1, &mVertexArray);
 
-        glBindVertexArray(mVertexArrayObject);
+        glBindVertexArray(mVertexArray);
 
         glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
@@ -44,16 +44,20 @@ namespace backlash {
         std::cout << "Size of Vector of Vertices: " << sizeof(Vertex) << " * " << vertices.size() << " = " << sizeof(Vertex) * vertices.size() << std::endl;
 
         int i = 0;
-        for (auto vert : vertices) {
-            std::cout << "Putting Vertex " << i++ << ": (" << vert.x << ", " << vert.y << ", " << vert.z << ")" << std::endl;
-        }
-        // glGenBuffers(1, &mIndexBuffer) ;
-        // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
-        // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mNumIndices, &indices[0], GL_STATIC_DRAW);
-        // std::cout << "Size of Vector of Indices: " << sizeof(unsigned int) << " * " << mNumIndices << " = " << sizeof(unsigned int) * mNumIndices << std::endl;
 
-        glEnableVertexAttribArray(0);  // <--- THIS MOTHER FUCKER FIXED IT
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), 0);
+        glGenBuffers(1, &mIndexBuffer) ;
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mNumIndices, &indices[0], GL_STATIC_DRAW);
+        std::cout << "Size of Vector of Indices: " << sizeof(unsigned int) << " * " << mNumIndices << " = " << sizeof(unsigned int) * mNumIndices << std::endl;
+
+        // This is the fix. apparently
+        glEnableVertexAttribArray(0);   // "vert"
+        glEnableVertexAttribArray(1);   // "vertTexCoord"
+        glEnableVertexAttribArray(2);   // "vertNormal"
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) sizeof(glm::vec3));
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*) ( sizeof(glm::vec3) + sizeof(glm::vec2)) );
 
         glBindVertexArray(0);
         std::cout << "Initialized Vertex Buffer: " << mVertexBuffer << std::endl;

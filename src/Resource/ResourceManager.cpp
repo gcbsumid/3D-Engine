@@ -20,7 +20,8 @@
 backlash::ResourceManager* backlash::ResourceManager::mInstance;
 
 const std::string files[] = {
-    "mug.blend"
+    // "mug.blend"
+    "phoenix_ugv.md2"
 };
 
 static void color4_to_float4(const aiColor4D *c, glm::vec4& f)
@@ -110,18 +111,18 @@ namespace backlash {
 
         for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
             const aiVector3D* pos = &(mesh->mVertices[i]);
-            // const aiVector3D* normal = &(mesh->mNormals[i]);
-            // const aiVector3D* texCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &Zero3D;
+            const aiVector3D* normal = &(mesh->mNormals[i]);
+            const aiVector3D* texCoord = mesh->HasTextureCoords(0) ? &(mesh->mTextureCoords[0][i]) : &Zero3D;
 
             std::cout << "Vertex id: " << i << std::endl;
             std::cout << "\tPosition: (" << pos->x << "," << pos->y << "," << pos->z << ")" << std::endl;
-            // std::cout << "\tTexture Coordinates: (" << texCoord->x << "," << texCoord->y << ")" << std::endl;
-            // std::cout << "\tNormal: (" << normal->x << "," << normal->y << "," << normal->z << ")" << std::endl;
+            std::cout << "\tTexture Coordinates: (" << texCoord->x << "," << texCoord->y << ")" << std::endl;
+            std::cout << "\tNormal: (" << normal->x << "," << normal->y << "," << normal->z << ")" << std::endl;
             glm::vec3 glmPos = glm::vec3(pos->x, pos->y, pos->z);
-            Vertex v(glmPos); //,
-            // Vertex v(glm::vec3(pos->x, pos->y, pos->z)
-                     // glm::vec2(texCoord->x, texCoord->y),
-                     // glm::vec3(normal->x, normal->y, normal->z));
+            // Vertex v(glmPos); //,
+            Vertex v(glm::vec3(glmPos),
+                     glm::vec2(texCoord->x, texCoord->y),
+                     glm::vec3(normal->x, normal->y, normal->z));
             if (!box.IsPointInside(glmPos)) {
                 box.Update(glmPos);
             }
