@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 #include "AABB.h"
 
 namespace backlash {
@@ -43,6 +44,10 @@ namespace backlash {
         return true;
     }
 
-
+    void AABB::DisplayBoundingBox() const {
+        std::cout << "Bounding Box: " << std::endl;
+        std::cout << "\tMin: (" << mMin.x << ", " << mMin.y << ", " << mMin.z << ")" << std::endl;
+        std::cout << "\tMin: (" << mMax.x << ", " << mMax.y << ", " << mMax.z << ")" << std::endl;
+    }
 
 }

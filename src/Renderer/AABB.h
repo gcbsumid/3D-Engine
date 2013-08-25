@@ -15,6 +15,7 @@ namespace backlash {
 
         void Update(const glm::vec3&);
         bool IsPointInside(const glm::vec3&) const;
+        void DisplayBoundingBox() const;
     };
 
 }

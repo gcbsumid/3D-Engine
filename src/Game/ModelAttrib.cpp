@@ -47,7 +47,6 @@ namespace backlash {
         points.push_back(glm::vec4(max.x, max.y, min.z, 1.0));
 
         for (auto& x : points) {
-            // std::cout << "(" << x.x << ", " << x.y << ", " << x.z << ")" << std::endl;
             x = x * mTransform;
         }
 

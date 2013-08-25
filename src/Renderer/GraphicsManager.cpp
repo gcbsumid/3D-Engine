@@ -126,9 +126,17 @@ namespace backlash {
     void GraphicsManager::LoadShaders() {
         std::vector<Shader> shaders;
 
+        // Gouraud Shader
         shaders.push_back(Shader::ShaderFromFile(utility::ResourcePath("vertex-shader.vert"), GL_VERTEX_SHADER));
 
         shaders.push_back(Shader::ShaderFromFile(utility::ResourcePath("fragment-shader.frag"), GL_FRAGMENT_SHADER));
+
+        // Phong Shader
+        // shaders.push_back(Shader::ShaderFromFile(utility::ResourcePath("phong_shader.vert"), GL_VERTEX_SHADER));
+
+        // shaders.push_back(Shader::ShaderFromFile(utility::ResourcePath("phong_shader.frag"), GL_FRAGMENT_SHADER));
+
+        // Simple Shader
         // shaders.push_back(Shader::ShaderFromFile(utility::ResourcePath("simple_vertex_shader.vert"), GL_VERTEX_SHADER));
 
         // shaders.push_back(Shader::ShaderFromFile(utility::ResourcePath("simple_fragment_shader.frag"), GL_FRAGMENT_SHADER));
@@ -218,24 +226,18 @@ namespace backlash {
         mShaders.at(0)->SetUniform("model", transform);
 
         glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-        std::cout << "box vbo: " << gVBO << std::endl;
+        // std::cout << "box vbo: " << gVBO << std::endl;
 
         crateTexture->BindTexture(mShaders.at(0));
 
         glBindVertexArray(gVAO);
-        std::cout << "box abo: " << gVAO << std::endl;
+        // std::cout << "box abo: " << gVAO << std::endl;
 
         glDrawArrays(drawType, drawStart, drawCount);
 
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
         // END TEMP
-
-
-
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        glEnableVertexAttribArray(2);
 
         // mActiveShader = nullptr;
 
@@ -271,13 +273,6 @@ namespace backlash {
 
             mTextures->at(materialName)->UnbindTexture();
         }
-
-        // glDisableVertexAttribArray(0);
-        // glDisableVertexAttribArray(1);
-        // glDisableVertexAttribArray(2);
-
-        // mShaders.at(0)->Stop();
-        // mShaders.at(0)->Stop();
         
         // swap the display buffers (displays what was just drawn)
         glfwSwapBuffers();

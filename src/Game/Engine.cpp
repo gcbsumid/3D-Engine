@@ -68,8 +68,8 @@ namespace backlash {
 
         glEnable(GL_DEPTH_TEST);
         // glFrontFace(GL_CW);
-        // glCullFace(GL_CULL_FACE);
-        // glEnable(GL_CULL_FACE);
+        glCullFace(GL_CULL_FACE);
+        glEnable(GL_CULL_FACE);
         glDepthFunc(GL_LESS);
 
         CreateManagers();
@@ -151,7 +151,7 @@ namespace backlash {
         comp->SetPosition(glm::vec3(-4,0,4));
         comp->SetIntensity(glm::vec3(1,1,1));
         comp->SetAttenuation(0.2f);
-        comp->SetAmbientCoefficient(0.005f);
+        comp->SetAmbientCoefficient(1.0f);
 
         // Attach the light to the systems
         mGraphics->AddLightComponent(comp);
@@ -205,7 +205,7 @@ namespace backlash {
             auto currentTime = std::chrono::high_resolution_clock::now();
 
             // Update animations (note: if anything, cast this to double)
-            Update(std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastFrame).count() / 1000.0); 
+            Update(std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastFrame).count() / 1000.0f); 
 
             mGraphics->Render();
 

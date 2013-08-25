@@ -30,10 +30,10 @@ namespace backlash {
         // std::cout << "attenuation: " << attenuation << std::endl;
         // std::cout << "ambientCoefficient: " << ambientCoefficient << std::endl;
 
-        std::cout << "Light Position: " << "(" << mPosition.x << "," << mPosition.y << "," << mPosition.z << ")" << std::endl;
-        std::cout << "Light Intensity: " << "(" << mIntensity.x << "," << mIntensity.y << "," << mIntensity.z << ")" << std::endl;
-        std::cout << "Light Attenuation: " << mAttenuation << std::endl;
-        std::cout << "Light Ambient Coefficient: " << mAmbientCoefficient << std::endl;
+        // std::cout << "Light Position: " << "(" << mPosition.x << "," << mPosition.y << "," << mPosition.z << ")" << std::endl;
+        // std::cout << "Light Intensity: " << "(" << mIntensity.x << "," << mIntensity.y << "," << mIntensity.z << ")" << std::endl;
+        // std::cout << "Light Attenuation: " << mAttenuation << std::endl;
+        // std::cout << "Light Ambient Coefficient: " << mAmbientCoefficient << std::endl;
 
         glUniform3f(position, mPosition.x, mPosition.y, mPosition.z);
         glUniform3f(intensities, mIntensity.x, mIntensity.y, mIntensity.z);

@@ -69,7 +69,8 @@ namespace backlash {
 
         const aiScene* scene = importer.ReadFile(file.c_str(), 
             aiProcess_GenSmoothNormals | 
-            aiProcess_Triangulate | aiProcess_FlipUVs);
+            aiProcess_Triangulate | 
+            aiProcess_JoinIdenticalVertices );
 
         if (scene) {
             std::cout << "Number of Materials: " << scene->mNumMaterials << std::endl;            

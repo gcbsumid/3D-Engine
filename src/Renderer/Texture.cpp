@@ -119,9 +119,9 @@ namespace backlash {
         GLint shininess = shader->Uniform("material.shininess");
         GLint specularColor = shader->Uniform("material.specularColor");
 
-        std::cout << "tex: " << tex << std::endl;
-        std::cout << "shininess: " << shininess << std::endl;
-        std::cout << "specularColor: " << specularColor << std::endl;
+        // std::cout << "tex: " << tex << std::endl;
+        // std::cout << "shininess: " << shininess << std::endl;
+        // std::cout << "specularColor: " << specularColor << std::endl;
 
         glUniform1f(tex, 0);
         glUniform1f(shininess, mShininess);

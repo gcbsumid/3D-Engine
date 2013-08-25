@@ -61,7 +61,7 @@ namespace backlash {
         glUniformMatrix4fv(cameraMatrix, 1, GL_FALSE, glm::value_ptr(Matrix()));
 
         glm::vec3 pos(Position());
-        std::cout << "Camera Position: (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
+        // std::cout << "Camera Position: (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
         glUniform3f(cameraPosition, pos.x, pos.y, pos.z);
         return true;
     }

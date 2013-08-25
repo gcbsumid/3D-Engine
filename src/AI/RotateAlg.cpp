@@ -4,6 +4,7 @@
 // Standard Library 
 #include <stdexcept>
 #include <sstream>
+#include <iostream>
 
 // Backlash Library
 #include "RotateAlg.h"
@@ -13,7 +14,7 @@
 namespace backlash  {
     RotateAlg::RotateAlg(AIComponent* comp) : 
         Algorithm(comp) {
-            mDirection = glm::vec3(1.0f,0.0f,0.0f);
+            mDirection = glm::vec3(0.0f,1.0f,0.0f);
         }
 
     RotateAlg::~RotateAlg() {}
@@ -25,8 +26,9 @@ namespace backlash  {
         //                  mDirection.z * timeTick);
         if (auto model = mCompParent->mModel.lock()) {
             // model->mOrientation = model->mOrientation * offset;
-            glm::mat4 orientation;
-            // model->mOrientation = glm::rotate(orientation, 360.0f * (float)timeTick, mDirection);
+            glm::mat4 orientation = model->mOrientation;
+            // std::cout << "Time tick: " << timeTick << std::endl;
+            model->mOrientation = glm::rotate(orientation, 90.0f * (float)timeTick, mDirection);
 
             model->UpdateTransform();
         } else {
