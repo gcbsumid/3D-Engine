@@ -19,6 +19,8 @@ const int MAX_DIRECTIONAL_LIGHTS = 3;
  *      Specular - Intense white reflected light. Makes the model shiny  *
  *      Attenuation - loss of light intensity over distance. The greater *
  *                    the distance, the lower the intensity              *
+ *      Half Vector - Vector bisecting the light direction and viewing   *
+ *                    direction.                                         *
  ************************************************************************/
 
 struct Attenuation {
@@ -29,9 +31,10 @@ struct Attenuation {
 
 struct BaseLight {
     vec3 color;   // intensities of the light
-    vec3 diffuse;
+    vec4 diffuse;
     float ambient;
     float specular; 
+    vec3 halfvector;
 };
 
 // Light Types
@@ -104,4 +107,25 @@ void main() {
     finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);
 }
 
-vec3 CalculateDirectionalLight(vec3 normal, vec3 surfaceToLight)
+vec3 CalculateDirectionalLight(const in int i,
+                               const in vec3 normal,
+                               inout vec4 ambient,
+                               inout vec4 diffuse,
+                               inout vec4 specular) 
+{
+    float normalDotLightDirection;
+    float normalDotHalfVector;
+    float power;
+
+    normalDotLightDirection = max(0.0, dot(normal, normalize(directionalLights[i].direction)));
+    normalDotHalfVector = max(0.0, dot(normal, normalize(directionalLights[i].base.halfvector)));
+
+    if (normalDotLightDirection == 0.0) 
+        pf = 0.0;
+    else 
+        pf = pow(normalDotHalfVector, material.shininess);
+
+    ambient += directionalLights[i].ambient;
+    diffuse += directionalLights[i].diffuse * normalDotLightDirection;
+    specular += directionalLights[i].specular * pf;
+} 
