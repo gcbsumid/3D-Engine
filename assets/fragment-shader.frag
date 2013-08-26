@@ -6,12 +6,58 @@ in vec3 fragVert;
 
 out vec4 finalColor;   // This is the output color for pixels
 
-uniform struct Light {
+const int MAX_POINT_LIGHTS = 3;
+const int MAX_SPOT_LIGHTS = 3;
+const int MAX_DIRECTIONAL_LIGHTS = 3;
+
+/*************************************************************************
+ * Definitions:                                                          *
+ *      Diffuse - Only show vertices whose angle between its normal and  *
+ *                surface-to-light vectors are accute or perpendicular   *
+ *      Ambient - Minimum brightness (so the parts of the model that the *
+ *                light doesn't touch is also seen)                      *
+ *      Specular - Intense white reflected light. Makes the model shiny  *
+ *      Attenuation - loss of light intensity over distance. The greater *
+ *                    the distance, the lower the intensity              *
+ ************************************************************************/
+
+struct Attenuation {
+    float constant;
+    float linear;
+    float quadratic;
+};
+
+struct BaseLight {
+    vec3 color;   // intensities of the light
+    vec3 diffuse;
+    float ambient;
+    float specular; 
+};
+
+// Light Types
+struct DirectionalLight {
+    BaseLight base;
+    vec3 direction;
+};
+
+struct PointLight {
+    BaseLight base;
     vec3 position;
-    vec3 intensities;   // color of the light
-    float ambientCoefficient;
-    float attenuation;
-} light;
+    Attenuation attenuation;  
+};
+
+struct SpotLight {
+    PointLight Base;
+    vec3 direction;
+    float cutoff; // angle cutoff between light-to-pixel vector and light-direction vector
+};
+
+uniform int numPointLights;
+uniform int numSpotLights;
+uniform int numDirectionalLights;
+uniform DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 uniform struct Material {
     sampler2D tex; // This is the texture
@@ -56,5 +102,6 @@ void main() {
 
     vec3 gamma = vec3(1.0/2.2);
     finalColor = vec4(pow(linearColor, gamma), surfaceColor.a);
-    // finalColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
+
+vec3 CalculateDirectionalLight(vec3 normal, vec3 surfaceToLight)
