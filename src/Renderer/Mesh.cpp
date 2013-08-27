@@ -43,8 +43,6 @@ namespace backlash {
 
         std::cout << "Size of Vector of Vertices: " << sizeof(Vertex) << " * " << vertices.size() << " = " << sizeof(Vertex) * vertices.size() << std::endl;
 
-        int i = 0;
-
         glGenBuffers(1, &mIndexBuffer) ;
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * mNumIndices, &indices[0], GL_STATIC_DRAW);

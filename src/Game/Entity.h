@@ -18,8 +18,8 @@ namespace backlash {
         Entity();
         ~Entity();
 
-        void AddComponent(E_COMPONENT);
-        std::shared_ptr<Component> GetComponent(E_COMPONENT) const;
+        void AddComponent(COMPONENT);
+        std::shared_ptr<Component> GetComponent(COMPONENT) const;
         int GetID() const;
         std::shared_ptr<ModelAttrib> GetModelAttrib() const;
 
@@ -31,7 +31,7 @@ namespace backlash {
         void SetPosition(glm::vec3 position);
         void DisplayPosition();
     private:
-        std::map<E_COMPONENT,std::shared_ptr<Component> > mComponents;
+        std::map<COMPONENT,std::shared_ptr<Component> > mComponents;
         int mID;
 
         std::shared_ptr<ModelAttrib> mModel;

@@ -10,10 +10,10 @@
 
 namespace backlash {
     AIComponent::AIComponent() :
-        Component(E_COMPONENT_AI) ,
+        Component(COMPONENT_AI) ,
         mModel()
         {
-            // mLocalAlgos.insert(std::make_pair(E_ALGORITHM_ROTATE, new RotateAlg(this)));
+            // mLocalAlgos.insert(std::make_pair(ALGORITHM_ROTATE, new RotateAlg(this)));
         }
 
     AIComponent::~AIComponent() {
@@ -40,13 +40,13 @@ namespace backlash {
         mModel = model;
     }
 
-    void AIComponent::GenerateAlgorithm(E_ALGORITHM type) {
+    void AIComponent::GenerateAlgorithm(ALGORITHM type) {
         Algorithm* algo = nullptr;
         switch (type) {
-            case E_ALGORITHM::E_ALGORITHM_ROTATE: 
+            case ALGORITHM::ALGORITHM_ROTATE: 
                 algo = new RotateAlg(this);
                 break;
-            case E_ALGORITHM::E_ALGORITHM_TRANSLATE:
+            case ALGORITHM::ALGORITHM_TRANSLATE:
                 algo = new TranslateAlg(this);
                 break;
             default: 

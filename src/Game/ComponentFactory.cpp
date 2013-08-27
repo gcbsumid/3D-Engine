@@ -8,7 +8,7 @@
 namespace backlash {
     ComponentFactory::~ComponentFactory() {}
 
-    Component* ComponentFactory::CreateComponent(const E_COMPONENT compType) {
+    Component* ComponentFactory::CreateComponent(const COMPONENT compType) {
         if (ComponentInit.find(compType) != ComponentInit.end()) {
             return ComponentInit.at(compType)->Create();
         } else {
@@ -16,16 +16,16 @@ namespace backlash {
         }
     } 
 
-    std::map<E_COMPONENT, std::unique_ptr<ComponentFactory>> ComponentFactory::ComponentInit;
+    std::map<COMPONENT, std::unique_ptr<ComponentFactory>> ComponentFactory::ComponentInit;
 
     ComponentFactoryInitializer::ComponentFactoryInitializer() {
-        ComponentFactory::ComponentInit[E_COMPONENT_DRAW] = 
+        ComponentFactory::ComponentInit[COMPONENT_DRAW] = 
             std::unique_ptr<DrawComponent::Factory> (new DrawComponent::Factory);
-        ComponentFactory::ComponentInit[E_COMPONENT_AI] = 
+        ComponentFactory::ComponentInit[COMPONENT_AI] = 
             std::unique_ptr<AIComponent::Factory> (new AIComponent::Factory);
-        ComponentFactory::ComponentInit[E_COMPONENT_CAMERA] = 
+        ComponentFactory::ComponentInit[COMPONENT_CAMERA] = 
             std::unique_ptr<CameraComponent::Factory> (new CameraComponent::Factory);
-        ComponentFactory::ComponentInit[E_COMPONENT_LIGHT] = 
+        ComponentFactory::ComponentInit[COMPONENT_LIGHT] = 
             std::unique_ptr<LightComponent::Factory> (new LightComponent::Factory);
     }
 

@@ -15,10 +15,10 @@ namespace backlash {
         virtual ~ComponentFactory();  
         friend class ComponentFactoryInitializer;
 
-        static Component* CreateComponent(const E_COMPONENT);
+        static Component* CreateComponent(const COMPONENT);
     private:
         virtual Component* Create() = 0;
-        static std::map<E_COMPONENT, std::unique_ptr<ComponentFactory>> ComponentInit;
+        static std::map<COMPONENT, std::unique_ptr<ComponentFactory>> ComponentInit;
     };
 
     class ComponentFactoryInitializer {

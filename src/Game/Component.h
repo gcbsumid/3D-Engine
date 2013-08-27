@@ -6,22 +6,22 @@
 #include "../Renderer/Program.h"
 
 namespace backlash {
-    enum E_COMPONENT ;
+    enum COMPONENT ;
 
     class Component {
     public:
-        Component(E_COMPONENT);
+        Component(COMPONENT);
         ~Component();
 
         virtual void Update() = 0;
         virtual bool Render(Program*) = 0;
         
         int GetID() const;
-        E_COMPONENT GetType() const;
+        COMPONENT GetType() const;
 
     private:
         const int mID;
-        const E_COMPONENT mType;
+        const COMPONENT mType;
 
     };
 }

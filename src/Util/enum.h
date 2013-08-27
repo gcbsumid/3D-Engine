@@ -10,24 +10,33 @@ namespace backlash {
     //     return static_cast<typename std::underlying_type<Enumeration>::type>(value);
     // }
 
-    enum E_COMPONENT {  
-        E_COMPONENT_DRAW = 0,
-        E_COMPONENT_CAMERA,
-        E_COMPONENT_LIGHT,
-        E_COMPONENT_AI,
+    enum COMPONENT {  
+        COMPONENT_DRAW = 0,
+        COMPONENT_CAMERA,
+        COMPONENT_LIGHT,
+        COMPONENT_AI,
 
-        E_COMPONENT_MAX
+        COMPONENT_MAX
     } ;
 
-    enum E_ALGORITHM {
-        E_ALGORITHM_ROTATE = 0,
-        E_ALGORITHM_TRANSLATE,
+    enum ALGORITHM {
+        ALGORITHM_ROTATE = 0,
+        ALGORITHM_TRANSLATE,
 
-        E_ALGORITHM_MAX
+        ALGORITHM_MAX
     };
 
-    extern bool IsValidComponent(E_COMPONENT);
-    extern bool IsValidAlgorithm(E_ALGORITHM);
+    enum LIGHT {
+        LIGHT_DIRECTIONAL = 0,
+        LIGHT_POINT, 
+        LIGHT_SPOT,
+
+        LIGHT_MAX
+    };
+
+    extern bool IsValidComponent(COMPONENT);
+    extern bool IsValidAlgorithm(ALGORITHM);
+    extern bool IsValidLight(LIGHT);
 }
 
 #endif

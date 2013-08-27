@@ -14,7 +14,7 @@ static void display_vec3(const std::string& title, const glm::vec3& vec) {
 
 namespace backlash {
     CameraComponent::CameraComponent() : 
-        Component(E_COMPONENT_CAMERA),
+        Component(COMPONENT_CAMERA),
         mHorizontalAngle(0.0f),
         mVerticalAngle(0.0f),
         mFieldOfView(50.0f),

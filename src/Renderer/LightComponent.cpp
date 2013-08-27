@@ -11,7 +11,7 @@
 
 namespace backlash {
     LightComponent::LightComponent() : 
-            Component(E_COMPONENT_LIGHT) {}
+            Component(COMPONENT_LIGHT) {}
 
     LightComponent::~LightComponent() {}
 

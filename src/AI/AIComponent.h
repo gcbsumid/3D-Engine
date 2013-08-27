@@ -16,7 +16,7 @@
  // TODO: will pass in the status to determine which algorithm will be used.
 
 namespace backlash {
-    enum E_ALGORITHM;
+    enum ALGORITHM;
     class Algorithm;
 
     class AIComponent : public Component {
@@ -45,7 +45,7 @@ namespace backlash {
         void Action(double);
 
         void SetModelAttrib(std::shared_ptr<ModelAttrib> model);
-        void GenerateAlgorithm(E_ALGORITHM);
+        void GenerateAlgorithm(ALGORITHM);
         void ClearAlgorithms();
     private: 
         // std::map<int, Algorithm*> mLocalAlgos;

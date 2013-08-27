@@ -17,7 +17,7 @@
 #include "Program.h"
 
 namespace backlash {
-    enum E_COMPONENT;
+    enum COMPONENT;
 
     class DrawComponent : public Component {
     friend class ComponentFactoryInitializer;

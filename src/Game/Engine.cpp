@@ -129,12 +129,12 @@ namespace backlash {
 
     void Engine::CreatePlayer() {
         Entity* player = new Entity;
-        player->AddComponent(E_COMPONENT_CAMERA);
+        player->AddComponent(COMPONENT_CAMERA);
 
         player->SetCameraComponentModelAttrib();
 
         // Add the camera component to the player entity and systems
-        std::shared_ptr<CameraComponent> comp = std::static_pointer_cast<CameraComponent>(player->GetComponent(E_COMPONENT_CAMERA));
+        std::shared_ptr<CameraComponent> comp = std::static_pointer_cast<CameraComponent>(player->GetComponent(COMPONENT_CAMERA));
 
         mGraphics->AddCameraComponent(comp);
         mInput->AddCameraComponent(comp);
@@ -145,9 +145,9 @@ namespace backlash {
 
     void Engine::CreateLight() {
         Entity* light = new Entity;
-        light->AddComponent(E_COMPONENT_LIGHT);
+        light->AddComponent(COMPONENT_LIGHT);
 
-        std::shared_ptr<LightComponent> comp = std::static_pointer_cast<LightComponent>(light->GetComponent(E_COMPONENT_LIGHT));
+        std::shared_ptr<LightComponent> comp = std::static_pointer_cast<LightComponent>(light->GetComponent(COMPONENT_LIGHT));
         comp->SetPosition(glm::vec3(-4,0,4));
         comp->SetIntensity(glm::vec3(1,1,1));
         comp->SetAttenuation(0.2f);
@@ -166,17 +166,17 @@ namespace backlash {
 
         Entity* human = new Entity;
 
-        human->AddComponent(E_COMPONENT_AI);
-        human->AddComponent(E_COMPONENT_DRAW);
+        human->AddComponent(COMPONENT_AI);
+        human->AddComponent(COMPONENT_DRAW);
 
-        std::shared_ptr<DrawComponent> drawComp = std::static_pointer_cast<DrawComponent>(human->GetComponent(E_COMPONENT_DRAW));
-        std::shared_ptr<AIComponent> aiComp = std::static_pointer_cast<AIComponent>(human->GetComponent(E_COMPONENT_AI));
+        std::shared_ptr<DrawComponent> drawComp = std::static_pointer_cast<DrawComponent>(human->GetComponent(COMPONENT_DRAW));
+        std::shared_ptr<AIComponent> aiComp = std::static_pointer_cast<AIComponent>(human->GetComponent(COMPONENT_AI));
 
         human->SetDrawComponentModelAttrib();
         human->SetAIComponentModelAttrib();
 
         // Generate the AI Algorithm
-        aiComp->GenerateAlgorithm(E_ALGORITHM::E_ALGORITHM_ROTATE);
+        aiComp->GenerateAlgorithm(ALGORITHM::ALGORITHM_ROTATE);
 
         // Attach Shader and Mesh to the component
         mGraphics->AttachShaderToDrawComponent(drawComp.get(), 0); 
