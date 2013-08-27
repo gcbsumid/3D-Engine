@@ -53,6 +53,7 @@ struct SpotLight {
     PointLight Base;
     vec3 direction;
     float cutoff; // angle cutoff between light-to-pixel vector and light-direction vector
+    float exponent;
 };
 
 uniform int numPointLights;
@@ -121,11 +122,98 @@ vec3 CalculateDirectionalLight(const in int i,
     normalDotHalfVector = max(0.0, dot(normal, normalize(directionalLights[i].base.halfvector)));
 
     if (normalDotLightDirection == 0.0) 
-        pf = 0.0;
+        power = 0.0;
     else 
-        pf = pow(normalDotHalfVector, material.shininess);
+        power = pow(normalDotHalfVector, material.shininess);
 
     ambient += directionalLights[i].ambient;
     diffuse += directionalLights[i].diffuse * normalDotLightDirection;
-    specular += directionalLights[i].specular * pf;
+    specular += directionalLights[i].specular * power;
 } 
+
+vec3 CalculatePointLight(const in int i,
+                         const in vec3 eye,
+                         const in vec3 eyeCoordinatePosition,
+                         const in vec3 normal,
+                         inout vec4 ambient,
+                         inout vec4 diffuse,
+                         inout vec4 specular)
+{
+    float normalDotLightDirection; 
+    float normalDotHalfVector;
+    float power;
+    float attenuation;      // Computed attenuation factor
+    float dist;                // Distance from surface to light position
+    vec3 surfaceToLight;    // direction from surface to light position
+
+    surfaceToLight = vec3(pointLights[i].position - eyeCoordinatePosition);
+    dist = length(surfaceToLight);
+    surfaceToLight = normalize(surfaceToLight);
+
+    attenuation = 1.0 / (pointLights[i].attenuation.constant +
+                         pointLights[i].attneuation.linear * dist +
+                         pointLights[i].attenuation.quadratic * dist * dist) ;
+
+    pointLights[i].halfvector = normalize(surfaceToLight + eye);
+
+    normalDotLightDirection = max(0.0, dot(normalDotLightDirection, normal));
+    normalDotHalfVector = max(0.0, dot(pointlights.halfvector, normal));
+
+    if (normalDotLightDirection == 0.0) 
+        power = 0.0;
+    else 
+        power = pow (normalDotHalfVector, material.shininess);
+
+    ambient += pointlights[i].ambient * attenuation;
+    diffuse += pointlights[i].diffuse * attenuation;
+    specular += pointlights[i].specular * pf * attenuation;
+}
+
+vec3 CalculateSpotLight(const in int i,
+                         const in vec3 eye,
+                         const in vec3 eyeCoordinatePosition,
+                         const in vec3 normal,
+                         inout vec4 ambient,
+                         inout vec4 diffuse,
+                         inout vec4 specular)
+{
+    float normalDotLightDirection;
+    float normalDotHalfVector;
+    float power;
+    float attenuation;
+    float dist;
+    vec3 surfaceToLight;
+    float spotAttenuation;
+
+    surfaceToLight = vec3(spotLights[i].position - eyeCoordinatePosition);
+    dist = length(surfaceToLight);
+    surfaceToLight = normalize(surfaceToLight);
+
+    attenuation = 1.0 / (spotLights[i].attenuation.constant +
+                         spotLights[i].attneuation.linear * dist +
+                         spotLights[i].attenuation.quadratic * dist * dist) ;
+
+    float surfaceToLightDotDirection = dot(-surfaceToLight, normalize(spotLights[i].direction));
+    if (surfaceToLightDotDirection < spotLights[i].cutoff) {
+        spotAttenuation = 0.0;
+    } else {
+        spotAttenuation = pow(surfaceToLightDotDirection, spotLights[i].exponent);
+    }
+
+    attenuation = attenuation * spotAttenuation;
+
+    spotLights[i].halfvector = normalize(surfaceToLight + eye);
+
+    normalDotLightDirection = max(0.0, dot(normalDotLightDirection, normal));
+    normalDotHalfVector = max(0.0, dot(pointlights.halfvector, normal));
+
+    if (normalDotLightDirection == 0.0) {
+        power = 0.0;
+    } else {
+        power = pow(normalDotHalfVector, material.shininess);
+    }
+
+    ambient += pointlights[i].ambient * attenuation;
+    diffuse += pointlights[i].diffuse * attenuation;
+    specular += pointlights[i].specular * pf * attenuation;    
+}
